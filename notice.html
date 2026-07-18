@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Official Library and College notice board, exam notifications and announcements.">
+    <title>Notice Board | Library Portal</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- AOS Animate On Scroll -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Custom Style -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="spinner-custom"></div>
+        <div class="logo-loading">DEPT LIBRARY</div>
+        <p class="text-muted mt-2 fs-14">Opening notice board...</p>
+    </div>
+
+    <!-- Global Header -->
+    <header></header>
+
+    <!-- Main Container -->
+    <main class="container my-5 pt-5 flex-grow-1">
+        <!-- Breadcrumbs Placeholder -->
+        <div id="breadcrumbs-container"></div>
+
+        <div class="row g-4 mt-3">
+            <!-- Left Info Panel -->
+            <div class="col-lg-4" data-aos="fade-right">
+                <div class="glass-card p-4 sticky-top" style="top: 100px;">
+                    <h4 class="fw-800 text-primary mb-3">Notice Board</h4>
+                    <p class="text-muted fs-14">The official notice channel for Department Library activities, exam forms, circular updates, and training placement drives.</p>
+                    <hr class="text-muted opacity-10">
+                    
+                    <h6 class="fw-700 mb-3 fs-14">Notice Categories</h6>
+                    <div class="d-flex flex-wrap gap-2 mb-4" id="category-filter-container">
+                        <button class="btn btn-sm btn-primary-custom filter-btn" data-category="">All</button>
+                        <button class="btn btn-sm btn-outline-custom filter-btn" data-category="Exam">Exams</button>
+                        <button class="btn btn-sm btn-outline-custom filter-btn" data-category="Circular">Circulars</button>
+                        <button class="btn btn-sm btn-outline-custom filter-btn" data-category="Event">Events</button>
+                        <button class="btn btn-sm btn-outline-custom filter-btn" data-category="Announcement">Announcements</button>
+                    </div>
+
+                    <div class="alert alert-warning py-3 border-0 rounded fs-13 mb-0">
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <span class="material-icons">info</span>
+                            <strong class="fw-700">Dues Clearance</strong>
+                        </div>
+                        Before submitting examination forms, ensure all library books are returned and dues are cleared.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notices Feed -->
+            <div class="col-lg-8" data-aos="fade-left">
+                <div class="d-flex flex-column gap-4" id="notices-feed-container">
+                    <!-- Dynamic notices -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Global Footer -->
+    <footer></footer>
+
+    <!-- Bootstrap 5 Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Script Module -->
+    <script type="module" src="js/app.js"></script>
+    <script type="module">
+        import { getNotices } from "./js/db.js";
+
+        let allNotices = [];
+        let activeCategory = "";
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            // Load notices
+            await loadNoticesData();
+            renderNoticesFeed();
+
+            // Category Filter Events
+            document.querySelectorAll("#category-filter-container .filter-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    // Update active button classes
+                    document.querySelectorAll("#category-filter-container .filter-btn").forEach(b => {
+                        b.className = "btn btn-sm btn-outline-custom filter-btn";
+                    });
+                    btn.className = "btn btn-sm btn-primary-custom filter-btn";
+
+                    activeCategory = btn.dataset.category;
+                    renderNoticesFeed();
+                });
+            });
+        });
+
+        async function loadNoticesData() {
+            try {
+                allNotices = await getNotices();
+            } catch (e) {
+                console.error("Failed to load notices:", e);
+            }
+        }
+
+        function renderNoticesFeed() {
+            const container = document.getElementById("notices-feed-container");
+            const filtered = activeCategory === "" 
+                ? allNotices 
+                : allNotices.filter(n => n.category === activeCategory);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="glass-card p-5 text-center text-muted">
+                        <span class="material-icons" style="font-size: 64px;">drafts</span>
+                        <h4 class="mt-3">No notices found in this category.</h4>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(notice => {
+                const badgeColors = {
+                    Exam: "bg-danger",
+                    Circular: "bg-primary",
+                    Event: "bg-success",
+                    Announcement: "bg-info"
+                };
+                const badgeColor = badgeColors[notice.category] || "bg-secondary";
+                
+                return `
+                    <div class="glass-card p-4 ${notice.important ? 'border-start border-4 border-danger shadow-lg' : ''}">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge ${badgeColor} text-white px-3 py-1 rounded-pill fs-11">${notice.category}</span>
+                                ${notice.important ? '<span class="badge bg-danger-light text-danger px-2 py-1 fs-10 rounded d-flex align-items-center gap-1"><span class="material-icons" style="font-size:12px;">warning</span> CRITICAL</span>' : ''}
+                            </div>
+                            <span class="fs-12 text-muted fw-500">${notice.date}</span>
+                        </div>
+                        <h4 class="fw-800 text-color mb-2 fs-20">${notice.title}</h4>
+                        <p class="text-muted mb-0 fs-14" style="text-align:justify; white-space: pre-wrap;">${notice.content}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+    </script>
+</body>
+</html>

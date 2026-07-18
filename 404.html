@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found | 404 Error</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Custom Style -->
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .error-card {
+            max-width: 500px;
+            padding: 50px 30px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .error-code {
+            font-size: 96px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100 justify-content-center">
+
+    <div class="container py-5">
+        <div class="glass-card error-card">
+            <div class="error-code">404</div>
+            <h3 class="fw-800 text-color mb-3">Resource Not Found</h3>
+            <p class="text-muted fs-14 mb-4">The catalog page, exam record, or file path you are looking for has been moved, renamed, or is temporarily offline.</p>
+            <div class="d-flex flex-column gap-2 col-md-8 mx-auto">
+                <a href="index.html" class="btn btn-primary-custom d-flex align-items-center justify-content-center gap-2">
+                    <span class="material-icons">home</span> Return to Home
+                </a>
+                <a href="books.html" class="btn btn-outline-custom d-flex align-items-center justify-content-center gap-2">
+                    <span class="material-icons">menu_book</span> Search Catalog
+                </a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

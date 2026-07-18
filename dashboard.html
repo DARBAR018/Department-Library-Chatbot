@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Personal student and faculty library dashboard.">
+    <title>My Dashboard | Library Portal</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- AOS Animate On Scroll -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Custom Style -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="spinner-custom"></div>
+        <div class="logo-loading">DEPT LIBRARY</div>
+        <p class="text-muted mt-2 fs-14">Syncing account activity...</p>
+    </div>
+
+    <!-- Global Header -->
+    <header></header>
+
+    <!-- Main Content Container -->
+    <main class="container my-5 pt-5 flex-grow-1">
+        <!-- Breadcrumbs Placeholder -->
+        <div id="breadcrumbs-container"></div>
+
+        <!-- Dashboard Header -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 mt-3" data-aos="fade-up">
+            <div>
+                <h2 class="fw-800 mb-0">Welcome, <span id="dash-user-name">User</span></h2>
+                <p class="text-muted fs-14 mb-0">Role: <span id="dash-user-role" class="text-primary fw-600 uppercase">Student</span> | Email: <span id="dash-user-email">email@college.edu</span></p>
+            </div>
+            <div class="mt-2 mt-md-0 d-flex gap-2">
+                <a href="books.html" class="btn btn-primary-custom d-flex align-items-center gap-1"><span class="material-icons">search</span> Search Books</a>
+                <a href="papers.html" class="btn btn-cyan-custom d-flex align-items-center gap-1"><span class="material-icons">download</span> Get Papers</a>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="row g-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="col-6 col-md-3">
+                <div class="glass-card p-4 h-100 position-relative overflow-hidden border-start border-4 border-primary">
+                    <span class="material-icons text-primary position-absolute" style="font-size:48px; right:15px; bottom:15px; opacity:0.1;">auto_stories</span>
+                    <h6 class="text-muted mb-2">My Issued Books</h6>
+                    <div class="stat-number text-primary" id="dash-issued-count">0</div>
+                    <span class="fs-11 text-muted">Limit: 3 books max</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="glass-card p-4 h-100 position-relative overflow-hidden border-start border-4 border-warning">
+                    <span class="material-icons text-warning position-absolute" style="font-size:48px; right:15px; bottom:15px; opacity:0.1;">hourglass_empty</span>
+                    <h6 class="text-muted mb-2">Holds / Reserves</h6>
+                    <div class="stat-number text-warning" id="dash-holds-count">0</div>
+                    <span class="fs-11 text-muted">Ready for counter pickup</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="glass-card p-4 h-100 position-relative overflow-hidden border-start border-4 border-danger">
+                    <span class="material-icons text-danger position-absolute" style="font-size:48px; right:15px; bottom:15px; opacity:0.1;">currency_rupee</span>
+                    <h6 class="text-muted mb-2">Accumulated Fine</h6>
+                    <div class="stat-number text-danger" id="dash-fine-amount">₹0</div>
+                    <span class="fs-11 text-muted">₹2 / day after deadline</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="glass-card p-4 h-100 position-relative overflow-hidden border-start border-4 border-success">
+                    <span class="material-icons text-success position-absolute" style="font-size:48px; right:15px; bottom:15px; opacity:0.1;">check_circle</span>
+                    <h6 class="text-muted mb-2">Approved Returns</h6>
+                    <div class="stat-number text-success" id="dash-returned-count">0</div>
+                    <span class="fs-11 text-muted">All-time count</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <!-- Analytics Chart -->
+            <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
+                <div class="glass-card p-4 h-100">
+                    <h5 class="fw-800 mb-3 d-flex align-items-center gap-2"><span class="material-icons text-primary">bar_chart</span> Book Volumes by Department</h5>
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="booksChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notice Highlights -->
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="glass-card p-4 h-100 d-flex flex-column">
+                    <h5 class="fw-800 mb-3 d-flex align-items-center gap-2 text-danger">
+                        <span class="material-icons">notifications_active</span> Important Alerts
+                    </h5>
+                    <div class="d-flex flex-column gap-3 overflow-y-auto flex-grow-1" id="dash-alerts-container" style="max-height: 280px;">
+                        <!-- Dynamic alerts -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Holds & Active Issues Grid -->
+        <div class="row g-4" data-aos="fade-up" data-aos-delay="400">
+            <div class="col-12">
+                <div class="glass-card p-4">
+                    <h5 class="fw-800 mb-4 d-flex align-items-center gap-2"><span class="material-icons text-primary">receipt_long</span> My Active Borrowings & Holds</h5>
+                    <div class="table-responsive">
+                        <table class="table custom-table mb-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Book Details</th>
+                                    <th>Shelf Location</th>
+                                    <th>Issue Date</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dash-borrowings-body">
+                                <!-- Dynamic rows injected here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Global Footer -->
+    <footer></footer>
+
+    <!-- Bootstrap 5 Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Script Module -->
+    <script type="module" src="js/app.js"></script>
+    <script type="module">
+        import { enforceProtectedRoute, getCurrentUser } from "./js/auth.js";
+        import { getBooks, getNotices } from "./js/db.js";
+
+        // Protect route
+        enforceProtectedRoute();
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const user = getCurrentUser();
+            if (!user) return;
+
+            // Load user data in header labels
+            document.getElementById("dash-user-name").textContent = user.name;
+            document.getElementById("dash-user-role").textContent = user.role;
+            document.getElementById("dash-user-email").textContent = user.email;
+
+            // Seed user specific simulated borrow history
+            initUserBorrowings(user.email);
+            
+            // Render Chart.js
+            await renderBooksChart();
+
+            // Render Alert notices
+            await renderImportantAlerts();
+        });
+
+        function initUserBorrowings(email) {
+            const storageKey = `borrowings_${email}`;
+            let borrowings = localStorage.getItem(storageKey);
+            
+            if (!borrowings) {
+                // Seed simulated holdings for testing out-of-the-box
+                const seedData = [
+                    {
+                        id: "BR001",
+                        title: "Object Oriented Programming with C++",
+                        author: "E. Balagurusamy",
+                        location: "Rack A-Shelf 2",
+                        issueDate: "2026-07-02",
+                        dueDate: "2026-07-16", // Tomorrow relative to July 15, 2026
+                        status: "issued",
+                        fine: 0
+                    },
+                    {
+                        id: "BR002",
+                        title: "Computer Networks",
+                        author: "Andrew S. Tanenbaum",
+                        location: "Rack B-Shelf 1",
+                        issueDate: "---",
+                        dueDate: "---",
+                        status: "hold", // ready for pickup
+                        fine: 0
+                    }
+                ];
+                localStorage.setItem(storageKey, JSON.stringify(seedData));
+                borrowings = seedData;
+            } else {
+                borrowings = JSON.parse(borrowings);
+            }
+
+            // Update stats indicators
+            const issuedList = borrowings.filter(b => b.status === 'issued');
+            const holdsList = borrowings.filter(b => b.status === 'hold');
+            const returnedList = borrowings.filter(b => b.status === 'returned');
+            
+            // Calculate late fine
+            const today = new Date("2026-07-15"); // hardcode system baseline date
+            let totalFine = 0;
+            
+            issuedList.forEach(item => {
+                const due = new Date(item.dueDate);
+                if (today > due) {
+                    const diffTime = Math.abs(today - due);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    item.fine = diffDays * 2;
+                    totalFine += item.fine;
+                }
+            });
+
+            // Update DOM stats labels
+            document.getElementById("dash-issued-count").textContent = issuedList.length;
+            document.getElementById("dash-holds-count").textContent = holdsList.length;
+            document.getElementById("dash-fine-amount").textContent = "₹" + totalFine;
+            document.getElementById("dash-returned-count").textContent = 5 + returnedList.length; // +5 dummy history
+
+            // Render table records
+            const tableBody = document.getElementById("dash-borrowings-body");
+            if (borrowings.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">You have no active checkouts or book holds.</td></tr>`;
+            } else {
+                tableBody.innerHTML = borrowings.map(item => {
+                    let badgeColor = "bg-primary";
+                    let statusLabel = "Checked Out";
+                    let actionButton = "";
+
+                    if (item.status === 'hold') {
+                        badgeColor = "bg-warning";
+                        statusLabel = "Hold (Awaiting Pickup)";
+                        actionButton = `<button class="btn btn-sm btn-outline-danger cancel-hold-btn" data-id="${item.id}">Cancel Hold</button>`;
+                    } else if (item.status === 'issued') {
+                        if (item.fine > 0) {
+                            badgeColor = "bg-danger";
+                            statusLabel = `Overdue (Fine: ₹${item.fine})`;
+                        } else {
+                            badgeColor = "bg-success";
+                            statusLabel = "Active Issue";
+                        }
+                        actionButton = `<button class="btn btn-sm btn-outline-custom renew-btn" data-id="${item.id}">Renew (14 Days)</button>`;
+                    } else if (item.status === 'returned') {
+                        badgeColor = "bg-secondary";
+                        statusLabel = "Returned";
+                        actionButton = `<span class="text-muted fs-12">Completed</span>`;
+                    }
+
+                    return `
+                        <tr id="row-${item.id}">
+                            <td>
+                                <div class="fw-700">${item.title}</div>
+                                <div class="text-muted fs-12">by ${item.author}</div>
+                            </td>
+                            <td><span class="badge bg-light text-dark border p-2 fs-12">${item.location}</span></td>
+                            <td>${item.issueDate}</td>
+                            <td>${item.dueDate}</td>
+                            <td><span class="badge ${badgeColor} px-3 py-2 rounded-pill fs-11">${statusLabel}</span></td>
+                            <td class="text-center">${actionButton}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                // Attach event actions
+                document.querySelectorAll(".renew-btn").forEach(btn => {
+                    btn.addEventListener("click", () => handleRenew(btn.dataset.id, email));
+                });
+                document.querySelectorAll(".cancel-hold-btn").forEach(btn => {
+                    btn.addEventListener("click", () => handleCancelHold(btn.dataset.id, email));
+                });
+            }
+        }
+
+        // Action: Book Renewal
+        function handleRenew(id, email) {
+            const storageKey = `borrowings_${email}`;
+            const list = JSON.parse(localStorage.getItem(storageKey));
+            const idx = list.findIndex(b => b.id === id);
+            
+            if (idx !== -1) {
+                // Update dates (14 days renewal)
+                list[idx].dueDate = "2026-07-29"; // Hardcoded offset relative to 2026-07-15
+                localStorage.setItem(storageKey, JSON.stringify(list));
+                window.showToast("Renewed Successful", "The borrowing duration has been extended.", "success");
+                initUserBorrowings(email);
+            }
+        }
+
+        // Action: Cancel Hold
+        function handleCancelHold(id, email) {
+            const storageKey = `borrowings_${email}`;
+            let list = JSON.parse(localStorage.getItem(storageKey));
+            list = list.filter(b => b.id !== id);
+            localStorage.setItem(storageKey, JSON.stringify(list));
+            window.showToast("Hold Cancelled", "The book reservation has been withdrawn.", "info");
+            initUserBorrowings(email);
+        }
+
+        async function renderImportantAlerts() {
+            try {
+                const notices = await getNotices();
+                const importantAlerts = notices.filter(n => n.important);
+                const alertsContainer = document.getElementById("dash-alerts-container");
+                
+                if (importantAlerts.length === 0) {
+                    alertsContainer.innerHTML = `<div class="text-muted text-center py-4">No critical notices at this time.</div>`;
+                } else {
+                    alertsContainer.innerHTML = importantAlerts.map(alert => `
+                        <div class="glass-card p-3 border-start border-3 border-danger mb-2">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="badge bg-danger-light text-danger fs-10 px-2 py-1 rounded-pill">${alert.category}</span>
+                                <span class="fs-10 text-muted">${alert.date}</span>
+                            </div>
+                            <h6 class="fw-700 mb-1 fs-13">${alert.title}</h6>
+                            <p class="text-muted mb-0 fs-12 text-truncate">${alert.content}</p>
+                        </div>
+                    `).join('');
+                }
+            } catch (e) {
+                console.error("Alert load error:", e);
+            }
+        }
+
+        async function renderBooksChart() {
+            try {
+                const books = await getBooks();
+                
+                // Aggregates counts by department
+                const deptMap = { CO: 0, IF: 0, EE: 0, ME: 0, CE: 0 };
+                books.forEach(b => {
+                    if (deptMap[b.department] !== undefined) {
+                        deptMap[b.department] += b.quantity;
+                    }
+                });
+
+                const ctx = document.getElementById('booksChart').getContext('2d');
+                
+                // Theme dependent colors
+                const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+                const labelColor = isDark ? '#94a3b8' : '#64748b';
+                const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)';
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Computer', 'Information Tech', 'Electrical', 'Mechanical', 'Civil'],
+                        datasets: [{
+                            label: 'Total Available Volumes',
+                            data: [deptMap.CO, deptMap.IF, deptMap.EE, deptMap.ME, deptMap.CE],
+                            backgroundColor: [
+                                'rgba(11, 94, 215, 0.7)',
+                                'rgba(6, 182, 212, 0.7)',
+                                'rgba(245, 158, 11, 0.7)',
+                                'rgba(16, 185, 129, 0.7)',
+                                'rgba(239, 68, 68, 0.7)'
+                            ],
+                            borderColor: [
+                                '#0b5ed7',
+                                '#06b6d4',
+                                '#f59e0b',
+                                '#10b981',
+                                '#ef4444'
+                            ],
+                            borderWidth: 1.5,
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: gridColor
+                                },
+                                ticks: {
+                                    color: labelColor,
+                                    font: { family: 'Outfit', size: 12 }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: labelColor,
+                                    font: { family: 'Outfit', size: 12 }
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (e) {
+                console.error("Chart loading failed:", e);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="College Library Administration Panel.">
+    <title>Admin Dashboard | Library Portal</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- AOS Animate On Scroll -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Custom Style -->
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .admin-sidebar {
+            background: var(--card-bg);
+            border-right: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            min-height: calc(100vh - 80px);
+        }
+        .admin-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--text-color);
+            font-weight: 500;
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+        .admin-nav-link:hover, .admin-nav-link.active {
+            background: var(--primary-color);
+            color: white !important;
+        }
+        .admin-nav-link.active .material-icons {
+            color: white !important;
+        }
+        .admin-nav-link .material-icons {
+            color: var(--primary-color);
+        }
+        .admin-section {
+            display: none;
+        }
+        .admin-section.active {
+            display: block;
+            animation: secFade 0.4s ease;
+        }
+        @keyframes secFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="spinner-custom"></div>
+        <div class="logo-loading">DEPT LIBRARY</div>
+        <p class="text-muted mt-2 fs-14">Opening administrative console...</p>
+    </div>
+
+    <!-- Global Header -->
+    <header></header>
+
+    <!-- Main Admin Layout Container -->
+    <div class="container-fluid mt-5 pt-4 flex-grow-1">
+        <div class="row">
+            <!-- Admin Navigation Sidebar -->
+            <div class="col-md-3 col-xl-2 px-0 py-3 admin-sidebar" data-aos="fade-right">
+                <div class="px-3 mb-4">
+                    <h5 class="fw-800 text-color">Control Panel</h5>
+                    <span class="fs-11 text-muted">Admin Account Connected</span>
+                </div>
+                
+                <div class="px-2">
+                    <button class="w-100 border-0 text-start admin-nav-link active" data-target="sec-analytics">
+                        <span class="material-icons">analytics</span> Analytics
+                    </button>
+                    <button class="w-100 border-0 text-start admin-nav-link" data-target="sec-books">
+                        <span class="material-icons">auto_stories</span> Manage Books
+                    </button>
+                    <button class="w-100 border-0 text-start admin-nav-link" data-target="sec-notices">
+                        <span class="material-icons">campaign</span> Notices
+                    </button>
+                    <button class="w-100 border-0 text-start admin-nav-link" data-target="sec-papers">
+                        <span class="material-icons">history_edu</span> Exam Papers
+                    </button>
+                    <button class="w-100 border-0 text-start admin-nav-link" data-target="sec-ebooks">
+                        <span class="material-icons">tablet_mac</span> Digital E-Books
+                    </button>
+                    <button class="w-100 border-0 text-start admin-nav-link" data-target="sec-faculty">
+                        <span class="material-icons">people</span> Manage Faculty
+                    </button>
+                    <button class="w-100 border-0 text-start admin-nav-link" data-target="sec-faqs">
+                        <span class="material-icons">smart_toy</span> Chatbot FAQs
+                    </button>
+                </div>
+            </div>
+
+            <!-- Admin Workspace Viewport -->
+            <div class="col-md-9 col-xl-10 p-4" data-aos="fade-left">
+                <!-- Breadcrumbs Placeholder -->
+                <div id="breadcrumbs-container" class="mb-4"></div>
+
+                <!-- SECTION: ANALYTICS & MONITORING -->
+                <div id="sec-analytics" class="admin-section active">
+                    <h3 class="fw-800 text-color mb-4">Analytics Overview</h3>
+                    <div class="row g-3 mb-4">
+                        <div class="col-6 col-lg-3">
+                            <div class="glass-card p-4 text-center">
+                                <h6 class="text-muted fs-13 mb-1">Database Mode</h6>
+                                <div class="badge bg-primary text-white p-2 mt-2" id="db-mode-indicator">DEMO MODE</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="glass-card p-4 text-center">
+                                <h6 class="text-muted fs-13 mb-1">Total Volumes</h6>
+                                <h4 class="fw-800 text-primary mt-2 mb-0" id="total-vols-label">0</h4>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="glass-card p-4 text-center">
+                                <h6 class="text-muted fs-13 mb-1">Active Notices</h6>
+                                <h4 class="fw-800 text-warning mt-2 mb-0" id="total-notices-label">0</h4>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="glass-card p-4 text-center">
+                                <h6 class="text-muted fs-13 mb-1">Faculty Registered</h6>
+                                <h4 class="fw-800 text-success mt-2 mb-0" id="total-fac-label">0</h4>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="glass-card p-4">
+                                <h5 class="fw-800 text-primary mb-3">Library Stack Balance</h5>
+                                <div style="position:relative; height:260px;">
+                                    <canvas id="adminVolsChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="glass-card p-4 h-100">
+                                <h5 class="fw-800 text-primary mb-3">Quick Actions Checklist</h5>
+                                <ul class="list-group list-group-flush gap-2 fs-13" style="background:transparent;">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 text-color" style="background:transparent;">
+                                        <span>Issue cards to new Batch 2026 students</span>
+                                        <span class="badge bg-danger rounded-pill">Overdue</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 text-color" style="background:transparent;">
+                                        <span>Update GTU Summer 2026 exam schedule details</span>
+                                        <span class="badge bg-warning text-dark rounded-pill">Pending</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 text-color" style="background:transparent;">
+                                        <span>Review Chatbot FAQ match density reports</span>
+                                        <span class="badge bg-success rounded-pill">Updated</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION: MANAGE BOOKS -->
+                <div id="sec-books" class="admin-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-800 text-color mb-0">Manage Book Catalog</h3>
+                        <button class="btn btn-primary-custom d-flex align-items-center gap-1" id="add-book-trigger-btn"><span class="material-icons fs-18">add</span> Add Book</button>
+                    </div>
+                    <div class="glass-card p-4">
+                        <div class="table-responsive">
+                            <table class="table custom-table mb-0 align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Book Details</th>
+                                        <th>Department & Sem</th>
+                                        <th>Stock Status</th>
+                                        <th>Shelf Rack</th>
+                                        <th class="text-center">Operations</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-books-tbody">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION: MANAGE NOTICES -->
+                <div id="sec-notices" class="admin-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-800 text-color mb-0">Manage Notice Board</h3>
+                        <button class="btn btn-primary-custom d-flex align-items-center gap-1" id="add-notice-trigger-btn"><span class="material-icons fs-18">add</span> Publish Notice</button>
+                    </div>
+                    <div class="glass-card p-4">
+                        <div class="table-responsive">
+                            <table class="table custom-table mb-0 align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Notice Heading</th>
+                                        <th>Category</th>
+                                        <th>Date Published</th>
+                                        <th>Importance</th>
+                                        <th class="text-center">Operations</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-notices-tbody">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION: EXAM PAPERS -->
+                <div id="sec-papers" class="admin-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-800 text-color mb-0">Manage Exam Papers</h3>
+                        <button class="btn btn-primary-custom d-flex align-items-center gap-1" id="add-paper-trigger-btn"><span class="material-icons fs-18">upload</span> Upload Paper</button>
+                    </div>
+                    <div class="glass-card p-4">
+                        <div class="table-responsive">
+                            <table class="table custom-table mb-0 align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Paper Name</th>
+                                        <th>Department & Sem</th>
+                                        <th>Exam Year</th>
+                                        <th class="text-center">Operations</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-papers-tbody">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION: DIGITAL E-BOOKS -->
+                <div id="sec-ebooks" class="admin-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-800 text-color mb-0">Manage Digital E-Books</h3>
+                        <button class="btn btn-primary-custom d-flex align-items-center gap-1" id="add-ebook-trigger-btn"><span class="material-icons fs-18">upload</span> Catalog E-Book</button>
+                    </div>
+                    <div class="glass-card p-4">
+                        <div class="table-responsive">
+                            <table class="table custom-table mb-0 align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>E-Book Title</th>
+                                        <th>Category</th>
+                                        <th>File Size</th>
+                                        <th class="text-center">Operations</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-ebooks-tbody">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION: FACULTY DIRECTORY -->
+                <div id="sec-faculty" class="admin-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-800 text-color mb-0">Manage Faculty Registry</h3>
+                        <button class="btn btn-primary-custom d-flex align-items-center gap-1" id="add-faculty-trigger-btn"><span class="material-icons fs-18">person_add</span> Register Staff</button>
+                    </div>
+                    <div class="glass-card p-4">
+                        <div class="table-responsive">
+                            <table class="table custom-table mb-0 align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Instructor Profile</th>
+                                        <th>Department</th>
+                                        <th>Designation</th>
+                                        <th>Contact Email</th>
+                                        <th class="text-center">Operations</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-faculty-tbody">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION: CHATBOT FAQS -->
+                <div id="sec-faqs" class="admin-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-800 text-color mb-0">Train Chatbot Intelligence (FAQs)</h3>
+                        <button class="btn btn-primary-custom d-flex align-items-center gap-1" id="add-faq-trigger-btn"><span class="material-icons fs-18">school</span> Add FAQ Rule</button>
+                    </div>
+                    <div class="glass-card p-4">
+                        <div class="table-responsive">
+                            <table class="table custom-table mb-0 align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>FAQ Question</th>
+                                        <th>Syllabus Keywords Map</th>
+                                        <th class="text-center">Operations</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-faqs-tbody">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD / EDIT BOOK -->
+    <div class="modal fade pdf-modal" id="bookFormModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="book-admin-form" novalidate>
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-800" id="book-modal-title">Add New Book</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: var(--text-color) invert(1);"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="admin-book-id">
+                        <div class="mb-3">
+                            <label class="form-label fw-600 fs-13">Book Title</label>
+                            <input type="text" id="admin-book-title" class="form-control form-control-custom" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-600 fs-13">Author Name</label>
+                            <input type="text" id="admin-book-author" class="form-control form-control-custom" required>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label fw-600 fs-13">Department</label>
+                                <select id="admin-book-dept" class="form-select form-control-custom" required>
+                                    <option value="CO">Computer</option>
+                                    <option value="IF">Info Tech</option>
+                                    <option value="EE">Electrical</option>
+                                    <option value="ME">Mechanical</option>
+                                    <option value="CE">Civil</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-600 fs-13">Semester</label>
+                                <input type="number" id="admin-book-sem" class="form-control form-control-custom" min="1" max="6" required>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label fw-600 fs-13">Subject Code</label>
+                                <input type="text" id="admin-book-subj" class="form-control form-control-custom" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-600 fs-13">ISBN Number</label>
+                                <input type="text" id="admin-book-isbn" class="form-control form-control-custom" required>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label fw-600 fs-13">Total Quantity</label>
+                                <input type="number" id="admin-book-qty" class="form-control form-control-custom" min="1" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-600 fs-13">Rack Location</label>
+                                <input type="text" id="admin-book-loc" class="form-control form-control-custom" placeholder="Rack X-Shelf Y" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary-custom">Save Book</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD / EDIT NOTICE -->
+    <div class="modal fade pdf-modal" id="noticeFormModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="notice-admin-form" novalidate>
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-800" id="notice-modal-title">Publish Notice</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: var(--text-color) invert(1);"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="admin-notice-id">
+                        <div class="mb-3">
+                            <label class="form-label fw-600 fs-13">Notice Header Title</label>
+                            <input type="text" id="admin-notice-title" class="form-control form-control-custom" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-600 fs-13">Category</label>
+                            <select id="admin-notice-cat" class="form-select form-control-custom" required>
+                                <option value="Circular">Circular</option>
+                                <option value="Exam">Exam</option>
+                                <option value="Event">Event</option>
+                                <option value="Announcement">Announcement</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-600 fs-13">Notice content details</label>
+                            <textarea id="admin-notice-content" class="form-control form-control-custom" rows="4" required></textarea>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="admin-notice-imp">
+                            <label class="form-check-label fw-600 fs-13 text-color" for="admin-notice-imp">Highlight as Important / Critical</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary-custom">Save Notice</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD PAPER -->
+    <div class="modal fade pdf-modal" id="paperFormModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="paper-admin-form" novalidate>
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-800">Upload Exam Paper</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: var(--text-color) invert(1);"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-600 fs-13">Paper Title</label>
+                            <input type="text" id="admin-paper-title" class="form-control form-control-custom" placeholder="GTU Winter 2026 - Data Structures" required>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label fw-600 fs-13">Department</label>
+                                <select id="admin-paper-dept" class="form-select form-control-custom" required>
+                                    <option value="CO">Computer</option>
+                                    <option value="IF">Info Tech</option>
+                                    <option value="EE">Electrical</option>
+                                    <option value="ME">Mechanical</option>
+                                    <option value="CE">Civil</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-600 fs-13">Semester</label>
+                                <input type="number" id="admin-paper-sem" class="form-control form-control-custom" min="1" max="6" required>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label fw-600 fs-13">Subject Code</label>
+                                <input type="text" id="admin-paper-subj" class="form-control form-control-custom" placeholder="DBMS" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-600 fs-13">Exam Year</label>
+                                <input type="number" id="admin-paper-year" class="form-control form-control-custom" min="2015" max="2027" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary-custom">Save Paper</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD EBOOK -->
+    <div class="modal fade pdf-modal" id="ebookFormModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="ebook-admin-form" novalidate>
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-800">Catalog E-Book</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: var(--text-color) invert(1);"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-600 fs-13">E-Book Title</label>
+                            <input type="text" id="admin-ebook-title" class="form-control form-control-custom" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-600 fs-13">Author Name</label>
+                            <input type="text" id="admin-ebook-author" class="form-control form-control-custom" required>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label fw-600 fs-13">Category</label>
+                                <input type="text" id="admin-ebook-cat" class="form-control form-control-custom" placeholder="Programming" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-600 fs-13">File Size</label>
+                                <input type="text" id="admin-ebook-size" class="form-control form-control-custom" placeholder="e.g. 5.4 MB" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary-custom">Catalog Book</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD / EDIT FACULTY -->
+    <div class="modal fade pdf-modal" id="facultyFormModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="faculty-admin-form" novalidate>
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-800" id="faculty-modal-title">Register Faculty</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: var(--text-color) invert(1);"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="admin-fac-id">
+                        <div class="mb-3">
+                            <label class="form-label fw-600 fs-13">Faculty Full Name</label>
+                            <input type="text" id="admin-fac-name" class="form-control form-control-custom" required>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label fw-600 fs-13">Department</label>
+                                <select id="admin-fac-dept" class="form-select form-control-custom" required>
+                                    <option value="CO">Computer</option>
+                                    <option value="IF">Info Tech</option>
+                                    <option value="EE">Electrical</option>
+                                    <option value="ME">Mechanical</option>
+                                    <option value="CE">Civil</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-600 fs-13">Designation</label>
+                                <input type="text" id="admin-fac-desig" class="form-control form-control-custom" placeholder="Assistant Professor" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-600 fs-13">Qualification Degrees</label>
+                            <input type="text" id="admin-fac-qual" class="form-control form-control-custom" placeholder="M.E. in Computer Eng" required>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label fw-600 fs-13">College Email</label>
+                                <input type="email" id="admin-fac-email" class="form-control form-control-custom" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-600 fs-13">Contact Number</label>
+                                <input type="text" id="admin-fac-phone" class="form-control form-control-custom" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary-custom">Save Faculty</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD / EDIT FAQ -->
+    <div class="modal fade pdf-modal" id="faqFormModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="faq-admin-form" novalidate>
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-800" id="faq-modal-title">Teach Chatbot FAQ</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: var(--text-color) invert(1);"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="admin-faq-id">
+                        <div class="mb-3">
+                            <label class="form-label fw-600 fs-13">Standard Question</label>
+                            <input type="text" id="admin-faq-q" class="form-control form-control-custom" placeholder="e.g. What is the fine structure?" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-600 fs-13">Keywords Mapping (comma separated)</label>
+                            <input type="text" id="admin-faq-keys" class="form-control form-control-custom" placeholder="fine, late, delay, dues" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-600 fs-13">Standard Chatbot Response Answer</label>
+                            <textarea id="admin-faq-ans" class="form-control form-control-custom" rows="4" placeholder="Standard text details..." required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary-custom">Save FAQ</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Footer -->
+    <footer></footer>
+
+    <!-- Bootstrap 5 Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Script Module -->
+    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/admin.js"></script>
+</body>
+</html>

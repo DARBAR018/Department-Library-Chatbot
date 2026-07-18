@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Download GTU previous years exam question papers.">
+    <title>Previous Papers | Library Portal</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- AOS Animate On Scroll -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Custom Style -->
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .exam-sheet {
+            background: #ffffff;
+            color: #1a1a1a;
+            font-family: 'Times New Roman', Times, serif;
+            padding: 40px;
+            border: 1px solid #ddd;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            min-height: 500px;
+        }
+        .exam-header {
+            text-align: center;
+            border-bottom: 2px double #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .question-item {
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        [data-theme="dark"] .exam-sheet {
+            background: #f8fafc; /* keep preview readable like printed page even in dark mode */
+            color: #0f172a;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="spinner-custom"></div>
+        <div class="logo-loading">DEPT LIBRARY</div>
+        <p class="text-muted mt-2 fs-14">Opening question papers database...</p>
+    </div>
+
+    <!-- Global Header -->
+    <header></header>
+
+    <!-- Main Container -->
+    <main class="container my-5 pt-5 flex-grow-1">
+        <!-- Breadcrumbs Placeholder -->
+        <div id="breadcrumbs-container"></div>
+
+        <div class="row g-4 mt-3">
+            <!-- Sidebar filters -->
+            <div class="col-lg-3" data-aos="fade-right">
+                <div class="glass-card p-4 sticky-top" style="top: 100px;">
+                    <h5 class="fw-800 text-primary mb-3 d-flex align-items-center gap-2">
+                        <span class="material-icons">search</span> Filter Papers
+                    </h5>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-600 fs-13">Department</label>
+                        <select id="paper-dept" class="form-select form-control-custom">
+                            <option value="">All Departments</option>
+                            <option value="CO">Computer Eng.</option>
+                            <option value="IF">Information Tech.</option>
+                            <option value="EE">Electrical Eng.</option>
+                            <option value="ME">Mechanical Eng.</option>
+                            <option value="CE">Civil Eng.</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-600 fs-13">Semester</label>
+                        <select id="paper-sem" class="form-select form-control-custom">
+                            <option value="">All Semesters</option>
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="3">Semester 3</option>
+                            <option value="4">Semester 4</option>
+                            <option value="5">Semester 5</option>
+                            <option value="6">Semester 6</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-600 fs-13">Subject Search</label>
+                        <input type="text" id="paper-subject" class="form-control form-control-custom" placeholder="e.g. DBMS, OOP, CN">
+                    </div>
+
+                    <button class="btn btn-outline-custom w-100 py-2 fs-13 mt-2" id="clear-papers-btn">
+                        Reset Filters
+                    </button>
+                </div>
+            </div>
+
+            <!-- Papers Table -->
+            <div class="col-lg-9" data-aos="fade-left">
+                <div class="glass-card p-4">
+                    <h5 class="fw-800 mb-4 d-flex align-items-center gap-2"><span class="material-icons text-primary">history_edu</span> Exam Archives</h5>
+                    
+                    <div class="table-responsive">
+                        <table class="table custom-table mb-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Subject & Paper Title</th>
+                                    <th>Dept & Sem</th>
+                                    <th>Exam Year</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="papers-table-body">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- PDF PREVIEW MODAL -->
+    <div class="modal fade pdf-modal" id="paperPreviewModal" tabindex="-1" aria-labelledby="paperPreviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-800" id="paperPreviewModalLabel">GTU Exam Paper Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: var(--text-color) invert(1);"></button>
+                </div>
+                <div class="modal-body bg-light overflow-y-auto" style="max-height: 600px;">
+                    <div class="exam-sheet" id="virtual-exam-sheet">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">Close Preview</button>
+                    <button type="button" class="btn btn-primary-custom" id="modal-download-btn"><span class="material-icons fs-16 align-middle">download</span> Download PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Footer -->
+    <footer></footer>
+
+    <!-- Bootstrap 5 Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Script Module -->
+    <script type="module" src="js/app.js"></script>
+    <script type="module">
+        import { getPapers } from "./js/db.js";
+
+        let allPapers = [];
+        let selectedPaper = null;
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            await loadPapersData();
+            filterAndRenderPapers();
+
+            // Bind filters
+            document.getElementById("paper-dept").addEventListener("change", filterAndRenderPapers);
+            document.getElementById("paper-sem").addEventListener("change", filterAndRenderPapers);
+            document.getElementById("paper-subject").addEventListener("input", filterAndRenderPapers);
+            
+            document.getElementById("clear-papers-btn").addEventListener("click", () => {
+                document.getElementById("paper-dept").value = "";
+                document.getElementById("paper-sem").value = "";
+                document.getElementById("paper-subject").value = "";
+                filterAndRenderPapers();
+            });
+
+            document.getElementById("modal-download-btn").addEventListener("click", () => {
+                if (selectedPaper) {
+                    triggerPaperDownload(selectedPaper);
+                }
+            });
+        });
+
+        async function loadPapersData() {
+            try {
+                allPapers = await getPapers();
+            } catch (e) {
+                console.error("Failed to load papers:", e);
+            }
+        }
+
+        function filterAndRenderPapers() {
+            const dept = document.getElementById("paper-dept").value;
+            const sem = document.getElementById("paper-sem").value;
+            const subject = document.getElementById("paper-subject").value.toLowerCase();
+
+            const filtered = allPapers.filter(p => {
+                const matchDept = dept === "" || p.department === dept;
+                const matchSem = sem === "" || p.semester.toString() === sem;
+                const matchSub = subject === "" || 
+                                 p.subject.toLowerCase().includes(subject) || 
+                                 p.title.toLowerCase().includes(subject);
+
+                return matchDept && matchSem && matchSub;
+            });
+
+            renderPapersTable(filtered);
+        }
+
+        function renderPapersTable(papers) {
+            const body = document.getElementById("papers-table-body");
+            if (papers.length === 0) {
+                body.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-muted">No papers found matching filters.</td></tr>`;
+                return;
+            }
+
+            const deptNames = { CO: "Computer", IF: "Info Tech", EE: "Electrical", ME: "Mechanical", CE: "Civil" };
+
+            body.innerHTML = papers.map(p => `
+                <tr>
+                    <td>
+                        <div class="fw-700 text-primary">${p.title}</div>
+                        <div class="text-muted fs-12">Subject Code: ${p.subject} (GTU Curriculum)</div>
+                    </td>
+                    <td>
+                        <span class="badge bg-primary-light text-primary px-2 py-1 fs-11 rounded mb-1">${deptNames[p.department] || p.department}</span>
+                        <div class="fs-11 text-muted">Semester ${p.semester}</div>
+                    </td>
+                    <td><strong class="text-color">${p.year}</strong></td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center gap-2">
+                            <button class="btn btn-sm btn-outline-custom preview-btn" data-id="${p.id}"><span class="material-icons fs-14 align-middle">visibility</span> Preview</button>
+                            <button class="btn btn-sm btn-primary-custom download-btn" data-id="${p.id}"><span class="material-icons fs-14 align-middle">download</span> Download</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Attach actions
+            document.querySelectorAll(".preview-btn").forEach(btn => {
+                btn.addEventListener("click", () => openPreviewModal(btn.dataset.id));
+            });
+            document.querySelectorAll(".download-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const paper = allPapers.find(p => p.id === btn.dataset.id);
+                    if (paper) triggerPaperDownload(paper);
+                });
+            });
+        }
+
+        function openPreviewModal(id) {
+            const paper = allPapers.find(p => p.id === id);
+            if (!paper) return;
+
+            selectedPaper = paper;
+            const sheet = document.getElementById("virtual-exam-sheet");
+            
+            const deptFull = { CO: "COMPUTER ENGINEERING", IF: "INFORMATION TECHNOLOGY", EE: "ELECTRICAL ENGINEERING", ME: "MECHANICAL ENGINEERING", CE: "CIVIL ENGINEERING" };
+
+            // Render virtual printed GTU paper inside the modal body
+            sheet.innerHTML = `
+                <div class="exam-header">
+                    <div style="font-size: 14px; font-weight: bold; letter-spacing: 1px;">GUJARAT TECHNOLOGICAL UNIVERSITY</div>
+                    <div style="font-size: 11px; margin: 3px 0;">DIPLOMA ENGINEERING - SEMESTER ${paper.semester} – EXAMINATION - ${paper.year}</div>
+                    <table style="width:100%; font-size:12px; margin-top:15px; text-align:left;">
+                        <tr>
+                            <td><strong>Subject Code:</strong> ${paper.subject}</td>
+                            <td style="text-align:right;"><strong>Date:</strong> 18-12-${paper.year - 1}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Subject Name:</strong> ${paper.title.split(" - ").pop()}</td>
+                            <td style="text-align:right;"><strong>Total Marks:</strong> 70</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><strong>Department:</strong> ${deptFull[paper.department] || 'DIPLOMA ENGINEERING'}</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div style="font-size:12px; font-style:italic; border-bottom:1px solid #000; padding-bottom:5px; margin-bottom:15px;">
+                    Instructions: 1. Attempt all questions. 2. Make suitable assumptions wherever necessary. 3. Figures to the right indicate full marks.
+                </div>
+
+                <div class="question-list">
+                    <div class="question-item">
+                        <strong>Q.1 (a)</strong> Explain the basic concepts and key features of ${paper.subject} curriculum. <span style="float:right;">[03]</span>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="question-item">
+                        <strong>Q.1 (b)</strong> Differentiate between procedural programming and modular designs in ${paper.subject}. <span style="float:right;">[04]</span>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="question-item">
+                        <strong>Q.1 (c)</strong> Draw a neat, labeled architectural diagram illustrating core blocks of the model system. <span style="float:right;">[07]</span>
+                        <div style="clear:both;"></div>
+                    </div>
+                    
+                    <hr style="border-top:1px dashed #000; margin:20px 0;">
+
+                    <div class="question-item">
+                        <strong>Q.2 (a)</strong> Solve the given design equations with step-by-step mathematical boundary conditions. <span style="float:right;">[03]</span>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="question-item">
+                        <strong>Q.2 (b)</strong> Summarize the working principles of the main controllers. Give standard examples. <span style="float:right;">[04]</span>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="question-item">
+                        <strong>Q.2 (c)</strong> Discuss critical real-life applications and future trends for this technology area. <span style="float:right;">[07]</span>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            `;
+
+            const modal = new bootstrap.Modal(document.getElementById("paperPreviewModal"));
+            modal.show();
+        }
+
+        function triggerPaperDownload(paper) {
+            window.showToast("Preparing Download", `Assembling ${paper.fileName}...`, "info");
+            
+            setTimeout(() => {
+                // Generate a dummy PDF text content file
+                const dummyContent = `%PDF-1.4\n%...\n1 0 obj\n<< /Title (${paper.title}) >>\nendobj\n...`;
+                const blob = new Blob([dummyContent], { type: 'application/pdf' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = paper.fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                window.showToast("Download Complete", `${paper.fileName} downloaded successfully.`, "success");
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

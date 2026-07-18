@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Secure portal login and registration page.">
+    <title>Authentication | Library Portal</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- AOS Animate On Scroll -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Custom Style -->
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .auth-container {
+            max-width: 480px;
+            margin: 120px auto 60px;
+        }
+        .auth-card {
+            padding: 40px;
+        }
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+            animation: formFade 0.4s ease;
+        }
+        @keyframes formFade {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="spinner-custom"></div>
+        <div class="logo-loading">DEPT LIBRARY</div>
+        <p class="text-muted mt-2 fs-14">Establishing secure connection...</p>
+    </div>
+
+    <!-- Global Header -->
+    <header></header>
+
+    <div class="container d-flex flex-column justify-content-center flex-grow-1">
+        <div class="auth-container w-100" data-aos="zoom-in">
+            <!-- Breadcrumbs Placeholder -->
+            <div id="breadcrumbs-container"></div>
+            
+            <div class="glass-card auth-card mt-3">
+                
+                <!-- LOGIN FORM -->
+                <div id="login-section" class="form-section active">
+                    <h3 class="fw-800 text-center mb-2">Welcome Back</h3>
+                    <p class="text-muted text-center mb-4 fs-14">Log in to check issued books, grades, and access papers.</p>
+                    
+                    <form id="login-form" novalidate>
+                        <div class="mb-3">
+                            <label for="login-email" class="form-label fw-600 fs-14">College Email</label>
+                            <input type="email" id="login-email" class="form-control form-control-custom" placeholder="email@college.edu" required>
+                            <div class="invalid-feedback">Please enter a valid college email.</div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <label for="login-password" class="form-label fw-600 fs-14">Password</label>
+                                <a href="#" id="to-forgot-btn" class="fs-12 fw-500 text-primary">Forgot Password?</a>
+                            </div>
+                            <input type="password" id="login-password" class="form-control form-control-custom" placeholder="••••••••" required>
+                            <div class="invalid-feedback">Password is required.</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary-custom w-100 mt-2 py-2 fw-700">Sign In</button>
+                    </form>
+                    
+                    <div class="text-center mt-4 fs-14">
+                        <span class="text-muted">New student or faculty?</span>
+                        <a href="#" id="to-register-btn" class="fw-600 text-primary ms-1">Create Account</a>
+                    </div>
+                </div>
+
+                <!-- REGISTER FORM -->
+                <div id="register-section" class="form-section">
+                    <h3 class="fw-800 text-center mb-2">Create Account</h3>
+                    <p class="text-muted text-center mb-4 fs-14">Sign up to get access to custom dashboards & downloads.</p>
+                    
+                    <form id="register-form" novalidate>
+                        <div class="mb-3">
+                            <label for="register-name" class="form-label fw-600 fs-14">Full Name</label>
+                            <input type="text" id="register-name" class="form-control form-control-custom" placeholder="Enter full name" required>
+                            <div class="invalid-feedback">Please enter your name.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="register-email" class="form-label fw-600 fs-14">College Email</label>
+                            <input type="email" id="register-email" class="form-control form-control-custom" placeholder="email@college.edu" required>
+                            <div class="invalid-feedback">Please enter a valid college email.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="register-role" class="form-label fw-600 fs-14">Account Role</label>
+                            <select id="register-role" class="form-select form-control-custom">
+                                <option value="student">Student</option>
+                                <option value="faculty">Faculty Member</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="register-password" class="form-label fw-600 fs-14">Password</label>
+                            <input type="password" id="register-password" class="form-control form-control-custom" placeholder="Min 6 characters" minlength="6" required>
+                            <div class="invalid-feedback">Password must be at least 6 characters.</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary-custom w-100 mt-2 py-2 fw-700">Sign Up</button>
+                    </form>
+                    
+                    <div class="text-center mt-4 fs-14">
+                        <span class="text-muted">Already registered?</span>
+                        <a href="#" id="to-login-btn" class="fw-600 text-primary ms-1">Log In</a>
+                    </div>
+                </div>
+
+                <!-- FORGOT PASSWORD FORM -->
+                <div id="forgot-section" class="form-section">
+                    <h3 class="fw-800 text-center mb-2">Reset Password</h3>
+                    <p class="text-muted text-center mb-4 fs-14">Enter your registered college email and we will simulate a reset link.</p>
+                    
+                    <form id="forgot-form" novalidate>
+                        <div class="mb-3">
+                            <label for="forgot-email" class="form-label fw-600 fs-14">College Email</label>
+                            <input type="email" id="forgot-email" class="form-control form-control-custom" placeholder="email@college.edu" required>
+                            <div class="invalid-feedback">Please enter a valid registered email.</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary-custom w-100 mt-2 py-2 fw-700">Send Reset Link</button>
+                    </form>
+                    
+                    <div class="text-center mt-4 fs-14">
+                        <a href="#" id="forgot-back-btn" class="fw-600 text-muted d-flex align-items-center justify-content-center gap-1"><span class="material-icons" style="font-size:16px;">arrow_back</span> Back to Login</a>
+                    </div>
+                </div>
+
+                <!-- EMAIL VERIFICATION VIEW -->
+                <div id="verify-section" class="form-section">
+                    <div class="text-center mb-3 text-warning">
+                        <span class="material-icons" style="font-size:64px;">mark_email_unread</span>
+                    </div>
+                    <h3 class="fw-800 text-center mb-2">Verify Your Email</h3>
+                    <p class="text-muted text-center mb-4 fs-14">We have sent a simulated verification link to <strong id="verify-email-display">email@college.edu</strong>.</p>
+                    
+                    <div class="alert alert-info py-2 px-3 border-0 fs-12 mb-4 text-center">
+                        <span class="fw-600">Testing Tip:</span> Click below to automatically simulate email verification and gain access.
+                    </div>
+                    
+                    <button id="verify-now-btn" class="btn btn-cyan-custom w-100 py-2 fw-700 mb-3">Simulate Verification</button>
+                    <button id="verify-logout-btn" class="btn btn-outline-custom w-100 py-2 fw-700">Cancel & Logout</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Footer -->
+    <footer></footer>
+
+    <!-- Bootstrap 5 Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Script Module -->
+    <script type="module" src="js/app.js"></script>
+    <script type="module">
+        import { login, register, resetPassword, verifyUserEmail, logout, getCurrentUser } from "./js/auth.js";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Check if already logged in and verified
+            const user = getCurrentUser();
+            if (user) {
+                if (user.verified) {
+                    redirectToTarget();
+                } else {
+                    showSection("verify-section");
+                    document.getElementById("verify-email-display").textContent = user.email;
+                }
+            }
+
+            // Section Switch Toggles
+            document.getElementById("to-register-btn").addEventListener("click", (e) => { e.preventDefault(); showSection("register-section"); });
+            document.getElementById("to-login-btn").addEventListener("click", (e) => { e.preventDefault(); showSection("login-section"); });
+            document.getElementById("to-forgot-btn").addEventListener("click", (e) => { e.preventDefault(); showSection("forgot-section"); });
+            document.getElementById("forgot-back-btn").addEventListener("click", (e) => { e.preventDefault(); showSection("login-section"); });
+
+            // Form Submit: Login
+            const loginForm = document.getElementById("login-form");
+            loginForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                if (!validateForm(loginForm)) return;
+                
+                const email = document.getElementById("login-email").value;
+                const pass = document.getElementById("login-password").value;
+                
+                try {
+                    const loggedUser = await login(email, pass);
+                    window.showToast("Success", `Welcome back, ${loggedUser.name}!`, "success");
+                    
+                    if (loggedUser.verified) {
+                        setTimeout(redirectToTarget, 1000);
+                    } else {
+                        document.getElementById("verify-email-display").textContent = loggedUser.email;
+                        setTimeout(() => showSection("verify-section"), 1000);
+                    }
+                } catch (err) {
+                    window.showToast("Login Failed", err.message, "error");
+                }
+            });
+
+            // Form Submit: Register
+            const registerForm = document.getElementById("register-form");
+            registerForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                if (!validateForm(registerForm)) return;
+                
+                const name = document.getElementById("register-name").value;
+                const email = document.getElementById("register-email").value;
+                const role = document.getElementById("register-role").value;
+                const pass = document.getElementById("register-password").value;
+                
+                try {
+                    const newUser = await register(email, pass, name, role);
+                    window.showToast("Account Created", "Verification email sent.", "success");
+                    
+                    // Automatically log them in (but unverified)
+                    await login(email, pass);
+                    document.getElementById("verify-email-display").textContent = email;
+                    setTimeout(() => showSection("verify-section"), 1200);
+                } catch (err) {
+                    window.showToast("Registration Failed", err.message, "error");
+                }
+            });
+
+            // Form Submit: Forgot Password
+            const forgotForm = document.getElementById("forgot-form");
+            forgotForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                if (!validateForm(forgotForm)) return;
+                
+                const email = document.getElementById("forgot-email").value;
+                try {
+                    await resetPassword(email);
+                    window.showToast("Link Sent", "Password reset instructions sent to email.", "success");
+                    setTimeout(() => showSection("login-section"), 2000);
+                } catch (err) {
+                    window.showToast("Reset Failed", err.message, "error");
+                }
+            });
+
+            // Verification flow handlers
+            document.getElementById("verify-now-btn").addEventListener("click", async () => {
+                const currentUser = getCurrentUser();
+                if (currentUser) {
+                    await verifyUserEmail(currentUser.email);
+                    window.showToast("Account Verified", "Verification successful! Access granted.", "success");
+                    setTimeout(redirectToTarget, 1200);
+                }
+            });
+
+            document.getElementById("verify-logout-btn").addEventListener("click", async () => {
+                await logout();
+                showSection("login-section");
+            });
+        });
+
+        function showSection(sectionId) {
+            document.querySelectorAll(".form-section").forEach(sec => sec.classList.remove("active"));
+            document.getElementById(sectionId).classList.add("active");
+        }
+
+        function validateForm(form) {
+            if (!form.checkValidity()) {
+                form.classList.add("was-validated");
+                return false;
+            }
+            return true;
+        }
+
+        function redirectToTarget() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirect = urlParams.get("redirect") || "dashboard.html";
+            window.location.href = redirect;
+        }
+    </script>
+</body>
+</html>
