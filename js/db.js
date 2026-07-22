@@ -31,7 +31,10 @@ const storageKeys = {
     notices: "lib_notices",
     papers: "lib_papers",
     ebooks: "lib_ebooks",
-    faqs: "lib_faqs"
+    faqs: "lib_faqs",
+    students: "lib_students",
+    issuedBooks: "lib_issued",
+    returnedBooks: "lib_returned"
 };
 
 function seedLocalStorage() {
@@ -52,6 +55,15 @@ function seedLocalStorage() {
     }
     if (!localStorage.getItem(storageKeys.faqs)) {
         localStorage.setItem(storageKeys.faqs, JSON.stringify(SampleData.SAMPLE_FAQS));
+    }
+    if (!localStorage.getItem(storageKeys.students)) {
+        localStorage.setItem(storageKeys.students, JSON.stringify(SampleData.SAMPLE_STUDENTS));
+    }
+    if (!localStorage.getItem(storageKeys.issuedBooks)) {
+        localStorage.setItem(storageKeys.issuedBooks, JSON.stringify(SampleData.SAMPLE_ISSUED));
+    }
+    if (!localStorage.getItem(storageKeys.returnedBooks)) {
+        localStorage.setItem(storageKeys.returnedBooks, JSON.stringify(SampleData.SAMPLE_RETURNED));
     }
     console.log("[Database] LocalStorage virtual Firestore seeded with sample data.");
 }
@@ -474,4 +486,161 @@ export async function deleteFaq(id) {
     faqs = faqs.filter(f => f.id !== id);
     saveLocalData(storageKeys.faqs, faqs);
     return id;
+}
+
+/* ==========================================
+   STUDENT MANAGEMENT OPERATIONS
+   ========================================== */
+
+export async function getStudents() {
+    return getLocalData(storageKeys.students);
+}
+
+export async function addStudent(studentData) {
+    const id = studentData.id || "ST" + Date.now();
+    const newStudent = { id, ...studentData, createdAt: new Date().toISOString() };
+    const students = getLocalData(storageKeys.students);
+    students.push(newStudent);
+    saveLocalData(storageKeys.students, students);
+    return newStudent;
+}
+
+export async function updateStudent(id, updatedData) {
+    const students = getLocalData(storageKeys.students);
+    const idx = students.findIndex(s => s.id === id);
+    if (idx !== -1) {
+        students[idx] = { ...students[idx], ...updatedData };
+        saveLocalData(storageKeys.students, students);
+        return students[idx];
+    }
+    throw new Error("Student not found");
+}
+
+export async function deleteStudent(id) {
+    let students = getLocalData(storageKeys.students);
+    students = students.filter(s => s.id !== id);
+    saveLocalData(storageKeys.students, students);
+    return id;
+}
+
+/* ==========================================
+   BOOK ISSUE OPERATIONS
+   ========================================== */
+
+export async function getIssuedBooks() {
+    return getLocalData(storageKeys.issuedBooks).sort((a,b) => new Date(b.issueDate) - new Date(a.issueDate));
+}
+
+export async function issueBook(issueData) {
+    const id = "IS" + Date.now();
+    const today = new Date();
+    const dueDate = new Date(today);
+    dueDate.setDate(dueDate.getDate() + 14); // 14-day lending period
+
+    const newIssue = {
+        id,
+        bookId: issueData.bookId,
+        bookTitle: issueData.bookTitle,
+        bookAuthor: issueData.bookAuthor,
+        bookIsbn: issueData.bookIsbn,
+        studentId: issueData.studentId,
+        studentName: issueData.studentName,
+        studentEmail: issueData.studentEmail,
+        department: issueData.department,
+        issueDate: today.toISOString().split('T')[0],
+        dueDate: dueDate.toISOString().split('T')[0],
+        status: "issued",
+        fine: 0,
+        renewalCount: 0
+    };
+
+    const issued = getLocalData(storageKeys.issuedBooks);
+    issued.push(newIssue);
+    saveLocalData(storageKeys.issuedBooks, issued);
+
+    // Decrement available count for the book
+    const books = getLocalData(storageKeys.books);
+    const bIdx = books.findIndex(b => b.id === issueData.bookId);
+    if (bIdx !== -1 && books[bIdx].available > 0) {
+        books[bIdx].available -= 1;
+        saveLocalData(storageKeys.books, books);
+    }
+
+    return newIssue;
+}
+
+export async function renewIssue(issueId) {
+    const issued = getLocalData(storageKeys.issuedBooks);
+    const idx = issued.findIndex(i => i.id === issueId);
+    if (idx !== -1 && issued[idx].renewalCount < 1) {
+        const newDue = new Date();
+        newDue.setDate(newDue.getDate() + 14);
+        issued[idx].dueDate = newDue.toISOString().split('T')[0];
+        issued[idx].renewalCount += 1;
+        issued[idx].fine = 0;
+        saveLocalData(storageKeys.issuedBooks, issued);
+        return issued[idx];
+    }
+    throw new Error("Renewal not allowed.");
+}
+
+/* ==========================================
+   BOOK RETURN OPERATIONS
+   ========================================== */
+
+export async function getReturnedBooks() {
+    return getLocalData(storageKeys.returnedBooks).sort((a,b) => new Date(b.returnDate) - new Date(a.returnDate));
+}
+
+export async function returnBook(issueId) {
+    const issued = getLocalData(storageKeys.issuedBooks);
+    const idx = issued.findIndex(i => i.id === issueId);
+    if (idx === -1) throw new Error("Issue record not found");
+
+    const record = issued[idx];
+    const today = new Date();
+    const due = new Date(record.dueDate);
+    let fine = 0;
+    if (today > due) {
+        const diffDays = Math.ceil((today - due) / (1000 * 60 * 60 * 24));
+        fine = diffDays * 2; // ₹2 per day
+    }
+
+    const returnRecord = {
+        ...record,
+        id: "RT" + Date.now(),
+        issueId: record.id,
+        returnDate: today.toISOString().split('T')[0],
+        fine,
+        status: "returned"
+    };
+
+    // Save to returned collection
+    const returned = getLocalData(storageKeys.returnedBooks);
+    returned.push(returnRecord);
+    saveLocalData(storageKeys.returnedBooks, returned);
+
+    // Remove from issued collection
+    issued.splice(idx, 1);
+    saveLocalData(storageKeys.issuedBooks, issued);
+
+    // Restore available count for the book
+    const books = getLocalData(storageKeys.books);
+    const bIdx = books.findIndex(b => b.id === record.bookId);
+    if (bIdx !== -1) {
+        books[bIdx].available = Math.min(books[bIdx].available + 1, books[bIdx].quantity);
+        saveLocalData(storageKeys.books, books);
+    }
+
+    return returnRecord;
+}
+
+export async function calculateFine(issueId) {
+    const issued = getLocalData(storageKeys.issuedBooks);
+    const record = issued.find(i => i.id === issueId);
+    if (!record) return 0;
+    const today = new Date();
+    const due = new Date(record.dueDate);
+    if (today <= due) return 0;
+    return Math.ceil((today - due) / (1000 * 60 * 60 * 24)) * 2;
 }

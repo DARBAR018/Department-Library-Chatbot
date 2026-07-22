@@ -62,7 +62,12 @@ function injectCommonLayouts() {
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end glass-card p-2" aria-labelledby="userMenu" style="border-radius:12px;">
                         <li><a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-color" href="dashboard.html"><span class="material-icons text-primary">dashboard</span> Dashboard</a></li>
-                        ${user.role === 'admin' ? `<li><a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-color" href="admin.html"><span class="material-icons text-warning">admin_panel_settings</span> Admin Panel</a></li>` : ''}
+                        ${user.role === 'admin' ? `
+                        <li><a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-color" href="admin.html"><span class="material-icons text-warning">admin_panel_settings</span> Admin Panel</a></li>
+                        <li><a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-color" href="students.html"><span class="material-icons text-info">school</span> Students</a></li>
+                        <li><a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-color" href="issue.html"><span class="material-icons text-success">swap_horiz</span> Issue / Return</a></li>
+                        <li><a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-color" href="reports.html"><span class="material-icons text-danger">assessment</span> Reports</a></li>
+                        ` : ''}
                         <li><hr class="dropdown-divider"></li>
                         <li><button class="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-danger" id="nav-logout-btn"><span class="material-icons">logout</span> Logout</button></li>
                     </ul>
@@ -341,7 +346,10 @@ function buildBreadcrumbs() {
         "ebooks.html": "Digital E-Books Library",
         "about.html": "About Library",
         "contact.html": "Contact & Support",
-        "admin.html": "Library Administration"
+        "admin.html": "Library Administration",
+        "students.html": "Student Management",
+        "issue.html": "Book Issue & Return",
+        "reports.html": "Library Reports"
     };
     
     const title = pageTitles[path] || "Details";
