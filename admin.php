@@ -1,3 +1,7 @@
+<?php
+session_start();
+include "php/db.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -99,6 +103,16 @@
                     </button>
                     <button class="w-100 border-0 text-start admin-nav-link" data-target="sec-faqs">
                         <span class="material-icons">smart_toy</span> Chatbot FAQs
+                    </button>
+                    <hr style="border-color: var(--card-border); margin: 10px 8px;">
+                    <button class="w-100 border-0 text-start admin-nav-link" data-target="sec-students">
+                        <span class="material-icons">school</span> Students
+                    </button>
+                    <button class="w-100 border-0 text-start admin-nav-link" data-target="sec-issue">
+                        <span class="material-icons">swap_horiz</span> Issue / Return
+                    </button>
+                    <button class="w-100 border-0 text-start admin-nav-link" data-target="sec-reports">
+                        <span class="material-icons">assessment</span> Reports
                     </button>
                 </div>
             </div>
@@ -317,6 +331,107 @@
                                     <!-- Dynamic rows -->
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION: STUDENT MANAGEMENT (quick view + link) -->
+                <div id="sec-students" class="admin-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-800 text-color mb-0">Student Management</h3>
+                        <a href="students.html" class="btn btn-primary-custom d-flex align-items-center gap-1">
+                            <span class="material-icons fs-18">open_in_new</span> Open Full Page
+                        </a>
+                    </div>
+                    <div class="row g-3 mb-4" id="admin-student-stats">
+                        <!-- Loaded dynamically -->
+                    </div>
+                    <div class="glass-card p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-700 mb-0">Recent Students</h5>
+                            <input type="text" id="admin-student-search" class="form-control form-control-custom" placeholder="Search..." style="max-width:220px;">
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table custom-table mb-0 align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Student</th><th>Enrollment</th><th>Dept</th><th>Semester</th><th>Email</th><th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-students-tbody">
+                                    <tr><td colspan="6" class="text-center py-3"><a href="students.html" class="text-primary fw-600">Open Student Management page →</a></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION: ISSUE / RETURN (quick view + link) -->
+                <div id="sec-issue" class="admin-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-800 text-color mb-0">Book Issue & Return</h3>
+                        <a href="issue.html" class="btn btn-primary-custom d-flex align-items-center gap-1">
+                            <span class="material-icons fs-18">open_in_new</span> Open Full Page
+                        </a>
+                    </div>
+                    <div class="row g-3 mb-4" id="admin-issue-stats">
+                        <!-- Loaded dynamically -->
+                    </div>
+                    <div class="glass-card p-4">
+                        <h5 class="fw-700 mb-3">Active Issue Records</h5>
+                        <div class="table-responsive">
+                            <table class="table custom-table mb-0 align-middle">
+                                <thead>
+                                    <tr><th>Book</th><th>Student</th><th>Issue Date</th><th>Due Date</th><th>Fine</th><th>Status</th></tr>
+                                </thead>
+                                <tbody id="admin-issue-tbody">
+                                    <tr><td colspan="6" class="text-center py-3"><a href="issue.html" class="text-primary fw-600">Open Issue Management page →</a></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION: REPORTS (quick view + link) -->
+                <div id="sec-reports" class="admin-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-800 text-color mb-0">Library Reports</h3>
+                        <a href="reports.html" class="btn btn-primary-custom d-flex align-items-center gap-1">
+                            <span class="material-icons fs-18">open_in_new</span> Open Full Reports
+                        </a>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-md-6 col-lg-4">
+                            <div class="glass-card p-4 text-center">
+                                <span class="material-icons text-primary" style="font-size:40px;">menu_book</span>
+                                <h5 class="fw-700 mt-2">Books Report</h5>
+                                <p class="text-muted fs-13">Total catalog, availability, department-wise breakdown.</p>
+                                <a href="reports.html" class="btn btn-primary-custom btn-sm">View Report</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="glass-card p-4 text-center">
+                                <span class="material-icons text-success" style="font-size:40px;">book_online</span>
+                                <h5 class="fw-700 mt-2">Issue & Return</h5>
+                                <p class="text-muted fs-13">Active issues, overdue books, and return history.</p>
+                                <a href="reports.html" class="btn btn-primary-custom btn-sm">View Report</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="glass-card p-4 text-center">
+                                <span class="material-icons text-warning" style="font-size:40px;">currency_rupee</span>
+                                <h5 class="fw-700 mt-2">Fine Report</h5>
+                                <p class="text-muted fs-13">Pending and collected fine amounts with student details.</p>
+                                <a href="reports.html" class="btn btn-primary-custom btn-sm">View Report</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="glass-card p-4 text-center">
+                                <span class="material-icons text-info" style="font-size:40px;">school</span>
+                                <h5 class="fw-700 mt-2">Student Report</h5>
+                                <p class="text-muted fs-13">All registered students, department-wise data.</p>
+                                <a href="reports.html" class="btn btn-primary-custom btn-sm">View Report</a>
+                            </div>
                         </div>
                     </div>
                 </div>

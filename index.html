@@ -48,9 +48,9 @@
 
                     <div class="d-flex flex-wrap gap-2 align-items-center">
                         <span class="fs-12 text-muted fw-600">Quick Searches:</span>
-                        <a href="books.html?query=Data" class="badge bg-light text-muted px-3 py-2 rounded-pill fs-11" style="text-decoration:none;">Data Structures</a>
-                        <a href="books.html?query=Tanenbaum" class="badge bg-light text-muted px-3 py-2 rounded-pill fs-11" style="text-decoration:none;">Tanenbaum</a>
-                        <a href="books.html?query=Algorithms" class="badge bg-light text-muted px-3 py-2 rounded-pill fs-11" style="text-decoration:none;">Algorithms</a>
+                        <a href="books.php?query=Data" class="badge bg-light text-muted px-3 py-2 rounded-pill fs-11" style="text-decoration:none;">Data Structures</a>
+                        <a href="books.php?query=Tanenbaum" class="badge bg-light text-muted px-3 py-2 rounded-pill fs-11" style="text-decoration:none;">Tanenbaum</a>
+                        <a href="books.php?query=Algorithms" class="badge bg-light text-muted px-3 py-2 rounded-pill fs-11" style="text-decoration:none;">Algorithms</a>
                     </div>
                 </div>
                 <div class="col-lg-6 text-center" data-aos="zoom-in" data-aos-delay="200">
@@ -74,7 +74,7 @@
             </div>
             <div class="row g-4">
                 <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
-                    <div class="glass-card quick-access-card" onclick="window.location.href='books.html'">
+                    <div class="glass-card quick-access-card" onclick="window.location.href='books.php'">
                         <div class="quick-icon-box">
                             <span class="material-icons">menu_book</span>
                         </div>
@@ -92,7 +92,7 @@
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
-                    <div class="glass-card quick-access-card" onclick="window.location.href='ebooks.html'">
+                    <div class="glass-card quick-access-card" onclick="window.location.href='ebook.php'">
                         <div class="quick-icon-box">
                             <span class="material-icons">tablet_mac</span>
                         </div>
@@ -121,7 +121,7 @@
                     <span class="badge bg-primary text-white px-3 py-2 rounded-pill fw-600 mb-3 fs-12 uppercase">Statistics Dashboard</span>
                     <h2 class="fw-800">Library Holdings & Activities</h2>
                     <p class="text-muted">A dynamic look at our department libraries' size, user engagements, and issued resources. Stats update instantly as records are modified.</p>
-                    <a href="books.html" class="btn btn-primary-custom mt-2 d-inline-flex align-items-center gap-2">
+                    <a href="books.php" class="btn btn-primary-custom mt-2 d-inline-flex align-items-center gap-2">
                         Browse Full Stack <span class="material-icons">chevron_right</span>
                     </a>
                 </div>
@@ -277,7 +277,7 @@
             // Bind Search actions
             const triggerSearch = () => {
                 const query = document.getElementById("hero-search-input").value.trim();
-                window.location.href = `books.html?query=${encodeURIComponent(query)}`;
+                window.location.href = `books.php?query=${encodeURIComponent(query)}`;
             };
             
             document.getElementById("hero-search-btn").addEventListener("click", triggerSearch);

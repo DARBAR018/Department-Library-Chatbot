@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Generate and export library reports including books, issues, returns, fines, and students.">
+    <title>Reports | Library Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .report-tab-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+        .report-tab-btn {
+            padding: 10px 20px; border-radius: var(--border-radius-sm);
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            color: var(--text-muted); font-weight: 600; font-size: 13px;
+            cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 7px;
+        }
+        .report-tab-btn.active, .report-tab-btn:hover {
+            background: var(--primary-color); color: #fff; border-color: var(--primary-color);
+        }
+        .report-panel { display: none; }
+        .report-panel.active { display: block; animation: fadeInUp 0.35s ease; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .report-action-bar {
+            display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+            padding: 16px 20px; background: var(--primary-light);
+            border-radius: var(--border-radius-sm); margin-bottom: 20px;
+        }
+        .report-kpi {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: var(--border-radius-sm); padding: 16px 20px;
+            display: flex; align-items: center; gap: 14px; flex: 1; min-width: 160px;
+        }
+        .report-kpi-icon { font-size: 32px; }
+        .report-kpi-value { font-size: 22px; font-weight: 800; }
+        .report-kpi-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+
+        /* Print styles */
+        @media print {
+            header, footer, .report-tab-nav, .report-action-bar, #breadcrumbs-container, .btn, nav { display: none !important; }
+            .report-panel { display: block !important; }
+            body { background: white !important; color: black !important; }
+            .glass-card { box-shadow: none !important; border: 1px solid #ddd !important; }
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <div id="loading-screen">
+        <div class="spinner-custom"></div>
+        <div class="logo-loading">DEPT LIBRARY</div>
+        <p class="text-muted mt-2 fs-14">Generating reports...</p>
+    </div>
+
+    <header></header>
+
+    <main class="container my-5 pt-5 flex-grow-1">
+        <div id="breadcrumbs-container"></div>
+
+        <!-- Page Title -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 mt-3" data-aos="fade-up">
+            <div>
+                <h2 class="fw-800 mb-1 d-flex align-items-center gap-2">
+                    <span class="material-icons text-primary" style="font-size:32px;">assessment</span>
+                    Library Reports
+                </h2>
+                <p class="text-muted fs-14 mb-0">Generate, view, and export comprehensive library data reports</p>
+            </div>
+        </div>
+
+        <!-- Report Tab Navigation -->
+        <div class="report-tab-nav" data-aos="fade-up" data-aos-delay="100">
+            <button class="report-tab-btn active" data-rtab="rpt-books">
+                <span class="material-icons fs-18">menu_book</span> Books Report
+            </button>
+            <button class="report-tab-btn" data-rtab="rpt-issues">
+                <span class="material-icons fs-18">book_online</span> Issue Report
+            </button>
+            <button class="report-tab-btn" data-rtab="rpt-returns">
+                <span class="material-icons fs-18">assignment_return</span> Return Report
+            </button>
+            <button class="report-tab-btn" data-rtab="rpt-fines">
+                <span class="material-icons fs-18">currency_rupee</span> Fine Report
+            </button>
+            <button class="report-tab-btn" data-rtab="rpt-students">
+                <span class="material-icons fs-18">school</span> Student Report
+            </button>
+        </div>
+
+        <!-- ===== REPORT: BOOKS ===== -->
+        <div id="rpt-books" class="report-panel active" data-aos="fade-up" data-aos-delay="150">
+            <div class="report-action-bar">
+                <span class="fw-700 fs-14 me-auto"><span class="material-icons align-middle text-primary">menu_book</span> Book Catalog Report</span>
+                <button class="btn btn-primary-custom btn-sm d-flex align-items-center gap-1" onclick="exportCSV('books')">
+                    <span class="material-icons fs-16">download</span> Export CSV
+                </button>
+                <button class="btn btn-outline-custom btn-sm d-flex align-items-center gap-1" onclick="window.print()">
+                    <span class="material-icons fs-16">print</span> Print
+                </button>
+            </div>
+            <div class="d-flex flex-wrap gap-3 mb-4" id="books-kpis"></div>
+            <div class="glass-card p-4">
+                <div class="table-responsive">
+                    <table class="table custom-table align-middle mb-0 fs-13" id="books-report-table">
+                        <thead>
+                            <tr>
+                                <th>#</th><th>Title</th><th>Author</th><th>ISBN</th>
+                                <th>Dept</th><th>Sem</th><th>Total</th><th>Available</th><th>Issued</th><th>Location</th>
+                            </tr>
+                        </thead>
+                        <tbody id="books-report-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== REPORT: ISSUES ===== -->
+        <div id="rpt-issues" class="report-panel" data-aos="fade-up">
+            <div class="report-action-bar">
+                <span class="fw-700 fs-14 me-auto"><span class="material-icons align-middle text-primary">book_online</span> Active Issues Report</span>
+                <button class="btn btn-primary-custom btn-sm d-flex align-items-center gap-1" onclick="exportCSV('issues')">
+                    <span class="material-icons fs-16">download</span> Export CSV
+                </button>
+                <button class="btn btn-outline-custom btn-sm d-flex align-items-center gap-1" onclick="window.print()">
+                    <span class="material-icons fs-16">print</span> Print
+                </button>
+            </div>
+            <div class="d-flex flex-wrap gap-3 mb-4" id="issues-kpis"></div>
+            <div class="glass-card p-4">
+                <div class="table-responsive">
+                    <table class="table custom-table align-middle mb-0 fs-13">
+                        <thead>
+                            <tr>
+                                <th>#</th><th>Book Title</th><th>Student</th><th>Dept</th>
+                                <th>Issue Date</th><th>Due Date</th><th>Fine (₹)</th><th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="issues-report-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== REPORT: RETURNS ===== -->
+        <div id="rpt-returns" class="report-panel" data-aos="fade-up">
+            <div class="report-action-bar">
+                <span class="fw-700 fs-14 me-auto"><span class="material-icons align-middle text-primary">assignment_return</span> Return History Report</span>
+                <button class="btn btn-primary-custom btn-sm d-flex align-items-center gap-1" onclick="exportCSV('returns')">
+                    <span class="material-icons fs-16">download</span> Export CSV
+                </button>
+                <button class="btn btn-outline-custom btn-sm d-flex align-items-center gap-1" onclick="window.print()">
+                    <span class="material-icons fs-16">print</span> Print
+                </button>
+            </div>
+            <div class="d-flex flex-wrap gap-3 mb-4" id="returns-kpis"></div>
+            <div class="glass-card p-4">
+                <div class="table-responsive">
+                    <table class="table custom-table align-middle mb-0 fs-13">
+                        <thead>
+                            <tr>
+                                <th>#</th><th>Book Title</th><th>Student</th><th>Issue Date</th>
+                                <th>Due Date</th><th>Return Date</th><th>Fine (₹)</th><th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="returns-report-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== REPORT: FINES ===== -->
+        <div id="rpt-fines" class="report-panel" data-aos="fade-up">
+            <div class="report-action-bar">
+                <span class="fw-700 fs-14 me-auto"><span class="material-icons align-middle text-primary">currency_rupee</span> Fine Collection Report</span>
+                <button class="btn btn-primary-custom btn-sm d-flex align-items-center gap-1" onclick="exportCSV('fines')">
+                    <span class="material-icons fs-16">download</span> Export CSV
+                </button>
+                <button class="btn btn-outline-custom btn-sm d-flex align-items-center gap-1" onclick="window.print()">
+                    <span class="material-icons fs-16">print</span> Print
+                </button>
+            </div>
+            <div class="d-flex flex-wrap gap-3 mb-4" id="fines-kpis"></div>
+            <div class="glass-card p-4">
+                <div class="table-responsive">
+                    <table class="table custom-table align-middle mb-0 fs-13">
+                        <thead>
+                            <tr>
+                                <th>#</th><th>Student</th><th>Book</th><th>Due Date</th>
+                                <th>Return Date</th><th>Days Late</th><th>Fine (₹)</th><th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fines-report-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== REPORT: STUDENTS ===== -->
+        <div id="rpt-students" class="report-panel" data-aos="fade-up">
+            <div class="report-action-bar">
+                <span class="fw-700 fs-14 me-auto"><span class="material-icons align-middle text-primary">school</span> Student Report</span>
+                <button class="btn btn-primary-custom btn-sm d-flex align-items-center gap-1" onclick="exportCSV('students')">
+                    <span class="material-icons fs-16">download</span> Export CSV
+                </button>
+                <button class="btn btn-outline-custom btn-sm d-flex align-items-center gap-1" onclick="window.print()">
+                    <span class="material-icons fs-16">print</span> Print
+                </button>
+            </div>
+            <div class="d-flex flex-wrap gap-3 mb-4" id="students-kpis"></div>
+            <div class="glass-card p-4">
+                <div class="table-responsive">
+                    <table class="table custom-table align-middle mb-0 fs-13">
+                        <thead>
+                            <tr>
+                                <th>#</th><th>Name</th><th>Enrollment</th><th>Dept</th>
+                                <th>Sem</th><th>Email</th><th>Phone</th><th>Books Issued</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-report-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script type="module" src="js/app.js"></script>
+    <script type="module">
+        import { enforceProtectedRoute } from "./js/auth.js";
+        import { getBooks, getStudents, getIssuedBooks, getReturnedBooks } from "./js/db.js";
+
+        enforceProtectedRoute("admin");
+
+        let allBooks = [], allStudents = [], allIssued = [], allReturned = [];
+        const DEPT = { CO: "Computer", IF: "Info Tech", EE: "Electrical", ME: "Mechanical", CE: "Civil" };
+        const today = new Date();
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            [allBooks, allStudents, allIssued, allReturned] = await Promise.all([
+                getBooks(), getStudents(), getIssuedBooks(), getReturnedBooks()
+            ]);
+            setupTabs();
+            renderBooksReport();
+            renderIssuesReport();
+            renderReturnsReport();
+            renderFinesReport();
+            renderStudentsReport();
+        });
+
+        function setupTabs() {
+            document.querySelectorAll(".report-tab-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    document.querySelectorAll(".report-tab-btn").forEach(b => b.classList.remove("active"));
+                    document.querySelectorAll(".report-panel").forEach(p => p.classList.remove("active"));
+                    btn.classList.add("active");
+                    document.getElementById(btn.dataset.rtab).classList.add("active");
+                });
+            });
+        }
+
+        function makeKPI(icon, value, label, color) {
+            return `<div class="report-kpi">
+                <span class="material-icons report-kpi-icon" style="color:${color}">${icon}</span>
+                <div>
+                    <div class="report-kpi-value" style="color:${color}">${value}</div>
+                    <div class="report-kpi-label">${label}</div>
+                </div>
+            </div>`;
+        }
+
+        function renderBooksReport() {
+            const totalVols = allBooks.reduce((s, b) => s + b.quantity, 0);
+            const totalAvail = allBooks.reduce((s, b) => s + b.available, 0);
+            const totalIssued = totalVols - totalAvail;
+            document.getElementById("books-kpis").innerHTML =
+                makeKPI("auto_stories", allBooks.length, "Total Titles", "#0b5ed7") +
+                makeKPI("inventory_2", totalVols, "Total Volumes", "#06b6d4") +
+                makeKPI("check_circle", totalAvail, "Available", "#22c55e") +
+                makeKPI("bookmark", totalIssued, "Issued", "#f59e0b");
+
+            document.getElementById("books-report-body").innerHTML = allBooks.map((b, i) => `
+                <tr>
+                    <td class="text-muted">${i + 1}</td>
+                    <td class="fw-700">${b.title}</td>
+                    <td>${b.author}</td>
+                    <td><code>${b.isbn}</code></td>
+                    <td><span class="badge bg-primary rounded-pill">${b.department}</span></td>
+                    <td>Sem ${b.semester}</td>
+                    <td>${b.quantity}</td>
+                    <td><span class="text-success fw-700">${b.available}</span></td>
+                    <td><span class="text-warning fw-700">${b.quantity - b.available}</span></td>
+                    <td class="text-muted fs-12">${b.location}</td>
+                </tr>`).join("");
+        }
+
+        function renderIssuesReport() {
+            const overdue = allIssued.filter(i => new Date(i.dueDate) < today);
+            const totalFine = allIssued.reduce((s, i) => {
+                const due = new Date(i.dueDate); return s + (today > due ? Math.ceil((today - due) / 86400000) * 2 : 0);
+            }, 0);
+            document.getElementById("issues-kpis").innerHTML =
+                makeKPI("book_online", allIssued.length, "Total Issued", "#0b5ed7") +
+                makeKPI("schedule", overdue.length, "Overdue", "#ef4444") +
+                makeKPI("currency_rupee", "₹" + totalFine, "Fines Accumulated", "#f59e0b");
+
+            document.getElementById("issues-report-body").innerHTML = allIssued.map((i, idx) => {
+                const due = new Date(i.dueDate);
+                const isOverdue = today > due;
+                const fine = isOverdue ? Math.ceil((today - due) / 86400000) * 2 : 0;
+                return `<tr>
+                    <td class="text-muted">${idx + 1}</td>
+                    <td class="fw-700">${i.bookTitle}</td>
+                    <td>${i.studentName}</td>
+                    <td><span class="badge bg-secondary rounded-pill">${i.department}</span></td>
+                    <td>${i.issueDate}</td>
+                    <td class="${isOverdue ? 'text-danger fw-700' : ''}">${i.dueDate}</td>
+                    <td>${fine > 0 ? `<span style="color:#ef4444;font-weight:700;">₹${fine}</span>` : "₹0"}</td>
+                    <td>${isOverdue ? '<span class="badge bg-danger">Overdue</span>' : '<span class="badge bg-success">Active</span>'}</td>
+                </tr>`;
+            }).join("");
+        }
+
+        function renderReturnsReport() {
+            const totalFineCollected = allReturned.reduce((s, r) => s + (r.fine || 0), 0);
+            const onTime = allReturned.filter(r => r.fine === 0).length;
+            document.getElementById("returns-kpis").innerHTML =
+                makeKPI("assignment_return", allReturned.length, "Total Returns", "#22c55e") +
+                makeKPI("check_circle", onTime, "On-Time Returns", "#06b6d4") +
+                makeKPI("currency_rupee", "₹" + totalFineCollected, "Fines Collected", "#f59e0b");
+
+            document.getElementById("returns-report-body").innerHTML = allReturned.map((r, i) => `
+                <tr>
+                    <td class="text-muted">${i + 1}</td>
+                    <td class="fw-700">${r.bookTitle}</td>
+                    <td>${r.studentName}</td>
+                    <td>${r.issueDate}</td>
+                    <td>${r.dueDate}</td>
+                    <td class="text-success fw-700">${r.returnDate}</td>
+                    <td>${r.fine > 0 ? `<span style="color:#ef4444;font-weight:700;">₹${r.fine}</span>` : "₹0"}</td>
+                    <td><span class="badge bg-secondary">Returned</span></td>
+                </tr>`).join("");
+        }
+
+        function renderFinesReport() {
+            // Combine overdue issues + returned with fines
+            const overdueIssues = allIssued.filter(i => new Date(i.dueDate) < today);
+            const fineReturns = allReturned.filter(r => r.fine > 0);
+
+            const totalPending = overdueIssues.reduce((s, i) => {
+                return s + Math.ceil((today - new Date(i.dueDate)) / 86400000) * 2;
+            }, 0);
+            const totalCollected = fineReturns.reduce((s, r) => s + r.fine, 0);
+
+            document.getElementById("fines-kpis").innerHTML =
+                makeKPI("currency_rupee", "₹" + totalPending, "Pending Fines", "#f59e0b") +
+                makeKPI("payments", "₹" + totalCollected, "Fines Collected", "#22c55e") +
+                makeKPI("people", overdueIssues.length, "Students with Dues", "#ef4444");
+
+            let rows = "";
+            let rowIdx = 1;
+
+            overdueIssues.forEach(i => {
+                const daysLate = Math.ceil((today - new Date(i.dueDate)) / 86400000);
+                const fine = daysLate * 2;
+                rows += `<tr>
+                    <td class="text-muted">${rowIdx++}</td>
+                    <td>${i.studentName}</td>
+                    <td>${i.bookTitle}</td>
+                    <td class="text-danger fw-700">${i.dueDate}</td>
+                    <td class="text-muted">Not yet returned</td>
+                    <td class="text-danger fw-700">${daysLate}</td>
+                    <td class="fw-700" style="color:#ef4444;">₹${fine}</td>
+                    <td><span class="badge bg-danger">Pending</span></td>
+                </tr>`;
+            });
+
+            fineReturns.forEach(r => {
+                const daysLate = Math.ceil((new Date(r.returnDate) - new Date(r.dueDate)) / 86400000);
+                rows += `<tr>
+                    <td class="text-muted">${rowIdx++}</td>
+                    <td>${r.studentName}</td>
+                    <td>${r.bookTitle}</td>
+                    <td>${r.dueDate}</td>
+                    <td class="text-success fw-700">${r.returnDate}</td>
+                    <td>${daysLate}</td>
+                    <td class="fw-700" style="color:#22c55e;">₹${r.fine}</td>
+                    <td><span class="badge bg-success">Collected</span></td>
+                </tr>`;
+            });
+
+            document.getElementById("fines-report-body").innerHTML = rows || `<tr><td colspan="8" class="text-center text-muted py-4">No fine records found.</td></tr>`;
+        }
+
+        function renderStudentsReport() {
+            document.getElementById("students-kpis").innerHTML =
+                makeKPI("group", allStudents.length, "Total Students", "#0b5ed7") +
+                makeKPI("book_online", allIssued.length, "Books Currently Issued", "#f59e0b") +
+                makeKPI("apartment", "5", "Departments", "#06b6d4");
+
+            document.getElementById("students-report-body").innerHTML = allStudents.map((s, i) => {
+                const issuedCount = allIssued.filter(iss => iss.studentId === s.id).length;
+                return `<tr>
+                    <td class="text-muted">${i + 1}</td>
+                    <td class="fw-700">${s.name}</td>
+                    <td><code>${s.enrollmentNo || "—"}</code></td>
+                    <td><span class="badge bg-primary rounded-pill">${DEPT[s.department] || s.department}</span></td>
+                    <td>Sem ${s.semester}</td>
+                    <td>${s.email}</td>
+                    <td>${s.phone || "—"}</td>
+                    <td><span class="badge ${issuedCount > 0 ? 'bg-success' : 'bg-secondary'} rounded-pill">${issuedCount}</span></td>
+                </tr>`;
+            }).join("");
+        }
+
+        // CSV Export function — accessible globally from onclick attributes
+        window.exportCSV = function(type) {
+            let headers, rows, filename;
+            switch(type) {
+                case "books":
+                    headers = ["#","Title","Author","ISBN","Department","Semester","Total","Available","Issued","Location"];
+                    rows = allBooks.map((b, i) => [i+1, `"${b.title}"`, `"${b.author}"`, b.isbn, b.department, b.semester, b.quantity, b.available, b.quantity - b.available, b.location]);
+                    filename = "books_report";
+                    break;
+                case "issues":
+                    headers = ["#","Book Title","Student","Department","Issue Date","Due Date","Fine (Rs.)","Status"];
+                    rows = allIssued.map((i, idx) => {
+                        const due = new Date(i.dueDate); const fine = today > due ? Math.ceil((today-due)/86400000)*2 : 0;
+                        return [idx+1, `"${i.bookTitle}"`, `"${i.studentName}"`, i.department, i.issueDate, i.dueDate, fine, today > due ? "Overdue" : "Active"];
+                    });
+                    filename = "issue_report";
+                    break;
+                case "returns":
+                    headers = ["#","Book Title","Student","Issue Date","Due Date","Return Date","Fine (Rs.)","Status"];
+                    rows = allReturned.map((r, i) => [i+1, `"${r.bookTitle}"`, `"${r.studentName}"`, r.issueDate, r.dueDate, r.returnDate, r.fine, "Returned"]);
+                    filename = "return_report";
+                    break;
+                case "fines":
+                    headers = ["#","Student","Book","Due Date","Return Date","Days Late","Fine (Rs.)","Type"];
+                    rows = [];
+                    let ri = 1;
+                    allIssued.filter(i => new Date(i.dueDate) < today).forEach(i => {
+                        const d = Math.ceil((today-new Date(i.dueDate))/86400000);
+                        rows.push([ri++, `"${i.studentName}"`, `"${i.bookTitle}"`, i.dueDate, "Pending", d, d*2, "Pending"]);
+                    });
+                    allReturned.filter(r => r.fine > 0).forEach(r => {
+                        const d = Math.ceil((new Date(r.returnDate)-new Date(r.dueDate))/86400000);
+                        rows.push([ri++, `"${r.studentName}"`, `"${r.bookTitle}"`, r.dueDate, r.returnDate, d, r.fine, "Collected"]);
+                    });
+                    filename = "fine_report";
+                    break;
+                case "students":
+                    headers = ["#","Name","Enrollment","Department","Semester","Email","Phone","Books Issued"];
+                    rows = allStudents.map((s, i) => {
+                        const cnt = allIssued.filter(iss => iss.studentId === s.id).length;
+                        return [i+1, `"${s.name}"`, s.enrollmentNo || "", DEPT[s.department]||s.department, s.semester, s.email, s.phone||"", cnt];
+                    });
+                    filename = "student_report";
+                    break;
+            }
+            const csv = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+            const blob = new Blob([csv], { type: "text/csv" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `${filename}_${new Date().toISOString().split("T")[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            window.showToast("Report Exported", `${filename}.csv downloaded successfully.`, "success");
+        };
+    </script>
+</body>
+</html>

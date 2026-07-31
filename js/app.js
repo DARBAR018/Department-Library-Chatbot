@@ -50,7 +50,7 @@ function injectCommonLayouts() {
     // --- NAVBAR INJECTION ---
     const headerEl = document.querySelector("header");
     if (headerEl) {
-        let authButtons = `<a href="login.html" class="btn btn-primary-custom d-flex align-items-center gap-2">
+        let authButtons = `<a href="login.php" class="btn btn-primary-custom d-flex align-items-center gap-2">
             <span class="material-icons">login</span> Login
         </a>`;
         
@@ -62,7 +62,12 @@ function injectCommonLayouts() {
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end glass-card p-2" aria-labelledby="userMenu" style="border-radius:12px;">
                         <li><a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-color" href="dashboard.html"><span class="material-icons text-primary">dashboard</span> Dashboard</a></li>
-                        ${user.role === 'admin' ? `<li><a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-color" href="admin.html"><span class="material-icons text-warning">admin_panel_settings</span> Admin Panel</a></li>` : ''}
+                        ${user.role === 'admin' ? `
+                        <li><a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-color" href="admin.html"><span class="material-icons text-warning">admin_panel_settings</span> Admin Panel</a></li>
+                        <li><a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-color" href="students.html"><span class="material-icons text-info">school</span> Students</a></li>
+                        <li><a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-color" href="issue.html"><span class="material-icons text-success">swap_horiz</span> Issue / Return</a></li>
+                        <li><a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-color" href="reports.html"><span class="material-icons text-danger">assessment</span> Reports</a></li>
+                        ` : ''}
                         <li><hr class="dropdown-divider"></li>
                         <li><button class="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-danger" id="nav-logout-btn"><span class="material-icons">logout</span> Logout</button></li>
                     </ul>
@@ -88,11 +93,11 @@ function injectCommonLayouts() {
                     <div class="collapse navbar-collapse" id="mainNavbar">
                         <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
                             <li class="nav-item"><a class="nav-link ${isActive('index.html')}" href="index.html">Home</a></li>
-                            <li class="nav-item"><a class="nav-link ${isActive('books.html')}" href="books.html">Books</a></li>
+                            <li class="nav-item"><a class="nav-link ${isActive('books.php')}" href="books.php">Books</a></li>
                             <li class="nav-item"><a class="nav-link ${isActive('notice.html')}" href="notice.html">Notices</a></li>
                             <li class="nav-item"><a class="nav-link ${isActive('faculty.html')}" href="faculty.html">Faculty</a></li>
                             <li class="nav-item"><a class="nav-link ${isActive('papers.html')}" href="papers.html">Papers</a></li>
-                            <li class="nav-item"><a class="nav-link ${isActive('ebooks.html')}" href="ebooks.html">E-Books</a></li>
+                            <li class="nav-item"><a class="nav-link ${isActive('ebooks.php')}" href="ebooks.php">E-Books</a></li>
                             <li class="nav-item"><a class="nav-link ${isActive('about.html')}" href="about.html">About</a></li>
                             <li class="nav-item"><a class="nav-link ${isActive('contact.html')}" href="contact.html">Contact</a></li>
                         </ul>
@@ -132,10 +137,10 @@ function injectCommonLayouts() {
                     <div class="col-6 col-sm-3 col-lg-2">
                         <h6 class="fw-700 mb-3">Quick Links</h6>
                         <ul class="list-unstyled d-flex flex-column gap-2 fs-14">
-                            <li><a href="books.html" class="text-muted hover-link">Browse Books</a></li>
+                            <li><a href="books.php" class="text-muted hover-link">Browse Books</a></li>
                             <li><a href="notice.html" class="text-muted hover-link">Notice Board</a></li>
                             <li><a href="papers.html" class="text-muted hover-link">GTU Papers</a></li>
-                            <li><a href="ebooks.html" class="text-muted hover-link">E-Books</a></li>
+                            <li><a href="ebooks.php" class="text-muted hover-link">E-Books</a></li>
                         </ul>
                     </div>
                     <div class="col-6 col-sm-3 col-lg-2">
@@ -182,7 +187,7 @@ function injectCommonLayouts() {
 
     // --- CHATBOT WIDGET INJECTION ---
     // Inject only if not in login or error pages where we might want to disable it
-    if (!currentPath.includes("login.html") && !currentPath.includes("404.html") && !document.querySelector(".chatbot-trigger")) {
+    if (!currentPath.includes("login.php") && !currentPath.includes("404.html") && !document.querySelector(".chatbot-trigger")) {
         injectChatbotWidget();
     }
 }
@@ -332,16 +337,19 @@ function buildBreadcrumbs() {
     }
     
     const pageTitles = {
-        "login.html": "Account Access",
+        "login.php": "Account Access",
         "dashboard.html": "Student Dashboard",
-        "books.html": "Book Catalog",
+        "books.php": "Book Catalog",
         "notice.html": "Notice Board",
         "faculty.html": "Faculty Directory",
         "papers.html": "Previous Exam Papers",
-        "ebooks.html": "Digital E-Books Library",
+        "ebooks.php": "Digital E-Books Library",
         "about.html": "About Library",
         "contact.html": "Contact & Support",
-        "admin.html": "Library Administration"
+        "admin.html": "Library Administration",
+        "students.html": "Student Management",
+        "issue.html": "Book Issue & Return",
+        "reports.html": "Library Reports"
     };
     
     const title = pageTitles[path] || "Details";

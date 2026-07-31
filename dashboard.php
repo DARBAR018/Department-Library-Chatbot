@@ -40,13 +40,29 @@
                 <p class="text-muted fs-14 mb-0">Role: <span id="dash-user-role" class="text-primary fw-600 uppercase">Student</span> | Email: <span id="dash-user-email">email@college.edu</span></p>
             </div>
             <div class="mt-2 mt-md-0 d-flex gap-2">
-                <a href="books.html" class="btn btn-primary-custom d-flex align-items-center gap-1"><span class="material-icons">search</span> Search Books</a>
+                <a href="books.php" class="btn btn-primary-custom d-flex align-items-center gap-1"><span class="material-icons">search</span> Search Books</a>
                 <a href="papers.html" class="btn btn-cyan-custom d-flex align-items-center gap-1"><span class="material-icons">download</span> Get Papers</a>
             </div>
         </div>
 
-        <!-- Stats Section -->
-        <div class="row g-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+        <!-- Stats Section - 8 Cards -->
+        <div class="row g-3 mb-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="col-6 col-md-3">
+                <div class="glass-card p-4 h-100 position-relative overflow-hidden border-start border-4 border-primary">
+                    <span class="material-icons text-primary position-absolute" style="font-size:48px; right:15px; bottom:15px; opacity:0.1;">auto_stories</span>
+                    <h6 class="text-muted mb-2">Total Books</h6>
+                    <div class="stat-number text-primary" id="dash-total-books">0</div>
+                    <span class="fs-11 text-muted">All volumes</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="glass-card p-4 h-100 position-relative overflow-hidden border-start border-4 border-success">
+                    <span class="material-icons text-success position-absolute" style="font-size:48px; right:15px; bottom:15px; opacity:0.1;">check_circle</span>
+                    <h6 class="text-muted mb-2">Available Books</h6>
+                    <div class="stat-number text-success" id="dash-avail-books">0</div>
+                    <span class="fs-11 text-muted">Ready to borrow</span>
+                </div>
+            </div>
             <div class="col-6 col-md-3">
                 <div class="glass-card p-4 h-100 position-relative overflow-hidden border-start border-4 border-primary">
                     <span class="material-icons text-primary position-absolute" style="font-size:48px; right:15px; bottom:15px; opacity:0.1;">auto_stories</span>
@@ -77,6 +93,22 @@
                     <h6 class="text-muted mb-2">Approved Returns</h6>
                     <div class="stat-number text-success" id="dash-returned-count">0</div>
                     <span class="fs-11 text-muted">All-time count</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="glass-card p-4 h-100 position-relative overflow-hidden border-start border-4 border-info">
+                    <span class="material-icons text-info position-absolute" style="font-size:48px; right:15px; bottom:15px; opacity:0.1;">people</span>
+                    <h6 class="text-muted mb-2">Total Students</h6>
+                    <div class="stat-number text-info" id="dash-total-students">0</div>
+                    <span class="fs-11 text-muted">Registered members</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="glass-card p-4 h-100 position-relative overflow-hidden border-start border-4" style="border-left-color:#ef4444 !important;">
+                    <span class="material-icons position-absolute" style="font-size:48px; right:15px; bottom:15px; opacity:0.1; color:#ef4444;">schedule</span>
+                    <h6 class="text-muted mb-2">Overdue Books</h6>
+                    <div class="stat-number" style="color:#ef4444;" id="dash-overdue-count">0</div>
+                    <span class="fs-11 text-muted">Past due date</span>
                 </div>
             </div>
         </div>

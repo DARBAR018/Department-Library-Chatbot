@@ -253,7 +253,7 @@ export function setupAuthListener(callback) {
 export function enforceProtectedRoute(requiredRole = null) {
     const user = getCurrentUser();
     if (!user) {
-        window.location.href = "login.html?redirect=" + encodeURIComponent(window.location.pathname);
+        window.location.href = "login.php?redirect=" + encodeURIComponent(window.location.pathname);
         return false;
     }
     

@@ -21,13 +21,13 @@ It features a **Dual-Mode Data Layer** that runs entirely client-side using `loc
 ```
 /Department Library Chatbot/
 ├── index.html                  # Homepage (Hero, Stats, Announcements, Info)
-├── login.html                  # Auth Portal (Login, Signup, Reset forms)
+├── login.php                  # Auth Portal (Login, Signup, Reset forms)
 ├── dashboard.html              # Student Dashboard (Borrow history, renewal, Chart)
-├── books.html                  # Book Catalog (Advanced Search, Filters, Reserves)
+├── books.php                  # Book Catalog (Advanced Search, Filters, Reserves)
 ├── notice.html                 # Notice Board (Latest circulars, Exam schedule form)
 ├── faculty.html                # Faculty Directory (Staff list, contacts)
 ├── papers.html                 # Past Papers (Dept/Sem filter, virtual exam sheet preview)
-├── ebooks.html                 # Digital E-Books (Read online previewer, download)
+├── ebooks.php                 # Digital E-Books (Read online previewer, download)
 ├── about.html                  # About Page (Vision, Mission, facilities, timings)
 ├── contact.html                # Contact Page (Form, map placeholder, social links)
 ├── admin.html                  # Admin Dashboard (Analytics, inventory editors)

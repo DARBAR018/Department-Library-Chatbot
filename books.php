@@ -308,7 +308,7 @@
                 // Dismiss modal and redirect to login
                 bootstrap.Modal.getInstance(document.getElementById('bookDetailsModal')).hide();
                 setTimeout(() => {
-                    window.location.href = "login.html?redirect=books.html";
+                    window.location.href = "login.php?redirect=books.php";
                 }, 1200);
                 return;
             }

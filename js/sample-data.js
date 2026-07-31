@@ -363,3 +363,231 @@ export const SAMPLE_FAQS = [
         answer: "A diploma student can issue a maximum of 3 books at any given time for up to 14 days. Faculty members can borrow up to 10 books for a duration of 1 semester."
     }
 ];
+
+/* ==========================================
+   SAMPLE STUDENT DATA
+   ========================================== */
+export const SAMPLE_STUDENTS = [
+    {
+        id: "ST001",
+        name: "Rahul Sharma",
+        enrollmentNo: "2024CO001",
+        department: "CO",
+        semester: 4,
+        email: "rahul.sharma@student.college.edu",
+        phone: "+91 98765 11001",
+        address: "123, Gandhi Nagar, Ahmedabad",
+        createdAt: "2024-07-01T00:00:00.000Z"
+    },
+    {
+        id: "ST002",
+        name: "Priya Patel",
+        enrollmentNo: "2024IF002",
+        department: "IF",
+        semester: 3,
+        email: "priya.patel@student.college.edu",
+        phone: "+91 98765 11002",
+        address: "45, Navrangpura, Ahmedabad",
+        createdAt: "2024-07-01T00:00:00.000Z"
+    },
+    {
+        id: "ST003",
+        name: "Arjun Verma",
+        enrollmentNo: "2024EE003",
+        department: "EE",
+        semester: 5,
+        email: "arjun.verma@student.college.edu",
+        phone: "+91 98765 11003",
+        address: "78, Maninagar, Ahmedabad",
+        createdAt: "2024-07-01T00:00:00.000Z"
+    },
+    {
+        id: "ST004",
+        name: "Sneha Desai",
+        enrollmentNo: "2024ME004",
+        department: "ME",
+        semester: 4,
+        email: "sneha.desai@student.college.edu",
+        phone: "+91 98765 11004",
+        address: "56, Ellisbridge, Ahmedabad",
+        createdAt: "2024-07-01T00:00:00.000Z"
+    },
+    {
+        id: "ST005",
+        name: "Vikram Singh",
+        enrollmentNo: "2024CE005",
+        department: "CE",
+        semester: 3,
+        email: "vikram.singh@student.college.edu",
+        phone: "+91 98765 11005",
+        address: "90, Vastrapur, Ahmedabad",
+        createdAt: "2024-07-01T00:00:00.000Z"
+    },
+    {
+        id: "ST006",
+        name: "Anjali Mehta",
+        enrollmentNo: "2024CO006",
+        department: "CO",
+        semester: 5,
+        email: "anjali.mehta@student.college.edu",
+        phone: "+91 98765 11006",
+        address: "11, Paldi, Ahmedabad",
+        createdAt: "2024-07-02T00:00:00.000Z"
+    },
+    {
+        id: "ST007",
+        name: "Rohan Gupta",
+        enrollmentNo: "2024IF007",
+        department: "IF",
+        semester: 5,
+        email: "rohan.gupta@student.college.edu",
+        phone: "+91 98765 11007",
+        address: "32, Bodakdev, Ahmedabad",
+        createdAt: "2024-07-02T00:00:00.000Z"
+    },
+    {
+        id: "ST008",
+        name: "Kavya Nair",
+        enrollmentNo: "2024EE008",
+        department: "EE",
+        semester: 2,
+        email: "kavya.nair@student.college.edu",
+        phone: "+91 98765 11008",
+        address: "67, Satellite, Ahmedabad",
+        createdAt: "2024-07-03T00:00:00.000Z"
+    },
+    {
+        id: "ST009",
+        name: "Manish Rao",
+        enrollmentNo: "2024ME009",
+        department: "ME",
+        semester: 2,
+        email: "manish.rao@student.college.edu",
+        phone: "+91 98765 11009",
+        address: "14, Thaltej, Ahmedabad",
+        createdAt: "2024-07-03T00:00:00.000Z"
+    },
+    {
+        id: "ST010",
+        name: "Pooja Joshi",
+        enrollmentNo: "2024CE010",
+        department: "CE",
+        semester: 6,
+        email: "pooja.joshi@student.college.edu",
+        phone: "+91 98765 11010",
+        address: "99, Chandkheda, Ahmedabad",
+        createdAt: "2024-07-04T00:00:00.000Z"
+    }
+];
+
+/* ==========================================
+   SAMPLE ISSUED BOOK RECORDS
+   ========================================== */
+export const SAMPLE_ISSUED = [
+    {
+        id: "IS001",
+        bookId: "BK001",
+        bookTitle: "Object Oriented Programming with C++",
+        bookAuthor: "E. Balagurusamy",
+        bookIsbn: "978-0070669079",
+        studentId: "ST001",
+        studentName: "Rahul Sharma",
+        studentEmail: "rahul.sharma@student.college.edu",
+        department: "CO",
+        issueDate: "2026-07-05",
+        dueDate: "2026-07-19",
+        status: "issued",
+        fine: 0,
+        renewalCount: 0
+    },
+    {
+        id: "IS002",
+        bookId: "BK003",
+        bookTitle: "Computer Networks",
+        bookAuthor: "Andrew S. Tanenbaum",
+        bookIsbn: "978-0132126953",
+        studentId: "ST002",
+        studentName: "Priya Patel",
+        studentEmail: "priya.patel@student.college.edu",
+        department: "IF",
+        issueDate: "2026-07-01",
+        dueDate: "2026-07-15",
+        status: "issued",
+        fine: 6,
+        renewalCount: 0
+    },
+    {
+        id: "IS003",
+        bookId: "BK004",
+        bookTitle: "Introduction to Algorithms",
+        bookAuthor: "Thomas H. Cormen",
+        bookIsbn: "978-0262033848",
+        studentId: "ST006",
+        studentName: "Anjali Mehta",
+        studentEmail: "anjali.mehta@student.college.edu",
+        department: "CO",
+        issueDate: "2026-07-10",
+        dueDate: "2026-07-24",
+        status: "issued",
+        fine: 0,
+        renewalCount: 0
+    }
+];
+
+/* ==========================================
+   SAMPLE RETURNED BOOK RECORDS
+   ========================================== */
+export const SAMPLE_RETURNED = [
+    {
+        id: "RT001",
+        issueId: "IS_OLD001",
+        bookId: "BK002",
+        bookTitle: "Database System Concepts",
+        bookAuthor: "Abraham Silberschatz",
+        bookIsbn: "978-0073523309",
+        studentId: "ST003",
+        studentName: "Arjun Verma",
+        studentEmail: "arjun.verma@student.college.edu",
+        department: "EE",
+        issueDate: "2026-06-01",
+        dueDate: "2026-06-15",
+        returnDate: "2026-06-18",
+        fine: 6,
+        status: "returned"
+    },
+    {
+        id: "RT002",
+        issueId: "IS_OLD002",
+        bookId: "BK005",
+        bookTitle: "Basic Electrical Engineering",
+        bookAuthor: "B.L. Theraja",
+        bookIsbn: "978-8121908719",
+        studentId: "ST008",
+        studentName: "Kavya Nair",
+        studentEmail: "kavya.nair@student.college.edu",
+        department: "EE",
+        issueDate: "2026-06-10",
+        dueDate: "2026-06-24",
+        returnDate: "2026-06-24",
+        fine: 0,
+        status: "returned"
+    },
+    {
+        id: "RT003",
+        issueId: "IS_OLD003",
+        bookId: "BK009",
+        bookTitle: "Digital Logic & Computer Design",
+        bookAuthor: "M. Morris Mano",
+        bookIsbn: "978-8177584097",
+        studentId: "ST001",
+        studentName: "Rahul Sharma",
+        studentEmail: "rahul.sharma@student.college.edu",
+        department: "CO",
+        issueDate: "2026-05-20",
+        dueDate: "2026-06-03",
+        returnDate: "2026-06-05",
+        fine: 4,
+        status: "returned"
+    }
+];
+
