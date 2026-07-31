@@ -1,0 +1,84 @@
+﻿Diagnose log at 2026-07-23T01:33:42Z
+
+AppPath: C:\Program Files\Git\mingw64\bin\git-credential-manager.exe
+InstallDir: C:\Program Files\Git\mingw64\bin\
+Version: 2.9.0+194ba290ce533465310d50f811684ab180536ae7
+
+------------
+Diagnostic: Environment
+Skipped: False
+Success: True
+Exception: None
+Log:
+OSType: Windows
+OSVersion: 10.0 (build 19045)
+Reading environment variables... OK
+ Variables:
+SystemDrive=C:
+ProgramFiles(x86)=C:\Program Files (x86)
+MSYSTEM=MINGW64
+ProgramW6432=C:\Program Files
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 37 Stepping 5, GenuineIntel
+TMP=C:\Users\DELL\AppData\Local\Temp
+PROCESSOR_ARCHITECTURE=AMD64
+DriverData=C:\Windows\System32\Drivers\DriverData
+Path=C:/Program Files/Git/mingw64/libexec/git-core;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\DELL\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;C:\Users\DELL\AppData\Local\Programs\Microsoft VS Code\bin
+USERPROFILE=C:\Users\DELL
+PROCESSOR_REVISION=2505
+TEMP=C:\Users\DELL\AppData\Local\Temp
+FPS_BROWSER_APP_PROFILE_STRING=Internet Explorer
+FPS_BROWSER_USER_PROFILE_STRING=Default
+LOGONSERVER=\\DESKTOP-PUVUQIB
+TERM=xterm-256color
+USERNAME=DELL
+SystemRoot=C:\Windows
+GIT_EXEC_PATH=C:/Program Files/Git/mingw64/libexec/git-core
+PLINK_PROTOCOL=ssh
+OneDrive=C:\Users\DELL\OneDrive
+CommonProgramFiles=C:\Program Files\Common Files
+ProgramData=C:\ProgramData
+LC_CTYPE=C.UTF-8
+HOMEPATH=\Users\DELL
+OneDriveConsumer=C:\Users\DELL\OneDrive
+COMPUTERNAME=DESKTOP-PUVUQIB
+ALLUSERSPROFILE=C:\ProgramData
+CommonProgramW6432=C:\Program Files\Common Files
+SESSIONNAME=Console
+CommonProgramFiles(x86)=C:\Program Files (x86)\Common Files
+HOMEDRIVE=C:
+windir=C:\Windows
+GIT_TRACE2_PARENT_SID=ae9fd046-87cb-4cb7-ba5b-4b29794b5a7a
+NUMBER_OF_PROCESSORS=4
+OS=Windows_NT
+ProgramFiles=C:\Program Files
+ComSpec=C:\Windows\system32\cmd.exe
+PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+HOME=C:\Users\DELL
+PSModulePath=C:\Program Files\WindowsPowerShell\Modules;C:\Windows\system32\WindowsPowerShell\v1.0\Modules
+PROMPT=$P$G
+TMPDIR=C:\Users\DELL\AppData\Local\Temp
+APPDATA=C:\Users\DELL\AppData\Roaming
+USERDOMAIN=DESKTOP-PUVUQIB
+PROCESSOR_LEVEL=6
+LOCALAPPDATA=C:\Users\DELL\AppData\Local
+USERDOMAIN_ROAMINGPROFILE=DESKTOP-PUVUQIB
+COLORTERM=truecolor
+PUBLIC=C:\Users\Public
+
+
+------------
+Diagnostic: File system
+Skipped: False
+Success: True
+Exception: None
+Log:
+Temporary directory is 'C:\Users\DELL\AppData\Local\Temp\'...
+Checking basic file I/O...
+Writing to temporary file 'C:\Users\DELL\AppData\Local\Temp\c2a5453aa7c693490ddeca37'... OK
+Reading from temporary file 'C:\Users\DELL\AppData\Local\Temp\c2a5453aa7c693490ddeca37'... OK
+Deleting temporary file 'C:\Users\DELL\AppData\Local\Temp\c2a5453aa7c693490ddeca37'... OK
+Testing IFileSystem instance...
+UserHomePath: C:\Users\DELL
+UserDataDirectoryPath: C:\Users\DELL\.gcm
+GetCurrentDirectory(): C:\Users\DELL\Desktop\Department Library Chatbot
+
