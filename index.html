@@ -222,6 +222,29 @@
 
     <!-- Global Footer (Footer injected here) -->
     <footer></footer>
+    <!-- Global Footer (Footer injected here) -->
+<footer></footer>
+
+<!-- AI Chatbot Widget - Floating -->
+<div id="chat-widget" style="position:fixed; bottom:24px; right:24px; z-index:9999;">
+    <!-- Chat Toggle Button -->
+    <button id="chat-toggle" class="btn btn-primary rounded-circle shadow-lg d-flex align-items-center justify-content-center" style="width:60px; height:60px;">
+        <span class="material-icons">smart_toy</span>
+    </button>
+    
+    <!-- Chat Box -->
+    <div id="chat-container" class="glass-card shadow-lg" style="display:none; width:380px; height:500px; margin-bottom:12px; flex-direction:column; border-radius:16px; overflow:hidden;">
+        <div class="d-flex justify-content-between align-items-center p-3 border-bottom" style="background: var(--primary); color: white;">
+            <h6 class="mb-0 fw-700 d-flex align-items-center gap-2"><span class="material-icons">smart_toy</span> Liby - AI Librarian</h6>
+            <button id="chat-close" class="btn btn-sm text-white"><span class="material-icons">close</span></button>
+        </div>
+        <div id="chatBox" style="flex-grow:1; overflow-y:auto; padding:16px; background:#f8f9fa;"></div>
+        <div class="d-flex p-3 border-top gap-2" style="background:white;">
+            <input type="text" id="userInput" class="form-control" placeholder="Kuch poocho...">
+            <button id="sendBtn" class="btn btn-primary-custom px-3"><span class="material-icons">send</span></button>
+        </div>
+    </div>
+</div>
 
     <!-- Bootstrap 5 Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -286,5 +309,10 @@
             });
         });
     </script>
+    <script type="module" src="js/app.js"></script>
+<script type="module">
+   // ...tumhara existing code...
+</script>
+<script type="module" src="js/chatbot.js"></script>
 </body>
 </html>
