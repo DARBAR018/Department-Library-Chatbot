@@ -50,9 +50,9 @@ if (!isset($_SESSION['admin'])) {
                 </div>
                 <nav class="d-flex flex-column">
                     <a class="nav-link active px-3 py-2" href="#"><span class="material-icons me-2">dashboard</span> Dashboard</a>
-                    <a class="nav-link px-3 py-2" href="books.php"><span class="material-icons me-2">menu_book</span> Books</a>
-                    <a class="nav-link px-3 py-2" href="issue.php"><span class="material-icons me-2">swap_horiz</span> Issue / Return</a>
-                    <a class="nav-link px-3 py-2" href="admin-login.php?logout=1"><span class="material-icons me-2">logout</span> Logout</a>
+                    <a class="nav-link px-3 py-2" href="books.html"><span class="material-icons me-2">menu_book</span> Books</a>
+                    <a class="nav-link px-3 py-2" href="issue.html"><span class="material-icons me-2">swap_horiz</span> Issue / Return</a>
+                    <a class="nav-link px-3 py-2" href="admin-login.html?logout=1"><span class="material-icons me-2">logout</span> Logout</a>
                 </nav>
             </aside>
 

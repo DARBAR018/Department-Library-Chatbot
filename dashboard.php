@@ -40,7 +40,7 @@
                 <p class="text-muted fs-14 mb-0">Role: <span id="dash-user-role" class="text-primary fw-600 uppercase">Student</span> | Email: <span id="dash-user-email">email@college.edu</span></p>
             </div>
             <div class="mt-2 mt-md-0 d-flex gap-2">
-                <a href="books.php" class="btn btn-primary-custom d-flex align-items-center gap-1"><span class="material-icons">search</span> Search Books</a>
+                <a href="books.html" class="btn btn-primary-custom d-flex align-items-center gap-1"><span class="material-icons">search</span> Search Books</a>
                 <a href="papers.html" class="btn btn-cyan-custom d-flex align-items-center gap-1"><span class="material-icons">download</span> Get Papers</a>
             </div>
         </div>
