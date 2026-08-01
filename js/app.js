@@ -50,7 +50,7 @@ function injectCommonLayouts() {
     // --- NAVBAR INJECTION ---
     const headerEl = document.querySelector("header");
     if (headerEl) {
-        let authButtons = `<a href="login.php" class="btn btn-primary-custom d-flex align-items-center gap-2">
+        let authButtons = `<a href="login.html" class="btn btn-primary-custom d-flex align-items-center gap-2">
             <span class="material-icons">login</span> Login
         </a>`;
         
@@ -97,7 +97,7 @@ function injectCommonLayouts() {
                             <li class="nav-item"><a class="nav-link ${isActive('notice.html')}" href="notice.html">Notices</a></li>
                             <li class="nav-item"><a class="nav-link ${isActive('faculty.html')}" href="faculty.html">Faculty</a></li>
                             <li class="nav-item"><a class="nav-link ${isActive('papers.html')}" href="papers.html">Papers</a></li>
-                            <li class="nav-item"><a class="nav-link ${isActive('ebooks.php')}" href="ebooks.php">E-Books</a></li>
+                            <li class="nav-item"><a class="nav-link ${isActive('ebooks.html')}" href="ebooks.html">E-Books</a></li>
                             <li class="nav-item"><a class="nav-link ${isActive('about.html')}" href="about.html">About</a></li>
                             <li class="nav-item"><a class="nav-link ${isActive('contact.html')}" href="contact.html">Contact</a></li>
                         </ul>
@@ -137,10 +137,10 @@ function injectCommonLayouts() {
                     <div class="col-6 col-sm-3 col-lg-2">
                         <h6 class="fw-700 mb-3">Quick Links</h6>
                         <ul class="list-unstyled d-flex flex-column gap-2 fs-14">
-                            <li><a href="books.php" class="text-muted hover-link">Browse Books</a></li>
+                            <li><a href="books.html" class="text-muted hover-link">Browse Books</a></li>
                             <li><a href="notice.html" class="text-muted hover-link">Notice Board</a></li>
                             <li><a href="papers.html" class="text-muted hover-link">GTU Papers</a></li>
-                            <li><a href="ebooks.php" class="text-muted hover-link">E-Books</a></li>
+                            <li><a href="ebooks.html" class="text-muted hover-link">E-Books</a></li>
                         </ul>
                     </div>
                     <div class="col-6 col-sm-3 col-lg-2">
@@ -343,7 +343,7 @@ function buildBreadcrumbs() {
         "notice.html": "Notice Board",
         "faculty.html": "Faculty Directory",
         "papers.html": "Previous Exam Papers",
-        "ebooks.php": "Digital E-Books Library",
+        "ebooks.html": "Digital E-Books Library",
         "about.html": "About Library",
         "contact.html": "Contact & Support",
         "admin.html": "Library Administration",
