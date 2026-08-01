@@ -10,7 +10,7 @@ import * as SampleData from "./sample-data.js";
 let db = null;
 
 // Initialize Firebase if configured
-if (APP_MODE === "firebase") {
+if (APP_MODE === "localstorage" && isFirebaseConfigured()) {
     try {
         // Dynamically import Firebase on runtime to prevent errors in offline mode
         const { initializeApp } = await import("https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js");

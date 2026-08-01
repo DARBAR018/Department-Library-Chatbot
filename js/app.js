@@ -93,7 +93,7 @@ function injectCommonLayouts() {
                     <div class="collapse navbar-collapse" id="mainNavbar">
                         <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
                             <li class="nav-item"><a class="nav-link ${isActive('index.html')}" href="index.html">Home</a></li>
-                            <li class="nav-item"><a class="nav-link ${isActive('books.php')}" href="books.php">Books</a></li>
+                            <li class="nav-item"><a class="nav-link ${isActive('books.html')}" href="books.htm">Books</a></li>
                             <li class="nav-item"><a class="nav-link ${isActive('notice.html')}" href="notice.html">Notices</a></li>
                             <li class="nav-item"><a class="nav-link ${isActive('faculty.html')}" href="faculty.html">Faculty</a></li>
                             <li class="nav-item"><a class="nav-link ${isActive('papers.html')}" href="papers.html">Papers</a></li>
@@ -187,7 +187,7 @@ function injectCommonLayouts() {
 
     // --- CHATBOT WIDGET INJECTION ---
     // Inject only if not in login or error pages where we might want to disable it
-    if (!currentPath.includes("login.php") && !currentPath.includes("404.html") && !document.querySelector(".chatbot-trigger")) {
+    if (!currentPath.includes("login.html") && !currentPath.includes("404.html") && !document.querySelector(".chatbot-trigger")) {
         injectChatbotWidget();
     }
 }
@@ -337,9 +337,9 @@ function buildBreadcrumbs() {
     }
     
     const pageTitles = {
-        "login.php": "Account Access",
+        "login.html": "Account Access",
         "dashboard.html": "Student Dashboard",
-        "books.php": "Book Catalog",
+        "books.html": "Book Catalog",
         "notice.html": "Notice Board",
         "faculty.html": "Faculty Directory",
         "papers.html": "Previous Exam Papers",
