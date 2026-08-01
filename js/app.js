@@ -93,7 +93,7 @@ function injectCommonLayouts() {
                     <div class="collapse navbar-collapse" id="mainNavbar">
                         <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
                             <li class="nav-item"><a class="nav-link ${isActive('index.html')}" href="index.html">Home</a></li>
-                            <li class="nav-item"><a class="nav-link ${isActive('books.html')}" href="books.htm">Books</a></li>
+                            <li class="nav-item"><a class="nav-link ${isActive('books.html')}" href="books.html">Books</a></li>
                             <li class="nav-item"><a class="nav-link ${isActive('notice.html')}" href="notice.html">Notices</a></li>
                             <li class="nav-item"><a class="nav-link ${isActive('faculty.html')}" href="faculty.html">Faculty</a></li>
                             <li class="nav-item"><a class="nav-link ${isActive('papers.html')}" href="papers.html">Papers</a></li>
@@ -406,7 +406,7 @@ export function showToast(title, desc, type = "info") {
     
     container.insertAdjacentHTML("beforeend", toastHTML);
     const toastNode = document.getElementById(toastId);
-    
+    <li class="nav-item"><a class="nav-link ${isActive('books.html')}" href="books.html">Books</a></li>
     // Animate in
     setTimeout(() => {
         toastNode.classList.add("show");
