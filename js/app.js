@@ -406,7 +406,6 @@ export function showToast(title, desc, type = "info") {
     
     container.insertAdjacentHTML("beforeend", toastHTML);
     const toastNode = document.getElementById(toastId);
-    <li class="nav-item"><a class="nav-link ${isActive('books.html')}" href="books.html">Books</a></li>
     // Animate in
     setTimeout(() => {
         toastNode.classList.add("show");
