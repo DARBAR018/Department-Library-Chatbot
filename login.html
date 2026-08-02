@@ -243,7 +243,7 @@
 
                         console.log("Sending request...");
 
-                        const response = await fetch("php/send_otp.php", {
+                        const response = await fetch("server/send_otp.php", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded"
@@ -268,26 +268,83 @@
 
             // Form Submit: Login
             const loginForm = document.getElementById("login-form");
+
             loginForm.addEventListener("submit", async (e) => {
+
                 e.preventDefault();
+
                 if (!validateForm(loginForm)) return;
-                
+
                 const email = document.getElementById("login-email").value;
                 const pass = document.getElementById("login-password").value;
-                
-                try {
-                    const loggedUser = await login(email, pass);
-                    window.showToast("Success", `Welcome back, ${loggedUser.name}!`, "success");
-                    
-                    if (loggedUser.verified) {
-                        setTimeout(redirectToTarget, 1000);
-                    } else {
-                        document.getElementById("verify-email-display").textContent = loggedUser.email;
-                        setTimeout(() => showSection("verify-section"), 1000);
-                    }
-                } catch (err) {
-                    window.showToast("Login Failed", err.message, "error");
+                const otp = document.getElementById("login-otp").value;
+
+                if (otp === "") {
+
+                    window.showToast(
+                        "OTP Required",
+                        "Please click Send OTP and enter the OTP.",
+                        "warning"
+                    );
+
+                    return;
                 }
+
+                try {
+
+                    const form = new URLSearchParams();
+
+                    form.append("email", email);
+                    form.append("otp", otp);
+
+                    const response = await fetch("server/verify_otp.php", {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+
+                        body: form
+
+                    });
+
+                    const result = await response.json();
+
+                    if (!result.success) {
+
+                        window.showToast("OTP Failed", result.message, "error");
+
+                        return;
+
+                    }
+
+                    const loggedUser = await login(email, pass);
+
+                    window.showToast(
+                        "Success",
+                        `Welcome back, ${loggedUser.name}!`,
+                        "success"
+                    );
+
+                    if (loggedUser.verified) {
+
+                        setTimeout(redirectToTarget, 1000);
+
+                    } else {
+
+                        document.getElementById("verify-email-display").textContent = loggedUser.email;
+
+                        setTimeout(() => showSection("verify-section"), 1000);
+
+                    }
+
+                } catch (err) {
+
+                    window.showToast("Login Failed", err.message, "error");
+
+                }
+
             });
 
             // Form Submit: Register

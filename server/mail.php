@@ -3,7 +3,9 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . "/../PHPMailer/Exception.php";
+require_once __DIR__ . "/../PHPMailer/PHPMailer.php";
+require_once __DIR__ . "/../PHPMailer/SMTP.php";
 
 function getMailer()
 {
@@ -12,15 +14,15 @@ function getMailer()
     $mail->isSMTP();
 
     $mail->Host = "smtp.gmail.com";
-
     $mail->SMTPAuth = true;
 
-    $mail->Username = "departmentlibrary.ai@gmail.com";
+    // Your Gmail
+    $mail->Username = getenv("MAIL_USERNAME");
 
-    $mail->Password = "qflcuhhdpmajbcib";
+    // Gmail App Password
+    $mail->Password = getenv("MAIL_PASSWORD");
 
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-
     $mail->Port = 587;
 
     $mail->setFrom(
