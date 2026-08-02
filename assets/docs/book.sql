@@ -5,3 +5,10 @@ student_name VARCHAR(100),
 book_name VARCHAR(150),
 issue_date DATE
 );
+
+CREATE TABLE otp_verification (
+id INT AUTO_INCREMENT PRIMARY KEY,
+email VARCHAR(255) NOT NULL,
+otp VARCHAR(6) NOT NULL,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
