@@ -63,9 +63,38 @@
                     <form id="login-form" novalidate>
                         <div class="mb-3">
                             <label for="login-email" class="form-label fw-600 fs-14">College Email</label>
-                            <input type="email" id="login-email" class="form-control form-control-custom" placeholder="email@college.edu" required>
-                            <div class="invalid-feedback">Please enter a valid college email.</div>
+                            <input type="email"
+                                id="login-email"
+                                class="form-control form-control-custom"
+                                placeholder="email@college.edu"
+                                required>
+
+                            <div class="invalid-feedback">
+                                Please enter a valid college email.
+                            </div>
+
+                            <div class="mt-2">
+                                <button
+                                    type="button"
+                                    id="sendOtpBtn"
+                                    class="btn btn-warning w-100">
+                                    Send OTP
+                                </button>
+                            </div>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-600 fs-14">
+                                OTP
+                            </label>
+
+                            <input
+                            type="text"
+                            id="login-otp"
+                            class="form-control form-control-custom"
+                            placeholder="Enter OTP">
+
+                        </div>
+
                         <div class="mb-3">
                             <div class="d-flex justify-content-between">
                                 <label for="login-password" class="form-label fw-600 fs-14">Password</label>
@@ -188,6 +217,72 @@
             document.getElementById("to-login-btn").addEventListener("click", (e) => { e.preventDefault(); showSection("login-section"); });
             document.getElementById("to-forgot-btn").addEventListener("click", (e) => { e.preventDefault(); showSection("forgot-section"); });
             document.getElementById("forgot-back-btn").addEventListener("click", (e) => { e.preventDefault(); showSection("login-section"); });
+
+            // Send OTP Button
+            document.getElementById("sendOtpBtn").addEventListener("click", async () => {
+
+                const email = document.getElementById("login-email").value;
+
+                if(email === ""){
+                    window.showToast(
+                        "Email Required",
+                        "Please enter your email first.",
+                        "warning"
+                    );
+                    return;
+                }
+
+
+                try {
+
+                    const response = await fetch("php/send_otp.php", {
+
+                        method: "POST",
+
+                        headers:{
+                            "Content-Type":"application/x-www-form-urlencoded"
+                        },
+
+                        body:
+                        "email=" + encodeURIComponent(email)
+
+                    });
+
+
+                    const result = await response.text();
+
+
+                    if(result.trim() === "success"){
+
+                        window.showToast(
+                            "OTP Sent",
+                            "Check your Gmail inbox.",
+                            "success"
+                        );
+
+                    }
+                    else{
+
+                        window.showToast(
+                            "Failed",
+                            "OTP could not be sent.",
+                            "error"
+                        );
+
+                    }
+
+
+                } catch(error){
+
+                    window.showToast(
+                        "Error",
+                        error.message,
+                        "error"
+                    );
+
+                }
+
+            });
 
             // Form Submit: Login
             const loginForm = document.getElementById("login-form");
