@@ -1,0 +1,34 @@
+function returnBook() {
+    const bookId = document.getElementById("bookId").value.trim();
+    const studentId = document.getElementById("studentId").value.trim();
+
+    if (bookId === "" || studentId === "") {
+        alert("Please enter Book ID and Student ID.");
+        return;
+    }
+
+    let books = JSON.parse(localStorage.getItem("books")) || [];
+
+    let found = false;
+
+    books.forEach(book => {
+        if (
+            book.bookId === bookId &&
+            book.studentId === studentId &&
+            book.status === "Issued"
+        ) {
+            book.status = "Available";
+            book.studentId = "";
+            found = true;
+        }
+    });
+
+    if (found) {
+        localStorage.setItem("books", JSON.stringify(books));
+        alert(" Book Returned Successfully!");
+        document.getElementById("bookId").value = "";
+        document.getElementById("studentId").value = "";
+    } else {
+        alert(" Book record not found!");
+    }
+}
