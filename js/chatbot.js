@@ -190,6 +190,26 @@ function handleUserMessageSubmit() {
  * Core Matching NLP Framework
  */
 async function processCognitiveResponse(userQuery) {
+    try {
+    const response = await fetch("https://library-chatbot-api.onrender.com/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            message: userQuery
+        })
+    });
+
+    const data = await response.json();
+
+    if (data.reply) {
+        return data.reply;
+    }
+
+} catch (error) {
+    console.error("Gemini API Error:", error);
+    }
     const queryClean = userQuery.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "").trim();
     const tokens = queryClean.split(/\s+/);
     
