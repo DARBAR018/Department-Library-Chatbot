@@ -1,0 +1,28 @@
+<?php
+$conn = new mysqli("localhost","root","","library_db");
+
+if($conn->connect_error){
+    die("Connection Failed");
+}
+
+$student_name = $_POST['student_name'];
+$enrollment_no = $_POST['enrollment_no'];
+$book_title = $_POST['book_title'];
+$author_name = $_POST['author_name'];
+
+$sql = "INSERT INTO book_reservations
+(student_name,enrollment_no,book_title,author_name)
+VALUES (?,?,?,?)";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ssss",$student_name,$enrollment_no,$book_title,$author_name);
+
+if($stmt->execute()){
+    echo "Book Reserved Successfully";
+}else{
+    echo "Reservation Failed";
+}
+
+$stmt->close();
+$conn->close();
+?>
