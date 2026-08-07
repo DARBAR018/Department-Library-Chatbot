@@ -293,6 +293,107 @@
 <script type="module">
    
 </script>
+<!-- CHATBOT HTML START -->
+<style>
+#chat-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #0d6efd, #6610f2);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 9999;
+}
+#chat-container {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 350px;
+    height: 500px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    display: none;
+    flex-direction: column;
+    z-index: 9999;
+    overflow: hidden;
+}
+#chat-container .border-bottom {
+    background: linear-gradient(135deg, #0d6efd, #6610f2);
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+#chatBox {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background: #f8f9fa;
+}
+#chat-container .border-top {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background: white;
+}
+#userInput {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 10px 15px;
+    outline: none;
+}
+#sendBtn {
+    background: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-left: 8px;
+    cursor: pointer;
+}
+#chat-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+@media(max-width: 400px){
+    #chat-container { width: 90%; right: 5%; }
+}
+</style>
+
+<!-- Neela Chat Button -->
+<button id="chat-toggle">💬</button>
+
+<!-- Chat Window -->
+<div id="chat-container">
+  <div class="border-bottom">
+    <span>🤖 Liby Assistant</span>
+    <button id="chat-close">X</button>
+  </div>
+  
+  <div id="chatBox"></div>
+  
+  <div class="border-top">
+    <input id="userInput" type="text" placeholder="Liby se poocho...">
+    <button id="sendBtn">➤</button>
+  </div>
+</div>
+<!-- CHATBOT HTML END -->
+
+<script src="js/chatbot.js"></script>
 
 </body>
 </html>
