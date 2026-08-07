@@ -1,114 +1,232 @@
-/**
- * Department Library AI Chatbot
- * AI Chatbot Engine (Pattern Recognition NLP, Voice TTS/STT, Session Logging)
- */
+const chatBox = document.getElementById("chatBox");
+const userInput = document.getElementById("userInput");
+const sendBtn = document.getElementById("sendBtn");
+const chatToggle = document.getElementById("chat-toggle");
+const chatContainer = document.getElementById("chat-container");
+const chatClose = document.getElementById("chat-close");
+const chatHeader = document.querySelector("#chat-container .border-bottom");
 
-import { getFaqs, getBooks, getFaculty, getNotices } from "./db.js";
 
-// Session storage key
-const CHAT_LOGS_KEY = "lib_conversation_logs";
-const VOICE_TOGGLE_KEY = "lib_voice_output_enabled";
+// Chat History
+let chatHistory = [];
+let isMinimized = false;
 
-// Chat Engine State
-let isVoiceEnabled = localStorage.getItem(VOICE_TOGGLE_KEY) === "true";
-let speechSynth = window.speechSynthesis;
-let speechRecog = null;
-let isRecording = false;
+// 1. Chatbox Open/Close
+chatToggle.addEventListener("click", () => {
+    chatContainer.style.display = "flex";
+    chatToggle.style.display = "none";
+    if(chatBox.innerHTML === "") {
+        showWelcome();
+        showQuickButtons();
+        addHeaderButtons();
+    }
+});
 
-// Seed FAQs, Books, and Faculty lists globally to avoid reloading on every key hit
-let faqs = [];
-let books = [];
-let faculty = [];
-let notices = [];
+chatClose.addEventListener("click", () => {
+    chatContainer.style.display = "none";
+    chatToggle.style.display = "flex";
+});
 
-// Initialize Chatbot UI bindings
-export function initChatbot() {
-    const triggerBtn = document.getElementById("chatbot-trigger-btn");
-    const windowBox = document.getElementById("chatbot-window-box");
-    const minimizeBtn = document.getElementById("chat-minimize-btn");
-    const voiceToggleBtn = document.getElementById("chat-voice-toggle");
-    const inputForm = document.getElementById("chat-input-form");
-    const micBtn = document.getElementById("chat-mic-btn");
+// 2. Header me extra buttons
+function addHeaderButtons() {
+if(document.getElementById("header-btns")) return;
+let btns = ` 
+        <div id="header-btns" style="display:flex; gap:10px;">
+            <button id="clear-chat" title="Clear Chat" style="background:none; border:none; color:white; cursor:pointer;"><span class="material-icons" style="font-size:20px;">delete</span></button>
+            <button id="minimize-chat" title="Minimize" style="background:none; border:none; color:white; cursor:pointer;"><span class="material-icons" style="font-size:20px;">minimize</span></button>
+        </div>
+    `;
+    chatHeader.insertAdjacentHTML('beforeend', btns);
     
-    if (!triggerBtn || !windowBox) return;
-
-    // 1. Load Data
-    loadBotIntelligence();
-
-    // 2. Open/Close Actions
-    triggerBtn.addEventListener("click", () => {
-        windowBox.classList.add("active");
-        document.getElementById("chat-alert-dot").classList.add("d-none");
-        scrollToBottom();
-        // Give focus to input
-        setTimeout(() => document.getElementById("chat-user-input").focus(), 300);
-    });
-
-    minimizeBtn.addEventListener("click", () => {
-        windowBox.classList.remove("active");
-    });
-
-    // 3. Render Session Log History
-    renderLogsHistory();
-
-    // 4. Submit message
-    inputForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        handleUserMessageSubmit();
-    });
-
-    // 5. Setup Speech Recognition
-    setupSpeechRecognition();
-    micBtn.addEventListener("click", () => {
-        if (isRecording) {
-            stopVoiceRecognition();
-        } else {
-            startVoiceRecognition();
+    document.getElementById("clear-chat").onclick = () => {
+        if(confirm("Kya tum puri chat delete karna chahte ho?")) {
+            chatBox.innerHTML = "";
+            chatHistory = [];
+            showWelcome();
+            showQuickButtons();
         }
-    });
-
-    // 6. Setup Speech Synthesis (Voice Output Toggle)
-    updateVoiceToggleButtonUI();
-    voiceToggleBtn.addEventListener("click", () => {
-        isVoiceEnabled = !isVoiceEnabled;
-        localStorage.setItem(VOICE_TOGGLE_KEY, isVoiceEnabled);
-        updateVoiceToggleButtonUI();
-        window.showToast("Voice Output", isVoiceEnabled ? "Text-to-speech enabled." : "Text-to-speech muted.", "info");
-    });
+    };
+    
+    document.getElementById("minimize-chat").onclick = () => {
+        isMinimized = !isMinimized;
+        chatBox.style.display = isMinimized ? "none" : "block";
+        document.querySelector("#chat-container .border-top").style.display = isMinimized ? "none" : "flex";
+    };
 }
 
-// Automatically trigger initialization if file imported
-setTimeout(initChatbot, 100);
+// 2. Welcome Message
+function showWelcome() {
+    let welcome = `Namaste! 🙏 Main **Liby 2.0** hu
 
-async function loadBotIntelligence() {
+**K.D. Polytechnic - Computer Department Library**
+Timing: 9:00 AM to 5:00 PM | Mon to Sat
+
+Main ye sab kar sakta hu:
+
+1.  **📚 Book Search** - "Data Structure book" likho
+2.  **📄 GTU Papers** - "DSA 2023 paper" likho  
+3.  **📢 Notice** - "Exam notice" likho
+4.  **❓ Doubt** - "OOP kya hai?" koi bhi sawal
+5.  **🔗 Direct Link** - Main link bhejunga to sidha click ho jayega
+
+Tum kya search karna chahte ho?`;
+    addBotMessage(welcome);
+}
+
+// 3. Quick Reply Buttons
+function showQuickButtons() {
+    let buttons = `
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
+            <button class="quick-btn" onclick="sendQuickMsg('Books available')">📚 Books</button>
+            <button class="quick-btn" onclick="sendQuickMsg('GTU Papers')">📄 Papers</button>
+            <button class="quick-btn" onclick="sendQuickMsg('Latest Notice')">📢 Notice</button>
+            <button class="quick-btn" onclick="sendQuickMsg('Library Timing')">⏰ Timing</button>
+        </div>
+        <style>
+        .quick-btn { background:#0d6efd; color:white; border:none; padding:6px 12px; border-radius:20px; font-size:12px; cursor:pointer; }
+        .quick-btn:hover { background:#0b5ed7; }
+        a.chat-link { color:#0d6efd; text-decoration:underline; }
+        </style>
+    `;
+    chatBox.innerHTML += buttons;
+}
+
+function sendQuickMsg(msg) {
+    userInput.value = msg;
+    sendMessage();
+}
+
+// 4. Message Functions
+function getTime() {
+    return new Date().toLocaleTimeString('en-IN', {hour: '2-digit', minute:'2-digit'});
+}
+function addUserMessage(msg) {
+    chatHistory.push({role: "user", content: msg});
+    chatBox.innerHTML += `<div style="text-align:right; margin:10px 0;"><span style="background:#0d6efd; color:white; padding:10px 14px; border-radius:18px 18px 4px 18px; display:inline-block; max-width:85%; word-wrap:break-word;">${msg}</span></div>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function addBotMessage(msg) {
+    msg = convertLinks(msg);
+    msg = msg.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+    msg = msg.replace(/\n/g, '<br>');
+    
+    chatHistory.push({role: "assistant", content: msg});
+    chatBox.innerHTML += `<div style="text-align:left; margin:10px 0;"><span style="background:#f1f3f5; color:#000; padding:10px 14px; border-radius:18px 18px 18px 4px; display:inline-block; max-width:85%; word-wrap:break-word;">${msg}</span></div>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// Link convert karne ka function
+function convertLinks(text) {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, '<a href="$1" target="_blank" class="chat-link">$1</a>');
+}
+
+function addTyping() {
+    chatBox.innerHTML += `<div id="typing-indicator" style="text-align:left; margin:10px 0;">
+        <span style="background:#f1f3f5; padding:10px 14px; border-radius:18px 18px 18px 4px; display:inline-block;">
+            Liby likh raha hai<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+        </span>
+    </div>`;
+    let style = document.createElement('style');
+    style.innerHTML = `.dot { animation: blink 1.4s infinite; } .dot:nth-child(2){animation-delay:0.2s} .dot:nth-child(3){animation-delay:0.4s} @keyframes blink{0%,80%,100%{opacity:0}}`;
+      if(!document.getElementById('typing-style')) {
+        style.id = 'typing-style';
+        document.head.appendChild(style);
+      }
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function removeTyping() {
+    let typing = document.getElementById("typing-indicator");
+    if(typing) typing.remove();
+}
+// 6. Voice Input - Mic
+function addMicButton() {
+    if(!('webkitSpeechRecognition' in window)) return;
+    let micBtn = document.createElement('button');
+    micBtn.innerHTML = '<span class="material-icons">mic</span>';
+    micBtn.style = 'background:none; border:none; color:#0d6efd; cursor:pointer; padding:5px;';
+    micBtn.onclick = startVoice;
+    userInput.parentElement.insertBefore(micBtn, sendBtn);
+}
+
+function startVoice() {
+    const recognition = new webkitSpeechRecognition();
+    recognition.lang = 'en-IN';
+    recognition.onresult = (e) => {
+        userInput.value = e.results[0][0].transcript;
+        sendMessage();
+    };
+    recognition.start();
+}
+
+Render API + Error Handling
+async function getBotReply(userMsg){
+    addTyping();
     try {
-        faqs = await getFaqs();
-        books = await getBooks();
-        faculty = await getFaculty();
-        notices = await getNotices();
-    } catch (e) {
-        console.error("[Chatbot] Failed to load cognitive assets:", e);
+        const response = await fetch("https://library-chatbot-api.onrender.com/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                message: userMsg,
+                history: chatHistory.slice(-8),
+                department: "Computer Engineering",
+                college: "K.D. Polytechnic Patan"
+            })
+        });
+
+        removeTyping();
+        if(!response.ok) throw new Error("API Error: " + response.status);
+        const data = await response.json();
+        
+        if(data.type === "books" && data.books) {
+            let bookList = "📚 **Mili hui Books:**<br><br>";
+            data.books.forEach((b,i) => {
+                bookList += `<b>${i+1}. ${b.title}</b><br>✍️ Author: ${b.author}<br>📍 Rack: ${b.rack || 'N/A'}<br>📖 Status: ${b.available ? 'Available' : 'Issued'}<br><br>`;
+            });
+            addBotMessage(bookList);
+        } 
+        else if(data.type === "papers" && data.papers) {
+            let paperList = "📄 **GTU Previous Papers:**<br><br>";
+            data.papers.forEach(p => {
+                paperList += `- <b>${p.subject}</b> ${p.year} Sem-${p.sem} <a href="${p.link}" target="_blank" class="chat-link">[Download PDF]</a><br>`;
+            });
+            addBotMessage(paperList);
+        }
+        else if(data.type === "notice" && data.notices) {
+            let noticeList = "📢 **Latest Notices:**<br><br>";
+            data.notices.forEach(n => noticeList += `- <b>${n.title}</b> <br> 📅 Date: ${n.date}<br> ${n.link ? `<a href="${n.link}" target="_blank" class="chat-link">View Details</a>` : ''}<br><br>`);
+            addBotMessage(noticeList);
+        }
+        else {
+            addBotMessage(data.reply || "Maaf karna, main samjha nahi 😅 Kya tum 'Books', 'Papers' ya 'Doubt' ke baare me pooch rahe ho?");
+        }
+        
+    } catch (error) {
+        removeTyping();
+        addBotMessage("⚠️ Server se connect nahi ho pa raha 😅 <br><br><b>Backup Options:</b><br>1. Website: <a href='https://gtu.ac.in' target='_blank' class='chat-link'>gtu.ac.in</a><br>2. Library: 9AM - 5PM aao<br>3. Email: library@kdpolytechnic.ac.in");
     }
 }
+// 8. Send Logic + Enter
+function sendMessage() {
+    let userMsg = userInput.value.trim();
+    if(userMsg === "") return;
+    addUserMessage(userMsg);
+    userInput.value = "";
+    getBotReply(userMsg);
+}
 
-/**
- * Speech Recognition STT Implementation
- */
-function setupSpeechRecognition() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-        document.getElementById("chat-mic-btn").style.display = "none";
-        return;
-    }
+sendBtn.addEventListener("click", sendMessage);
+userInput.addEventListener("keypress", (e) => {
+    if(e.key === "Enter") sendMessage();
+});
 
-    speechRecog = new SpeechRecognition();
-    speechRecog.continuous = false;
-    speechRecog.lang = 'en-US';
-    speechRecog.interimResults = false;
-    speechRecog.maxAlternatives = 1;
-
-    speechRecog.onstart = () => {
-        isRecording = true;
+userInput.addEventListener("focus", () => {
+    setTimeout(() => chatBox.scrollTop = chatBox.scrollHeight, 300);
+});
+// Init
+addMicButton();        isRecording = true;
         const micIcon = document.querySelector("#chat-mic-btn span");
         micIcon.textContent = "mic_off";
         document.getElementById("chat-mic-btn").classList.add("voice-recording-pulsing");
