@@ -1,0 +1,381 @@
+<!-- ================= QR / BARCODE ISSUE-RETURN ================= -->
+
+<section id="scan-section" class="scan-section">
+
+    <h2>QR Code / Barcode Issue-Return</h2>
+    <p>Scan a book QR Code or Barcode to Issue / Return the book.</p>
+
+    <div class="scan-box">
+
+        <div id="reader"></div>
+
+        <button onclick="startScanner()" class="scan-btn">
+            Start Scanner
+        </button>
+
+        <button onclick="stopScanner()" class="stop-btn">
+             Stop Scanner
+        </button>
+
+        <div id="scanResult" class="scan-result">
+            Scan a book QR Code / Barcode
+        </div>
+
+    </div>
+
+    <div id="bookDetails" class="book-details">
+
+        <h3 id="bookName"></h3>
+
+        <p>
+            <b>Book ID:</b>
+            <span id="bookId"></span>
+        </p>
+
+        <p>
+            <b>Category:</b>
+            <span id="bookCategory"></span>
+        </p>
+
+        <p>
+            <b>Status:</b>
+            <span id="bookStatus"></span>
+        </p>
+
+        <button id="actionButton" onclick="issueReturnBook()">
+            Issue Book
+        </button>
+
+    </div>
+
+</section>
+
+
+<style>
+
+.scan-section {
+    padding: 40px 20px;
+    text-align: center;
+    background: #f5f7fb;
+}
+
+.scan-section h2 {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.scan-section > p {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.scan-box {
+    max-width: 500px;
+    margin: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+}
+
+#reader {
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+}
+
+.scan-btn,
+.stop-btn,
+#actionButton {
+    border: none;
+    padding: 12px 20px;
+    margin: 10px 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+    font-size: 15px;
+}
+
+.scan-btn {
+    background: #243b55;
+}
+
+.stop-btn {
+    background: #c0392b;
+}
+
+#actionButton {
+    background: #27ae60;
+}
+
+.scan-result {
+    margin-top: 15px;
+    padding: 12px;
+    background: #f1f3f6;
+    border-radius: 8px;
+}
+
+.book-details {
+    display: none;
+    max-width: 500px;
+    margin: 25px auto;
+    padding: 25px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+}
+
+.book-details h3 {
+    margin-bottom: 15px;
+}
+
+.book-details p {
+    margin: 10px;
+}
+
+</style>
+
+
+<!-- QR / BARCODE SCANNER LIBRARY -->
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+
+<script>
+
+let scanner = null;
+let currentBook = null;
+
+
+/*
+    SAMPLE LIBRARY BOOK DATABASE
+
+    QR / BARCODE value પ્રમાણે book શોધાશે.
+*/
+
+const libraryBooks = {
+
+    "BOOK001": {
+        name: "Java Programming",
+        category: "Programming",
+        status: "Available"
+    },
+
+    "BOOK002": {
+        name: "Python Programming",
+        category: "Programming",
+        status: "Available"
+    },
+
+    "BOOK003": {
+        name: "Database Management System",
+        category: "Database",
+        status: "Issued"
+    },
+
+    "BOOK004": {
+        name: "Computer Networks",
+        category: "Networking",
+        status: "Available"
+    },
+
+    "BOOK005": {
+        name: "Web Development",
+        category: "Web Development",
+        status: "Available"
+    }
+
+};
+
+
+/* START CAMERA SCANNER */
+
+function startScanner() {
+
+    scanner = new Html5Qrcode("reader");
+
+    const config = {
+        fps: 10,
+        qrbox: {
+            width: 250,
+            height: 250
+        }
+    };
+
+    scanner.start(
+        {
+            facingMode: "environment"
+        },
+        config,
+        onScanSuccess
+    ).catch(function(error) {
+
+        document.getElementById("scanResult").innerHTML =
+            "Camera permission required.";
+
+    });
+
+}
+
+
+/* WHEN QR / BARCODE IS SCANNED */
+
+function onScanSuccess(decodedText) {
+
+    document.getElementById("scanResult").innerHTML =
+        " Scanned: " + decodedText;
+
+    findBook(decodedText);
+
+}
+
+
+/* FIND BOOK */
+
+function findBook(bookId) {
+
+    currentBook = libraryBooks[bookId];
+
+    if (!currentBook) {
+
+        document.getElementById("bookDetails").style.display =
+            "block";
+
+        document.getElementById("bookName").innerHTML =
+            " Book Not Found";
+
+        document.getElementById("bookId").innerHTML =
+            bookId;
+
+        document.getElementById("bookCategory").innerHTML =
+            "-";
+
+        document.getElementById("bookStatus").innerHTML =
+            "Not Available";
+
+        document.getElementById("actionButton").style.display =
+            "none";
+
+        return;
+    }
+
+
+    document.getElementById("bookDetails").style.display =
+        "block";
+
+    document.getElementById("bookName").innerHTML =
+        "📖 " + currentBook.name;
+
+    document.getElementById("bookId").innerHTML =
+        bookId;
+
+    document.getElementById("bookCategory").innerHTML =
+        currentBook.category;
+
+    document.getElementById("bookStatus").innerHTML =
+        currentBook.status;
+
+
+    const button =
+        document.getElementById("actionButton");
+
+    button.style.display = "inline-block";
+
+
+    if (currentBook.status === "Available") {
+
+        button.innerHTML = "Issue Book";
+
+        button.style.background = "#27ae60";
+
+    } else {
+
+        button.innerHTML = "️ Return Book";
+
+        button.style.background = "#e67e22";
+
+    }
+
+}
+
+
+/* ISSUE / RETURN */
+
+function issueReturnBook() {
+
+    if (!currentBook) {
+        return;
+    }
+
+
+    if (currentBook.status === "Available") {
+
+        currentBook.status = "Issued";
+
+        alert(
+            " Book Issued Successfully!\n\n" +
+            currentBook.name
+        );
+
+    } else {
+
+        currentBook.status = "Available";
+
+        alert(
+            "Book Returned Successfully!\n\n" +
+            currentBook.name
+        );
+
+    }
+
+
+    document.getElementById("bookStatus").innerHTML =
+        currentBook.status;
+
+
+    if (currentBook.status === "Available") {
+
+        document.getElementById("actionButton").innerHTML =
+            " Issue Book";
+
+        document.getElementById("actionButton").style.background =
+            "#27ae60";
+
+    } else {
+
+        document.getElementById("actionButton").innerHTML =
+            "️ Return Book";
+
+        document.getElementById("actionButton").style.background =
+            "#e67e22";
+
+    }
+
+}
+
+
+/* STOP CAMERA */
+
+function stopScanner() {
+
+    if (scanner) {
+
+        scanner.stop()
+        .then(function() {
+
+            document.getElementById("scanResult").innerHTML =
+                " Scanner stopped.";
+
+        })
+        .catch(function(error) {
+
+            console.log(error);
+
+        });
+
+    }
+
+}
+
+</script>
+
+<!-- ================= END QR / BARCODE ================= -->
