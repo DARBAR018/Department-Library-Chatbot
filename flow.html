@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Department Library - QR Books</title>
+
+<!-- QR Code Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f2f4f7;
+}
+
+header{
+    background:#182848;
+    color:white;
+    text-align:center;
+    padding:25px 10px;
+}
+
+header h1{
+    margin:0 0 8px;
+}
+
+.controls{
+    background:white;
+    padding:18px;
+    text-align:center;
+    position:sticky;
+    top:0;
+    z-index:10;
+    box-shadow:0 2px 8px #ccc;
+}
+
+input,select{
+    width:280px;
+    max-width:90%;
+    padding:12px;
+    margin:5px;
+    border:1px solid #ccc;
+    border-radius:7px;
+}
+
+#bookCount{
+    font-weight:bold;
+    margin-top:10px;
+}
+
+.book-container{
+    padding:20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:20px;
+}
+
+.book{
+    background:white;
+    padding:18px;
+    border-radius:12px;
+    box-shadow:0 3px 12px rgba(0,0,0,.12);
+}
+
+.book h3{
+    color:#182848;
+    min-height:45px;
+}
+
+.book p{
+    margin:7px 0;
+}
+
+.qr{
+    width:160px;
+    min-height:160px;
+    margin:15px auto;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.btn{
+    display:inline-block;
+    padding:10px 15px;
+    margin:5px 2px;
+    border-radius:6px;
+    color:white;
+    text-decoration:none;
+    border:none;
+    cursor:pointer;
+    background:#182848;
+}
+
+.btn:hover{
+    opacity:.85;
+}
+
+.read{
+    background:#198754;
+}
+
+.print{
+    background:#6c757d;
+}
+
+.scan-info{
+    background:#fff3cd;
+    padding:15px;
+    margin:20px;
+    border-radius:8px;
+    text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>📚 Department Library</h1>
+    <p>200 Engineering Books • QR Code Library</p>
+</header>
+
+<div class="scan-info">
+    📱 <b>QR Scan:</b> કોઈપણ bookનું QR scan કરો અને તે bookની information જુઓ.
+</div>
+
+<div class="controls">
+
+    <input
+        type="text"
+        id="search"
+        placeholder="🔍 Search Book / Author"
+        onkeyup="showBooks()"
+    >
+
+    <select id="branch" onchange="showBooks()">
+        <option value="All">All Branches</option>
+        <option value="Computer">Computer Engineering</option>
+        <option value="Civil">Civil Engineering</option>
+        <option value="Mechanical">Mechanical Engineering</option>
+        <option value="Electrical">Electrical Engineering</option>
+    </select>
+
+    <div id="bookCount"></div>
+
+</div>
+
+<div class="book-container" id="bookContainer"></div>
+
+
+<script>
+
+/* ==========================================
+   200 BOOKS
+========================================== */
+
+const books=[];
+
+
+/* COMPUTER - 50 */
+
+const computerBooks=[
+"Computer Fundamentals",
+"Programming in C",
+"Programming in C++",
+"Java Programming",
+"Python Programming",
+"Data Structures",
+"Algorithms",
+"Database Management Systems",
+"Operating Systems",
+"Computer Networks",
+"Software Engineering",
+"Web Technology",
+"Internet Technology",
+"Object Oriented Programming",
+"Advanced Java",
+"Machine Learning",
+"Artificial Intelligence",
+"Deep Learning",
+"Cloud Computing",
+"Cyber Security",
+"Computer Graphics",
+"Compiler Design",
+"Distributed Systems",
+"Mobile Computing",
+"Information Security",
+"Cryptography",
+"Data Mining",
+"Big Data Analytics",
+"Blockchain Technology",
+"Internet of Things",
+"Embedded Systems",
+"Microprocessor",
+"Microcontroller",
+"Digital Logic Design",
+"Computer Architecture",
+"System Programming",
+"Linux Administration",
+"Network Security",
+"Software Testing",
+"Agile Software Development",
+"DevOps",
+"Natural Language Processing",
+"Image Processing",
+"Pattern Recognition",
+"Parallel Computing",
+"Wireless Networks",
+"Cloud Security",
+"Database Security",
+"Web Application Security",
+"Human Computer Interaction"
+];
+
+
+/* CIVIL - 50 */
+
+const civilBooks=[
+"Engineering Mechanics",
+"Strength of Materials",
+"Structural Analysis",
+"Design of Concrete Structures",
+"Design of Steel Structures",
+"Building Construction",
+"Construction Technology",
+"Surveying",
+"Advanced Surveying",
+"Engineering Geology",
+"Soil Mechanics",
+"Foundation Engineering",
+"Geotechnical Engineering",
+"Fluid Mechanics",
+"Hydraulics",
+"Hydrology",
+"Irrigation Engineering",
+"Water Resources Engineering",
+"Environmental Engineering",
+"Water Supply Engineering",
+"Wastewater Engineering",
+"Transportation Engineering",
+"Highway Engineering",
+"Traffic Engineering",
+"Railway Engineering",
+"Airport Engineering",
+"Bridge Engineering",
+"Tunnel Engineering",
+"Prestressed Concrete",
+"Earthquake Engineering",
+"Structural Dynamics",
+"RCC Design",
+"Steel Structure Design",
+"Quantity Surveying",
+"Estimation and Costing",
+"Construction Management",
+"Building Materials",
+"Concrete Technology",
+"Advanced Concrete Technology",
+"Urban Planning",
+"Town Planning",
+"Remote Sensing",
+"GIS for Civil Engineering",
+"Environmental Impact Assessment",
+"Coastal Engineering",
+"Hydraulic Structures",
+"Engineering Drawing",
+"Green Building Design",
+"Sustainable Construction",
+"Project Management"
+];
+
+
+/* MECHANICAL - 50 */
+
+const mechanicalBooks=[
+"Engineering Mechanics",
+"Thermodynamics",
+"Applied Thermodynamics",
+"Fluid Mechanics",
+"Heat Transfer",
+"Engineering Materials",
+"Manufacturing Processes",
+"Production Engineering",
+"Machine Design",
+"Mechanical Design",
+"Theory of Machines",
+"Dynamics of Machines",
+"Automobile Engineering",
+"Internal Combustion Engines",
+"Refrigeration and Air Conditioning",
+"Power Plant Engineering",
+"Industrial Engineering",
+"Operations Research",
+"Metrology and Measurements",
+"CAD CAM",
+"Computer Aided Design",
+"Computer Aided Manufacturing",
+"Robotics",
+"Mechatronics",
+"Industrial Automation",
+"Control Engineering",
+"Vibration Engineering",
+"Finite Element Analysis",
+"Advanced Manufacturing",
+"CNC Machines",
+"Machine Tools",
+"Welding Technology",
+"Foundry Technology",
+"Metal Forming",
+"Non Conventional Machining",
+"Maintenance Engineering",
+"Production Planning",
+"Quality Control",
+"Total Quality Management",
+"Engineering Drawing",
+"Strength of Materials",
+"Mechanical Vibrations",
+"Turbo Machines",
+"Gas Turbines",
+"Steam Turbines",
+"Boiler Engineering",
+"Renewable Energy",
+"Solar Energy Engineering",
+"Wind Energy Engineering",
+"Automotive Engineering"
+];
+
+
+/* ELECTRICAL - 50 */
+
+const electricalBooks=[
+"Basic Electrical Engineering",
+"Electrical Circuit Analysis",
+"Network Theory",
+"Electrical Machines",
+"DC Machines",
+"AC Machines",
+"Transformers",
+"Power Systems",
+"Power System Analysis",
+"Power Electronics",
+"Electrical Measurements",
+"Electrical Instrumentation",
+"Control Systems",
+"Digital Electronics",
+"Analog Electronics",
+"Microprocessors",
+"Microcontrollers",
+"Digital Signal Processing",
+"Signals and Systems",
+"Electromagnetic Theory",
+"Electrical Drives",
+"Industrial Electronics",
+"High Voltage Engineering",
+"Switchgear and Protection",
+"Power System Protection",
+"Renewable Energy Systems",
+"Solar Power Systems",
+"Wind Energy Systems",
+"Smart Grid",
+"Electric Vehicles",
+"Energy Management",
+"Electrical Estimation",
+"Electrical Wiring",
+"Utilization of Electrical Energy",
+"Generation of Electrical Power",
+"Transmission and Distribution",
+"Power Electronics Applications",
+"Embedded Systems",
+"VLSI Design",
+"Communication Engineering",
+"Optical Communication",
+"Power Quality",
+"FACTS Technology",
+"HVDC Transmission",
+"Substation Engineering",
+"Electrical Safety",
+"Industrial Automation",
+"PLC Programming",
+"SCADA Systems",
+"Instrumentation Engineering",
+"Modern Power System"
+];
+
+
+/* ==========================================
+   CREATE BOOK DATABASE
+========================================== */
+
+function addBooks(list,branch){
+
+    list.forEach((title,index)=>{
+
+        let id=books.length+1;
+
+        books.push({
+
+            id:id,
+
+            title:title,
+
+            author:"Engineering Author",
+
+            branch:branch,
+
+            /*
+            Authorized PDF મૂકવાની જગ્યા.
+            Example:
+            books/computer/1.pdf
+            */
+
+            pdf:
+            "books/"+
+            branch.toLowerCase()+
+            "/"+
+            (index+1)+
+            ".pdf"
+
+        });
+
+    });
+
+}
+
+addBooks(computerBooks,"Computer");
+addBooks(civilBooks,"Civil");
+addBooks(mechanicalBooks,"Mechanical");
+addBooks(electricalBooks,"Electrical");
+
+
+/* ==========================================
+   QR CODE URL
+========================================== */
+
+function getQRURL(book){
+
+    /*
+    QR scan થયા પછી આ URL open થશે.
+    */
+
+    return window.location.origin +
+           window.location.pathname +
+           "?book=" +
+           book.id;
+
+}
+
+
+/* ==========================================
+   DISPLAY BOOKS
+========================================== */
+
+function showBooks(){
+
+    const container=
+        document.getElementById("bookContainer");
+
+    const search=
+        document
+        .getElementById("search")
+        .value
+        .toLowerCase();
+
+    const branch=
+        document
+        .getElementById("branch")
+        .value;
+
+    container.innerHTML="";
+
+    const filtered=
+        books.filter(book=>{
+
+            const searchMatch=
+                book.title
+                .toLowerCase()
+                .includes(search)
+                ||
+                book.author
+                .toLowerCase()
+                .includes(search);
+
+            const branchMatch=
+                branch==="All"
+                ||
+                book.branch===branch;
+
+            return searchMatch && branchMatch;
+
+        });
+
+    document.getElementById("bookCount").innerText=
+        "Showing "+filtered.length+" of 200 Books";
+
+
+    filtered.forEach(book=>{
+
+        const card=
+        document.createElement("div");
+
+        card.className="book";
+
+        card.innerHTML=`
+
+            <h3>📖 ${book.title}</h3>
+
+            <p>
+                <b>Book ID:</b>
+                ${book.id}
+            </p>
+
+            <p>
+                <b>Branch:</b>
+                ${book.branch} Engineering
+            </p>
+
+            <p>
+                <b>Author:</b>
+                ${book.author}
+            </p>
+
+            <div
+                class="qr"
+                id="qr-${book.id}">
+            </div>
+
+            <a
+                class="btn read"
+                href="${book.pdf}"
+                target="_blank">
+                📚 Read Book
+            </a>
+
+            <button
+                class="btn print"
+                onclick="printQR(${book.id})">
+                🖨️ Print QR
+            </button>
+
+        `;
+
+        container.appendChild(card);
+
+
+        /* Generate QR */
+
+        new QRCode(
+            document.getElementById(
+                "qr-"+book.id
+            ),
+            {
+                text:getQRURL(book),
+                width:150,
+                height:150
+            }
+        );
+
+    });
+
+}
+
+
+/* ==========================================
+   PRINT QR
+========================================== */
+
+function printQR(id){
+
+    const book=
+        books.find(b=>b.id===id);
+
+    const qr=
+        document.getElementById(
+            "qr-"+id
+        ).innerHTML;
+
+    const win=
+        window.open("","_blank");
+
+    win.document.write(`
+
+        <html>
+
+        <head>
+        <title>Book QR - ${book.title}</title>
+        </head>
+
+        <body
+        style="text-align:center;font-family:Arial">
+
+        <h2>${book.title}</h2>
+
+        <p>
+        ${book.branch} Engineering
+        </p>
+
+        ${qr}
+
+        <p>
+        Book ID: ${book.id}
+        </p>
+
+        <p>
+        Scan this QR Code to view the book.
+        </p>
+
+        </body>
+
+        </html>
+
+    `);
+
+    win.document.close();
+
+    win.print();
+
+}
+
+
+/* ==========================================
+   QR SCAN → OPEN BOOK
+========================================== */
+
+function openScannedBook(){
+
+    const params=
+        new URLSearchParams(
+            window.location.search
+        );
+
+    const id=
+        parseInt(
+            params.get("book")
+        );
+
+    if(!id) return;
+
+    const book=
+        books.find(
+            b=>b.id===id
+        );
+
+    if(!book) return;
+
+
+    document.body.innerHTML=`
+
+        <header>
+
+            <h1>📚 Department Library</h1>
+
+            <p>Book Details</p>
+
+        </header>
+
+
+        <div
+        style="
+        max-width:600px;
+        margin:30px auto;
+        padding:25px;
+        background:white;
+        border-radius:12px;
+        box-shadow:0 3px 15px #ccc;
+        text-align:center;
+        ">
+
+            <h2>
+            📖 ${book.title}
+            </h2>
+
+            <p>
+            <b>Book ID:</b>
+            ${book.id}
+            </p>
+
+            <p>
+            <b>Branch:</b>
+            ${book.branch} Engineering
+            </p>
+
+            <p>
+            <b>Author:</b>
+            ${book.author}
+            </p>
+
+            <br>
+
+            <a
+            href="${book.pdf}"
+            target="_blank"
+            style="
+            display:inline-block;
+            padding:14px 25px;
+            background:#198754;
+            color:white;
+            text-decoration:none;
+            border-radius:7px;
+            font-weight:bold;
+            ">
+
+            📚 READ BOOK
+
+            </a>
+
+            <br><br>
+
+            <a
+            href="books.html"
+            style="
+            display:inline-block;
+            padding:10px 20px;
+            background:#182848;
+            color:white;
+            text-decoration:none;
+            border-radius:7px;
+            ">
+
+            ← Back to Library
+
+            </a>
+
+        </div>
+
+    `;
+
+}
+
+
+/* ==========================================
+   START
+========================================== */
+
+if(
+    new URLSearchParams(
+        window.location.search
+    ).has("book")
+){
+
+    openScannedBook();
+
+}else{
+
+    showBooks();
+
+}
+
+</script>
+
+</body>
+  </html>
