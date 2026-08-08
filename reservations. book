@@ -1,0 +1,276 @@
+"reservation.html"
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Reservation - Department Library</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f7fb;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            text-align: center;
+            color: #222;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        #message {
+            display: none;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #2563eb;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>📚 Book Reservation</h1>
+
+    <p class="subtitle">
+        Department Library Chatbot
+    </p>
+
+    <form id="reservationForm">
+
+        <label>Student Name</label>
+        <input
+            type="text"
+            id="studentName"
+            placeholder="Enter your name"
+            required
+        >
+
+        <label>Enrollment Number</label>
+        <input
+            type="text"
+            id="enrollment"
+            placeholder="Enter enrollment number"
+            required
+        >
+
+        <label>Book Title</label>
+        <input
+            type="text"
+            id="bookTitle"
+            placeholder="Enter book title"
+            required
+        >
+
+        <label>Author Name</label>
+        <input
+            type="text"
+            id="author"
+            placeholder="Enter author name"
+        >
+
+        <label>Reservation Date</label>
+        <input
+            type="date"
+            id="reservationDate"
+            required
+        >
+
+        <button type="submit">
+            Reserve Book
+        </button>
+
+    </form>
+
+    <div id="message"></div>
+
+    <a href="index.html" class="back">
+        ← Back to Library Chatbot
+    </a>
+
+</div>
+
+<script>
+
+    // Set today's date automatically
+    document.getElementById("reservationDate").value =
+        new Date().toISOString().split("T")[0];
+
+
+    document.getElementById("reservationForm")
+    .addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+        const studentName =
+            document.getElementById("studentName").value.trim();
+
+        const enrollment =
+            document.getElementById("enrollment").value.trim();
+
+        const bookTitle =
+            document.getElementById("bookTitle").value.trim();
+
+        const author =
+            document.getElementById("author").value.trim();
+
+        const reservationDate =
+            document.getElementById("reservationDate").value;
+
+
+        if (!studentName || !enrollment || !bookTitle || !reservationDate) {
+
+            showMessage(
+                "Please fill all required fields.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        // Get old reservations
+        let reservations =
+            JSON.parse(localStorage.getItem("bookReservations")) || [];
+
+
+        // Create reservation
+        const reservation = {
+
+            id: Date.now(),
+
+            studentName: studentName,
+
+            enrollment: enrollment,
+
+            bookTitle: bookTitle,
+
+            author: author,
+
+            reservationDate: reservationDate,
+
+            status: "Pending",
+
+            createdAt: new Date().toLocaleString()
+
+        };
+
+
+        // Save reservation
+        reservations.push(reservation);
+
+        localStorage.setItem(
+            "bookReservations",
+            JSON.stringify(reservations)
+        );
+
+
+        showMessage(
+            "✅ Book reservation submitted successfully!",
+            "success"
+        );
+
+
+        // Reset form
+        document.getElementById("reservationForm").reset();
+
+        document.getElementById("reservationDate").value =
+            new Date().toISOString().split("T")[0];
+
+    });
+
+
+    function showMessage(text, type) {
+
+        const message =
+            document.getElementById("message");
+
+        message.innerHTML = text;
+
+        message.className = type;
+
+        message.style.display = "block";
+
+        setTimeout(function() {
+
+            message.style.display = "none";
+
+        }, 5000);
+    }
+
+</script>
+
+</body>
+</html>
