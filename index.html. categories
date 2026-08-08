@@ -1,0 +1,267 @@
+<!-- ================= BOOK CATEGORIES ================= -->
+
+<section id="book-categories" class="book-categories">
+
+    <h2>📚 Book Categories</h2>
+    <p class="category-subtitle">
+        Explore books available in the Department Library
+    </p>
+
+    <div class="category-container">
+
+        <div class="category-card">
+            <div class="category-icon">💻</div>
+            <h3>Programming</h3>
+            <p>Java, Python, C, C++</p>
+            <button onclick="showCategoryBooks('Programming')">
+                View Books
+            </button>
+        </div>
+
+        <div class="category-card">
+            <div class="category-icon">🗄️</div>
+            <h3>Database</h3>
+            <p>DBMS, MySQL, SQL</p>
+            <button onclick="showCategoryBooks('Database')">
+                View Books
+            </button>
+        </div>
+
+        <div class="category-card">
+            <div class="category-icon">🌐</div>
+            <h3>Networking</h3>
+            <p>Computer Networks</p>
+            <button onclick="showCategoryBooks('Networking')">
+                View Books
+            </button>
+        </div>
+
+        <div class="category-card">
+            <div class="category-icon">🖥️</div>
+            <h3>Web Development</h3>
+            <p>HTML, CSS, JavaScript, PHP</p>
+            <button onclick="showCategoryBooks('Web Development')">
+                View Books
+            </button>
+        </div>
+
+        <div class="category-card">
+            <div class="category-icon">🤖</div>
+            <h3>Artificial Intelligence</h3>
+            <p>AI, Machine Learning</p>
+            <button onclick="showCategoryBooks('Artificial Intelligence')">
+                View Books
+            </button>
+        </div>
+
+        <div class="category-card">
+            <div class="category-icon">🔐</div>
+            <h3>Cyber Security</h3>
+            <p>Security & Cryptography</p>
+            <button onclick="showCategoryBooks('Cyber Security')">
+                View Books
+            </button>
+        </div>
+
+        <div class="category-card">
+            <div class="category-icon">⚙️</div>
+            <h3>Operating System</h3>
+            <p>Windows, Linux, OS</p>
+            <button onclick="showCategoryBooks('Operating System')">
+                View Books
+            </button>
+        </div>
+
+        <div class="category-card">
+            <div class="category-icon">🛠️</div>
+            <h3>Software Engineering</h3>
+            <p>Testing, SDLC, Design</p>
+            <button onclick="showCategoryBooks('Software Engineering')">
+                View Books
+            </button>
+        </div>
+
+    </div>
+
+    <!-- BOOK LIST -->
+    <div id="categoryBooks" class="category-books">
+        <h2 id="selectedCategory"></h2>
+        <div id="booksList"></div>
+    </div>
+
+</section>
+
+
+<style>
+
+.book-categories {
+    padding: 40px 20px;
+    text-align: center;
+    background: #f5f7fb;
+}
+
+.book-categories h2 {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.category-subtitle {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.category-container {
+    max-width: 1100px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.category-card {
+    background: white;
+    padding: 25px 15px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transition: 0.3s;
+}
+
+.category-card:hover {
+    transform: translateY(-6px);
+}
+
+.category-icon {
+    font-size: 45px;
+    margin-bottom: 10px;
+}
+
+.category-card h3 {
+    margin: 10px 0;
+}
+
+.category-card p {
+    color: #666;
+    min-height: 40px;
+}
+
+.category-card button {
+    border: none;
+    background: #243b55;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.category-card button:hover {
+    background: #141e30;
+}
+
+.category-books {
+    display: none;
+    max-width: 700px;
+    margin: 30px auto 0;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.book-item {
+    text-align: left;
+    padding: 15px;
+    margin: 10px 0;
+    background: #f1f3f6;
+    border-radius: 8px;
+}
+
+</style>
+
+
+<script>
+
+const categoryBooks = {
+
+    "Programming": [
+        "Java Programming",
+        "Python Programming",
+        "C Programming",
+        "C++ Programming"
+    ],
+
+    "Database": [
+        "Database Management System",
+        "MySQL",
+        "SQL Fundamentals"
+    ],
+
+    "Networking": [
+        "Computer Networks",
+        "Data Communication",
+        "Computer Networking"
+    ],
+
+    "Web Development": [
+        "HTML & CSS",
+        "JavaScript",
+        "PHP Web Development"
+    ],
+
+    "Artificial Intelligence": [
+        "Artificial Intelligence",
+        "Machine Learning",
+        "Deep Learning"
+    ],
+
+    "Cyber Security": [
+        "Cyber Security",
+        "Cryptography",
+        "Ethical Hacking"
+    ],
+
+    "Operating System": [
+        "Operating System Concepts",
+        "Linux",
+        "Windows Operating System"
+    ],
+
+    "Software Engineering": [
+        "Software Engineering",
+        "Software Testing",
+        "Software Design"
+    ]
+};
+
+
+function showCategoryBooks(category) {
+
+    const box = document.getElementById("categoryBooks");
+    const title = document.getElementById("selectedCategory");
+    const list = document.getElementById("booksList");
+
+    title.innerHTML = "📚 " + category + " Books";
+
+    list.innerHTML = "";
+
+    categoryBooks[category].forEach(function(book) {
+
+        list.innerHTML += `
+            <div class="book-item">
+                📖 <strong>${book}</strong>
+                <br>
+                <small>Available in Department Library</small>
+            </div>
+        `;
+
+    });
+
+    box.style.display = "block";
+
+    box.scrollIntoView({
+        behavior: "smooth"
+    });
+}
+
+</script>
+
+<!-- ================= END BOOK CATEGORIES ================= -->
