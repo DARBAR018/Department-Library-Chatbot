@@ -1,0 +1,2225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Department Library Chatbot</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#172033;
+}
+
+/* HEADER */
+
+header{
+    background:linear-gradient(135deg,#123c69,#1976a8);
+    color:white;
+    padding:25px 15px;
+    text-align:center;
+}
+
+header h1{
+    font-size:30px;
+}
+
+header p{
+    margin-top:8px;
+}
+
+/* NAV */
+
+nav{
+    background:white;
+    padding:12px;
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+    position:sticky;
+    top:0;
+    z-index:100;
+    box-shadow:0 2px 10px #0002;
+}
+
+nav button{
+    border:none;
+    background:#123c69;
+    color:white;
+    padding:10px 16px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+nav button:hover{
+    background:#1976a8;
+}
+
+/* CONTAINER */
+
+.container{
+    width:94%;
+    max-width:1250px;
+    margin:25px auto;
+}
+
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
+}
+
+/* DASHBOARD */
+
+.dashboard{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(190px,1fr));
+    gap:18px;
+}
+
+.stat{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 3px 12px #0002;
+    text-align:center;
+}
+
+.stat .icon{
+    font-size:35px;
+}
+
+.stat h2{
+    color:#123c69;
+    margin-top:10px;
+}
+
+/* SEARCH */
+
+.search-box{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 3px 12px #0002;
+    margin-bottom:20px;
+}
+
+.search-box input,
+.search-box select{
+    width:100%;
+    padding:13px;
+    border:1px solid #ccd3dd;
+    border-radius:9px;
+    margin-top:10px;
+    font-size:15px;
+}
+
+/* BOOK GRID */
+
+.book-grid{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(250px,1fr));
+    gap:18px;
+}
+
+/* BOOK CARD */
+
+.book-card{
+    background:white;
+    border-radius:15px;
+    padding:20px;
+    box-shadow:0 3px 12px #0002;
+    transition:.25s;
+}
+
+.book-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 6px 18px #0003;
+}
+
+.book-card h3{
+    color:#123c69;
+    margin-bottom:10px;
+}
+
+.book-card p{
+    margin:7px 0;
+}
+
+.available{
+    color:#138a3d;
+    font-weight:bold;
+}
+
+.issued{
+    color:#d62828;
+    font-weight:bold;
+}
+
+/* BUTTON */
+
+button{
+    border:none;
+    padding:10px 14px;
+    border-radius:8px;
+    background:#123c69;
+    color:white;
+    cursor:pointer;
+    margin-top:7px;
+}
+
+button:hover{
+    background:#1976a8;
+}
+
+.return{
+    background:#198754;
+}
+
+.read-btn{
+    background:#8b4513;
+    width:100%;
+    font-size:16px;
+}
+
+.details-btn{
+    width:100%;
+    background:#1976a8;
+}
+
+/* FACULTY */
+
+.faculty-grid{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.faculty-card{
+    background:white;
+    text-align:center;
+    padding:22px;
+    border-radius:18px;
+    box-shadow:0 3px 12px #0002;
+}
+
+.faculty-card img{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+    border:4px solid #1976a8;
+}
+
+.faculty-card h3{
+    margin-top:12px;
+    color:#123c69;
+}
+
+.faculty-card p{
+    margin:7px 0;
+}
+
+.phone{
+    color:#087f3e;
+    font-weight:bold;
+}
+
+/* NORMAL MODAL */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#0008;
+    z-index:500;
+}
+
+.modal-content{
+    background:white;
+    width:92%;
+    max-width:500px;
+    margin:7% auto;
+    padding:25px;
+    border-radius:15px;
+}
+
+.close{
+    float:right;
+    font-size:28px;
+    cursor:pointer;
+}
+
+/* BOOK DETAILS MODAL */
+
+.book-modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#0009;
+    z-index:900;
+    overflow:auto;
+}
+
+.book-details-box{
+    background:white;
+    width:92%;
+    max-width:650px;
+    margin:5% auto;
+    padding:28px;
+    border-radius:18px;
+}
+
+.book-close{
+    float:right;
+    font-size:30px;
+    cursor:pointer;
+}
+
+.book-cover{
+    text-align:center;
+    font-size:75px;
+    margin:10px;
+}
+
+.book-details-box h2{
+    color:#123c69;
+    text-align:center;
+    margin:15px;
+}
+
+.book-info{
+    background:#f4f7fb;
+    padding:18px;
+    border-radius:12px;
+    margin:20px 0;
+}
+
+.book-info p{
+    margin:10px 0;
+}
+
+/* READER */
+
+.reader{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#111;
+    z-index:2000;
+    overflow:auto;
+}
+
+.reader-header{
+    background:#123c69;
+    color:white;
+    padding:15px;
+    position:sticky;
+    top:0;
+    z-index:5;
+}
+
+.reader-header h2{
+    display:inline-block;
+    margin-left:10px;
+}
+
+.reader-close{
+    float:right;
+    font-size:28px;
+    cursor:pointer;
+}
+
+.reader-body{
+    width:94%;
+    max-width:850px;
+    margin:20px auto;
+}
+
+.reader-page{
+    background:#fffdf5;
+    padding:35px;
+    min-height:500px;
+    border-radius:10px;
+    box-shadow:0 3px 15px #0005;
+    line-height:1.8;
+}
+
+.reader-page h1{
+    color:#123c69;
+    margin-bottom:20px;
+}
+
+.reader-page h2{
+    margin:20px 0 10px;
+}
+
+.reader-controls{
+    text-align:center;
+    padding:20px;
+}
+
+.chapter-info{
+    color:white;
+    margin:0 15px;
+}
+
+.pdf-reader{
+    width:100%;
+    height:80vh;
+    border:none;
+    background:white;
+}
+
+/* FOOTER */
+
+footer{
+    background:#123c69;
+    color:white;
+    text-align:center;
+    padding:20px;
+    margin-top:40px;
+}
+
+.no-result{
+    text-align:center;
+    padding:30px;
+    background:white;
+    border-radius:12px;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    header h1{
+        font-size:23px;
+    }
+
+    .book-details-box{
+        margin:15% auto;
+    }
+
+    .reader-page{
+        padding:22px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<!-- HEADER -->
+
+<header>
+
+<h1>📚 Department Library Chatbot</h1>
+
+<p>
+Smart Department Library Management System
+</p>
+
+</header>
+
+
+<!-- NAVIGATION -->
+
+<nav>
+
+<button onclick="showSection('dashboard')">
+📊 Dashboard
+</button>
+
+<button onclick="showSection('books')">
+📚 Books
+</button>
+
+<button onclick="showSection('faculty')">
+👨‍🏫 Faculty
+</button>
+
+<button onclick="showSection('issued')">
+📕 Issued Books
+</button>
+
+</nav>
+
+
+<div class="container">
+
+
+<!-- DASHBOARD -->
+
+<section id="dashboard"
+class="section active">
+
+<h2>📊 Library Dashboard</h2>
+
+<br>
+
+<div class="dashboard">
+
+<div class="stat">
+<div class="icon">📚</div>
+<h3>Total Books</h3>
+<h2 id="totalBooks">0</h2>
+</div>
+
+<div class="stat">
+<div class="icon">✅</div>
+<h3>Available</h3>
+<h2 id="availableBooks">0</h2>
+</div>
+
+<div class="stat">
+<div class="icon">📕</div>
+<h3>Issued</h3>
+<h2 id="issuedBooks">0</h2>
+</div>
+
+<div class="stat">
+<div class="icon">👨‍🏫</div>
+<h3>Faculty</h3>
+<h2>10</h2>
+</div>
+
+<div class="stat">
+<div class="icon">💻</div>
+<h3>Computer</h3>
+<h2>50</h2>
+</div>
+
+<div class="stat">
+<div class="icon">🏗️</div>
+<h3>Civil</h3>
+<h2>50</h2>
+</div>
+
+<div class="stat">
+<div class="icon">⚙️</div>
+<h3>Mechanical</h3>
+<h2>50</h2>
+</div>
+
+<div class="stat">
+<div class="icon">⚡</div>
+<h3>Electrical</h3>
+<h2>50</h2>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- BOOKS -->
+
+<section id="books"
+class="section">
+
+<h2>📚 Book Search</h2>
+
+<br>
+
+<div class="search-box">
+
+<input
+type="text"
+id="bookSearch"
+placeholder="🔍 Search book, author, ID..."
+oninput="filterBooks()"
+>
+
+<select
+id="categoryFilter"
+onchange="filterBooks()">
+
+<option value="All">
+All Categories
+</option>
+
+<option value="Computer">
+Computer Engineering
+</option>
+
+<option value="Civil">
+Civil Engineering
+</option>
+
+<option value="Mechanical">
+Mechanical Engineering
+</option>
+
+<option value="Electrical">
+Electrical Engineering
+</option>
+
+</select>
+
+</div>
+
+<div id="bookList"
+class="book-grid"></div>
+
+</section>
+
+
+<!-- FACULTY -->
+
+<section id="faculty"
+class="section">
+
+<h2>👨‍🏫 Faculty Directory</h2>
+
+<br>
+
+<div class="search-box">
+
+<input
+type="text"
+id="facultySearch"
+placeholder="🔍 Search faculty..."
+oninput="filterFaculty()"
+>
+
+</div>
+
+<div id="facultyList"
+class="faculty-grid"></div>
+
+</section>
+
+
+<!-- ISSUED -->
+
+<section id="issued"
+class="section">
+
+<h2>📕 Issued Books</h2>
+
+<br>
+
+<div id="issuedList"
+class="book-grid"></div>
+
+</section>
+
+</div>
+
+
+<!-- FACULTY MODAL -->
+
+<div id="modal"
+class="modal">
+
+<div class="modal-content">
+
+<span
+class="close"
+onclick="closeModal()">×</span>
+
+<h2 id="modalName"></h2>
+
+<br>
+
+<p id="modalDepartment"></p>
+
+<p id="modalMobile"></p>
+
+<p id="modalEmail"></p>
+
+<br>
+
+<a id="callLink">
+
+<button>
+📞 Call Faculty
+</button>
+
+</a>
+
+</div>
+
+</div>
+
+
+<!-- BOOK DETAILS MODAL -->
+
+<div id="bookModal"
+class="book-modal">
+
+<div class="book-details-box">
+
+<span
+class="book-close"
+onclick="closeBookDetails()">
+×
+</span>
+
+<div id="bookDetails"></div>
+
+</div>
+
+</div>
+
+
+<!-- READER -->
+
+<div id="reader"
+class="reader">
+
+<div class="reader-header">
+
+<span
+class="reader-close"
+onclick="closeReader()">
+×
+</span>
+
+<span
+onclick="closeReader()"
+style="cursor:pointer">
+
+⬅ Back
+
+</span>
+
+<h2 id="readerTitle">
+Book Reader
+</h2>
+
+</div>
+
+
+<div class="reader-body">
+
+<div id="readerContent"
+class="reader-page">
+</div>
+
+
+<div class="reader-controls">
+
+<button onclick="previousChapter()">
+⬅ Previous
+</button>
+
+<span
+id="chapterInfo"
+class="chapter-info">
+Chapter 1
+</span>
+
+<button onclick="nextChapter()">
+Next ➡
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<footer>
+
+<p>
+© 2026 Department Library Chatbot |
+Smart Library System
+</p>
+
+</footer>
+
+
+<script>
+
+
+/* =====================================================
+   FACULTY
+===================================================== */
+
+const faculty=[
+
+{
+name:"Dr. Rajesh Patel",
+department:"Computer Engineering",
+mobile:"9876543210",
+email:"rajesh@example.com",
+image:"https://i.pravatar.cc/300?img=12"
+},
+
+{
+name:"Prof. Neha Shah",
+department:"Computer Engineering",
+mobile:"9876543211",
+email:"neha@example.com",
+image:"https://i.pravatar.cc/300?img=11"
+},
+
+{
+name:"Dr. Amit Desai",
+department:"Civil Engineering",
+mobile:"9876543212",
+email:"amit@example.com",
+image:"https://i.pravatar.cc/300?img=13"
+},
+
+{
+name:"Prof. Priya Mehta",
+department:"Civil Engineering",
+mobile:"9876543213",
+email:"priya@example.com",
+image:"https://i.pravatar.cc/300?img=14"
+},
+
+{
+name:"Dr. Kiran Joshi",
+department:"Mechanical Engineering",
+mobile:"9876543214",
+email:"kiran@example.com",
+image:"https://i.pravatar.cc/300?img=15"
+},
+
+{
+name:"Prof. Pooja Parmar",
+department:"Mechanical Engineering",
+mobile:"9876543215",
+email:"pooja@example.com",
+image:"https://i.pravatar.cc/300?img=16"
+},
+
+{
+name:"Dr. Hardik Trivedi",
+department:"Electrical Engineering",
+mobile:"9876543216",
+email:"hardik@example.com",
+image:"https://i.pravatar.cc/300?img=17"
+},
+
+{
+name:"Prof. Rina Patel",
+department:"Electrical Engineering",
+mobile:"9876543217",
+email:"rina@example.com",
+image:"https://i.pravatar.cc/300?img=18"
+},
+
+{
+name:"Dr. Sagar Shah",
+department:"Information Technology",
+mobile:"9876543218",
+email:"sagar@example.com",
+image:"https://i.pravatar.cc/300?img=19"
+},
+
+{
+name:"Prof. Komal Joshi",
+department:"Information Technology",
+mobile:"9876543219",
+email:"komal@example.com",
+image:"https://i.pravatar.cc/300?img=20"
+}
+
+];
+
+
+/* =====================================================
+   BOOK ARRAYS
+===================================================== */
+
+const books=[];
+
+const computerBooks=[
+
+"Computer Fundamentals",
+"Programming in C",
+"Programming in C++",
+"Java Programming",
+"Python Programming",
+"Data Structures",
+"Algorithms",
+"Database Management System",
+"Operating System",
+"Computer Networks",
+"Software Engineering",
+"Web Technology",
+"Artificial Intelligence",
+"Machine Learning",
+"Deep Learning",
+"Cloud Computing",
+"Cyber Security",
+"Information Security",
+"Computer Graphics",
+"Digital Logic",
+"Compiler Design",
+"Distributed Systems",
+"Computer Architecture",
+"Microprocessor",
+"Microcontroller",
+"Internet of Things",
+"Big Data",
+"Data Mining",
+"Data Analytics",
+"Mobile Computing",
+"Android Programming",
+"Linux Administration",
+"Unix Programming",
+"System Programming",
+"Network Security",
+"Cryptography",
+"Blockchain Technology",
+"Natural Language Processing",
+"Computer Vision",
+"Expert Systems",
+"Human Computer Interaction",
+"Web Development",
+"React Programming",
+"Node.js Programming",
+"PHP Programming",
+"SQL Programming",
+"Git and GitHub",
+"DevOps",
+"Software Testing",
+"Computer Engineering Handbook"
+
+];
+
+const civilBooks=[
+
+"Engineering Drawing",
+"Engineering Mechanics",
+"Building Materials",
+"Building Construction",
+"Concrete Technology",
+"Structural Analysis",
+"Strength of Materials",
+"Fluid Mechanics",
+"Hydraulics",
+"Surveying",
+"Advanced Surveying",
+"Geotechnical Engineering",
+"Soil Mechanics",
+"Foundation Engineering",
+"Transportation Engineering",
+"Highway Engineering",
+"Railway Engineering",
+"Environmental Engineering",
+"Water Resources Engineering",
+"Irrigation Engineering",
+"Structural Design",
+"RCC Design",
+"Steel Structures",
+"Earthquake Engineering",
+"Construction Management",
+"Quantity Surveying",
+"Estimation and Costing",
+"Engineering Geology",
+"Remote Sensing",
+"GIS for Civil Engineering",
+"Bridge Engineering",
+"Tunnel Engineering",
+"Airport Engineering",
+"Urban Planning",
+"Town Planning",
+"Environmental Pollution",
+"Wastewater Engineering",
+"Water Supply Engineering",
+"Advanced Concrete Technology",
+"Prestressed Concrete",
+"Construction Safety",
+"Project Management",
+"Disaster Management",
+"Coastal Engineering",
+"Hydrology",
+"Open Channel Flow",
+"Applied Mechanics",
+"Engineering Materials",
+"Modern Construction",
+"Civil Engineering Handbook"
+
+];
+
+const mechanicalBooks=[
+
+"Engineering Mechanics",
+"Thermodynamics",
+"Fluid Mechanics",
+"Heat Transfer",
+"Machine Design",
+"Manufacturing Processes",
+"Engineering Materials",
+"Production Engineering",
+"Automobile Engineering",
+"Refrigeration and Air Conditioning",
+"Internal Combustion Engines",
+"Mechanical Measurements",
+"Metrology",
+"Industrial Engineering",
+"Operations Research",
+"CAD CAM",
+"Computer Aided Design",
+"Computer Aided Manufacturing",
+"Robotics",
+"Mechatronics",
+"Engineering Drawing",
+"Theory of Machines",
+"Machine Tools",
+"Manufacturing Technology",
+"Power Plant Engineering",
+"Turbo Machines",
+"Steam Engineering",
+"Gas Turbines",
+"Renewable Energy",
+"Solar Energy",
+"Wind Energy",
+"Mechanical Vibrations",
+"Finite Element Analysis",
+"Engineering Optimization",
+"Production Planning",
+"Quality Control",
+"Maintenance Engineering",
+"Industrial Automation",
+"Control Engineering",
+"Advanced Manufacturing",
+"Non Conventional Machining",
+"Welding Technology",
+"Foundry Technology",
+"Metal Forming",
+"Tribology",
+"Composite Materials",
+"Energy Engineering",
+"Thermal Engineering",
+"Mechanical Engineering Handbook"
+
+];
+
+const electricalBooks=[
+
+"Basic Electrical Engineering",
+"Electrical Circuit Theory",
+"Electrical Machines",
+"Electrical Measurements",
+"Power Systems",
+"Power Electronics",
+"Digital Electronics",
+"Analog Electronics",
+"Electrical Drives",
+"Control Systems",
+"Signals and Systems",
+"Microprocessor",
+"Microcontroller",
+"Embedded Systems",
+"Power System Protection",
+"High Voltage Engineering",
+"Electrical Wiring",
+"Electrical Installation",
+"Switchgear",
+"Transformers",
+"DC Machines",
+"AC Machines",
+"Induction Motors",
+"Synchronous Machines",
+"Electrical Instrumentation",
+"Industrial Electronics",
+"Renewable Energy Systems",
+"Solar Power Systems",
+"Wind Energy Systems",
+"Smart Grid",
+"Power Quality",
+"Energy Management",
+"Electrical Safety",
+"Electromagnetic Theory",
+"Network Analysis",
+"Communication Systems",
+"Digital Signal Processing",
+"VLSI Design",
+"PLC Programming",
+"Industrial Automation",
+"Robotics",
+"Electric Vehicles",
+"Battery Technology",
+"Power Semiconductor Devices",
+"Electrical Materials",
+"Power Generation",
+"Power Transmission",
+"Power Distribution",
+"Electrical Engineering Design",
+"Electrical Engineering Handbook"
+
+];
+
+
+/* =====================================================
+   CREATE 200 BOOKS
+===================================================== */
+
+function addBooks(list,category,prefix){
+
+list.forEach((name,index)=>{
+
+books.push({
+
+id:prefix+String(index+1).padStart(3,"0"),
+
+name:name,
+
+author:"Engineering Author "+(index+1),
+
+category:category,
+
+status:"Available",
+
+issueDate:"",
+
+returnDate:"",
+
+/*
+ PDF મૂકવી હોય તો અહીં path મૂકી શકો.
+ Example:
+ pdf:"books/computer/ce001.pdf"
+*/
+
+pdf:""
+
+});
+
+});
+
+}
+
+addBooks(computerBooks,"Computer","CE");
+
+addBooks(civilBooks,"Civil","CV");
+
+addBooks(mechanicalBooks,"Mechanical","ME");
+
+addBooks(electricalBooks,"Electrical","EE");
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+function showSection(id){
+
+document
+.querySelectorAll(".section")
+.forEach(section=>{
+
+section.classList.remove("active");
+
+});
+
+document
+.getElementById(id)
+.classList.add("active");
+
+if(id==="issued"){
+
+displayIssued();
+
+}
+
+}
+
+
+/* =====================================================
+   DISPLAY BOOKS
+===================================================== */
+
+function displayBooks(list){
+
+const container=
+document.getElementById("bookList");
+
+container.innerHTML="";
+
+if(list.length===0){
+
+container.innerHTML=
+`
+<div class="no-result">
+❌ No book found
+</div>
+`;
+
+return;
+
+}
+
+
+list.forEach(book=>{
+
+const card=
+document.createElement("div");
+
+card.className="book-card";
+
+
+const statusClass=
+book.status==="Available"
+?"available"
+:"issued";
+
+
+card.innerHTML=`
+
+<h3>
+📖 ${book.name}
+</h3>
+
+<p>
+<b>Book ID:</b>
+${book.id}
+</p>
+
+<p>
+<b>Author:</b>
+${book.author}
+</p>
+
+<p>
+<b>Category:</b>
+${book.category}
+</p>
+
+<p class="${statusClass}">
+${
+book.status==="Available"
+?"✅ Available"
+:"❌ Issued"
+}
+</p>
+
+<button
+class="details-btn"
+onclick="openBookDetails('${book.id}')">
+
+📚 Book Details
+
+</button>
+
+<button
+class="read-btn"
+onclick="openReader('${book.id}')">
+
+📖 Read Book
+
+</button>
+
+${
+book.status==="Available"
+
+?
+
+`
+<button
+onclick="issueBook('${book.id}')">
+
+📕 Issue Book
+
+</button>
+`
+
+:
+
+`
+<button
+class="return"
+onclick="returnBook('${book.id}')">
+
+🔄 Return Book
+
+</button>
+`
+
+}
+
+`;
+
+container.appendChild(card);
+
+});
+
+}
+
+
+/* =====================================================
+   SEARCH BOOK
+===================================================== */
+
+function filterBooks(){
+
+const search=
+document
+.getElementById("bookSearch")
+.value
+.toLowerCase();
+
+const category=
+document
+.getElementById("categoryFilter")
+.value;
+
+
+const result=
+books.filter(book=>{
+
+const textMatch=
+
+book.name
+.toLowerCase()
+.includes(search)
+
+||
+
+book.author
+.toLowerCase()
+.includes(search)
+
+||
+
+book.id
+.toLowerCase()
+.includes(search);
+
+
+const categoryMatch=
+
+category==="All"
+||
+book.category===category;
+
+
+return textMatch && categoryMatch;
+
+});
+
+
+displayBooks(result);
+
+}
+
+
+/* =====================================================
+   BOOK DETAILS
+===================================================== */
+
+function openBookDetails(id){
+
+const book=
+books.find(b=>b.id===id);
+
+if(!book)return;
+
+
+document
+.getElementById("bookDetails")
+.innerHTML=
+
+`
+
+<div class="book-cover">
+📚
+</div>
+
+<h2>
+${book.name}
+</h2>
+
+<div class="book-info">
+
+<p>
+<b>📚 Book ID:</b>
+${book.id}
+</p>
+
+<p>
+<b>✍️ Author:</b>
+${book.author}
+</p>
+
+<p>
+<b>📂 Category:</b>
+${book.category}
+</p>
+
+<p>
+<b>📌 Status:</b>
+${book.status}
+</p>
+
+${
+book.issueDate
+?
+`
+<p>
+<b>📅 Issue Date:</b>
+${book.issueDate}
+</p>
+`
+:""
+}
+
+${
+book.returnDate
+?
+`
+<p>
+<b>🔄 Return Date:</b>
+${book.returnDate}
+</p>
+`
+:""
+}
+
+</div>
+
+
+<button
+class="read-btn"
+onclick="openReader('${book.id}')">
+
+📖 Read This Book
+
+</button>
+
+`;
+
+document
+.getElementById("bookModal")
+.style.display="block";
+
+}
+
+
+function closeBookDetails(){
+
+document
+.getElementById("bookModal")
+.style.display="none";
+
+}
+
+
+/* =====================================================
+   READER
+===================================================== */
+
+let currentBook=null;
+
+let currentChapter=0;
+
+
+/*
+ DEMO READING CONTENT
+
+આ content demonstration માટે છે.
+તમારી પોતાની / open-access bookના chapters
+અહીં add કરી શકો છો.
+*/
+
+const readerChapters={
+
+Computer:{
+
+"Computer Fundamentals":[
+
+{
+title:"Chapter 1 - Introduction",
+text:`
+A computer is an electronic device that accepts
+data as input, processes the data according to
+instructions, stores information and produces
+useful output.
+
+The major functions of a computer are input,
+processing, storage and output.
+
+Computers are used in education, business,
+engineering, communication, banking and many
+other fields.
+`
+},
+
+{
+title:"Chapter 2 - Computer Components",
+text:`
+A computer system consists of hardware and
+software.
+
+Important hardware components include the
+CPU, memory, storage devices, input devices
+and output devices.
+
+The CPU performs arithmetic, logical and
+control operations.
+`
+},
+
+{
+title:"Chapter 3 - Input and Output",
+text:`
+Input devices allow users to provide information
+to a computer.
+
+Examples include keyboard, mouse, scanner,
+microphone and camera.
+
+Output devices present processed information.
+Examples include monitor, printer and speakers.
+`
+}
+
+]
+
+},
+
+Civil:{
+
+"Engineering Drawing":[
+
+{
+title:"Chapter 1 - Introduction",
+text:`
+Engineering drawing is a graphical language used
+by engineers and designers to communicate
+technical information.
+
+It provides accurate information about the shape,
+size and construction of an object.
+`
+},
+
+{
+title:"Chapter 2 - Drawing Instruments",
+text:`
+Common drawing instruments include drawing
+boards, T-squares, set squares, compasses,
+protractors and scales.
+
+These instruments help engineers prepare accurate
+technical drawings.
+`
+}
+
+]
+
+},
+
+Mechanical:{
+
+"Engineering Mechanics":[
+
+{
+title:"Chapter 1 - Introduction",
+text:`
+Engineering mechanics is the study of forces and
+their effects on bodies.
+
+It is an important foundation for mechanical and
+civil engineering.
+`
+},
+
+{
+title:"Chapter 2 - Force",
+text:`
+A force is an external influence that can change
+the state of motion or shape of a body.
+
+Force has magnitude, direction and point of
+application.
+`
+}
+
+]
+
+},
+
+Electrical:{
+
+"Basic Electrical Engineering":[
+
+{
+title:"Chapter 1 - Introduction",
+text:`
+Electrical engineering deals with the generation,
+transmission, distribution and application of
+electrical energy.
+
+Electricity is widely used in homes, industries,
+transportation and communication systems.
+`
+},
+
+{
+title:"Chapter 2 - Electrical Circuits",
+text:`
+An electrical circuit provides a path through
+which electric current can flow.
+
+Basic circuit elements include voltage sources,
+resistors, capacitors and inductors.
+`
+}
+
+]
+
+}
+
+};
+
+
+/* =====================================================
+   OPEN READER
+===================================================== */
+
+function openReader(id){
+
+const book=
+books.find(b=>b.id===id);
+
+if(!book)return;
+
+currentBook=book;
+
+currentChapter=0;
+
+
+/*
+ If PDF exists,
+ open the actual PDF reader.
+*/
+
+if(book.pdf && book.pdf.trim()!==""){
+
+document
+.getElementById("readerContent")
+.innerHTML=
+
+`
+<iframe
+class="pdf-reader"
+src="${book.pdf}">
+</iframe>
+`;
+
+document
+.getElementById("readerTitle")
+.innerText=
+"📖 "+book.name;
+
+document
+.getElementById("chapterInfo")
+.innerText=
+"PDF Reader";
+
+document
+.getElementById("reader")
+.style.display="block";
+
+return;
+
+}
+
+
+/*
+ Otherwise display chapter content.
+*/
+
+document
+.getElementById("readerTitle")
+.innerText=
+"📖 "+book.name;
+
+showChapter();
+
+document
+.getElementById("reader")
+.style.display="block";
+
+}
+
+
+/* =====================================================
+   SHOW CHAPTER
+===================================================== */
+
+function showChapter(){
+
+const book=currentBook;
+
+let chapters=null;
+
+
+/*
+ Find chapters by category and book name.
+*/
+
+if(
+readerChapters[book.category] &&
+readerChapters[book.category][book.name]
+){
+
+chapters=
+readerChapters[book.category][book.name];
+
+}
+
+
+/*
+ If no chapter content exists,
+ show message.
+*/
+
+if(!chapters){
+
+document
+.getElementById("readerContent")
+.innerHTML=
+
+`
+
+<h1>
+📖 ${book.name}
+</h1>
+
+<h2>
+Digital Reader
+</h2>
+
+<p>
+આ book માટે હજુ reading content/PDF add
+કરવામાં આવ્યું નથી.
+</p>
+
+<br>
+
+<p>
+તમારી પોતાની અથવા open-access PDFને
+book.pdfમાં add કર્યા પછી આ જ Readerમાં
+પૂર્ણ book વાંચી શકાશે.
+</p>
+
+`;
+
+document
+.getElementById("chapterInfo")
+.innerText=
+"Content not added";
+
+return;
+
+}
+
+
+const chapter=
+chapters[currentChapter];
+
+
+document
+.getElementById("readerContent")
+.innerHTML=
+
+`
+
+<h1>
+${chapter.title}
+</h1>
+
+<p>
+${chapter.text}
+</p>
+
+`;
+
+document
+.getElementById("chapterInfo")
+.innerText=
+
+"Chapter "+
+(currentChapter+1)+
+" / "+
+chapters.length;
+
+}
+
+
+/* =====================================================
+   NEXT CHAPTER
+===================================================== */
+
+function nextChapter(){
+
+if(!currentBook)return;
+
+const chapters=
+readerChapters[currentBook.category]
+?
+readerChapters[currentBook.category][currentBook.name]
+:null;
+
+if(!chapters)return;
+
+if(currentChapter<
+chapters.length-1){
+
+currentChapter++;
+
+showChapter();
+
+}else{
+
+alert(
+"📚 This is the last chapter."
+);
+
+}
+
+}
+
+
+/* =====================================================
+   PREVIOUS CHAPTER
+===================================================== */
+
+function previousChapter(){
+
+if(!currentBook)return;
+
+const chapters=
+readerChapters[currentBook.category]
+?
+readerChapters[currentBook.category][currentBook.name]
+:null;
+
+if(!chapters)return;
+
+if(currentChapter>0){
+
+currentChapter--;
+
+showChapter();
+
+}else{
+
+alert(
+"📖 This is the first chapter."
+);
+
+}
+
+}
+
+
+/* =====================================================
+   CLOSE READER
+===================================================== */
+
+function closeReader(){
+
+document
+.getElementById("reader")
+.style.display="none";
+
+}
+
+
+/* =====================================================
+   ISSUE BOOK
+===================================================== */
+
+function issueBook(id){
+
+const book=
+books.find(b=>b.id===id);
+
+if(!book)return;
+
+if(book.status==="Issued"){
+
+alert("Book is already issued.");
+
+return;
+
+}
+
+const today=
+new Date()
+.toLocaleDateString("en-IN");
+
+book.status="Issued";
+
+book.issueDate=today;
+
+book.returnDate="";
+
+alert(
+"📕 "+book.name+
+"\nBook issued successfully!"
+);
+
+updateDashboard();
+
+filterBooks();
+
+}
+
+
+/* =====================================================
+   RETURN BOOK
+===================================================== */
+
+function returnBook(id){
+
+const book=
+books.find(b=>b.id===id);
+
+if(!book)return;
+
+const today=
+new Date()
+.toLocaleDateString("en-IN");
+
+book.status="Available";
+
+book.returnDate=today;
+
+alert(
+"🔄 "+book.name+
+"\nBook returned successfully!"
+);
+
+updateDashboard();
+
+filterBooks();
+
+displayIssued();
+
+}
+
+
+/* =====================================================
+   ISSUED BOOKS
+===================================================== */
+
+function displayIssued(){
+
+const container=
+document.getElementById("issuedList");
+
+const issued=
+books.filter(
+book=>book.status==="Issued"
+);
+
+container.innerHTML="";
+
+if(issued.length===0){
+
+container.innerHTML=
+
+`
+<div class="no-result">
+✅ No books are currently issued.
+</div>
+`;
+
+return;
+
+}
+
+
+issued.forEach(book=>{
+
+const card=
+document.createElement("div");
+
+card.className="book-card";
+
+card.innerHTML=
+
+`
+
+<h3>
+📕 ${book.name}
+</h3>
+
+<p>
+<b>Book ID:</b>
+${book.id}
+</p>
+
+<p>
+<b>Category:</b>
+${book.category}
+</p>
+
+<p>
+<b>Issue Date:</b>
+${book.issueDate}
+</p>
+
+<button
+class="read-btn"
+onclick="openReader('${book.id}')">
+
+📖 Read Book
+
+</button>
+
+<button
+class="return"
+onclick="returnBook('${book.id}')">
+
+🔄 Return Book
+
+</button>
+
+`;
+
+container.appendChild(card);
+
+});
+
+}
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+function updateDashboard(){
+
+const total=books.length;
+
+const available=
+books.filter(
+book=>book.status==="Available"
+).length;
+
+const issued=
+books.filter(
+book=>book.status==="Issued"
+).length;
+
+document
+.getElementById("totalBooks")
+.innerText=total;
+
+document
+.getElementById("availableBooks")
+.innerText=available;
+
+document
+.getElementById("issuedBooks")
+.innerText=issued;
+
+}
+
+
+/* =====================================================
+   FACULTY
+===================================================== */
+
+function displayFaculty(list){
+
+const container=
+document.getElementById("facultyList");
+
+container.innerHTML="";
+
+list.forEach((person,index)=>{
+
+const card=
+document.createElement("div");
+
+card.className="faculty-card";
+
+card.innerHTML=
+
+`
+
+<img
+src="${person.image}"
+alt="${person.name}"
+>
+
+<h3>
+${person.name}
+</h3>
+
+<p>
+${person.department}
+</p>
+
+<p class="phone">
+📱 ${person.mobile}
+</p>
+
+<p>
+✉️ ${person.email}
+</p>
+
+<button
+onclick="openFaculty(${index})">
+
+👤 View Profile
+
+</button>
+
+`;
+
+container.appendChild(card);
+
+});
+
+}
+
+
+/* =====================================================
+   FACULTY SEARCH
+===================================================== */
+
+function filterFaculty(){
+
+const search=
+document
+.getElementById("facultySearch")
+.value
+.toLowerCase();
+
+const result=
+faculty.filter(person=>
+
+person.name
+.toLowerCase()
+.includes(search)
+
+||
+
+person.department
+.toLowerCase()
+.includes(search)
+
+);
+
+displayFaculty(result);
+
+}
+
+
+/* =====================================================
+   FACULTY MODAL
+===================================================== */
+
+function openFaculty(index){
+
+const person=faculty[index];
+
+document
+.getElementById("modalName")
+.innerText=
+"👨‍🏫 "+person.name;
+
+document
+.getElementById("modalDepartment")
+.innerText=
+"🏫 Department: "+
+person.department;
+
+document
+.getElementById("modalMobile")
+.innerText=
+"📱 Mobile: "+
+person.mobile;
+
+document
+.getElementById("modalEmail")
+.innerText=
+"✉️ Email: "+
+person.email;
+
+document
+.getElementById("callLink")
+.href=
+"tel:"+person.mobile;
+
+document
+.getElementById("modal")
+.style.display="block";
+
+}
+
+
+function closeModal(){
+
+document
+.getElementById("modal")
+.style.display="none";
+
+}
+
+
+/* =====================================================
+   INITIAL LOAD
+===================================================== */
+
+displayBooks(books);
+
+displayFaculty(faculty);
+
+updateDashboard();
+
+
+/* =====================================================
+   CLOSE MODALS
+===================================================== */
+
+window.onclick=function(event){
+
+const facultyModal=
+document.getElementById("modal");
+
+const bookModal=
+document.getElementById("bookModal");
+
+if(event.target===facultyModal){
+
+closeModal();
+
+}
+
+if(event.target===bookModal){
+
+closeBookDetails();
+
+}
+
+};
+
+</script>
+
+</body>
+</html>
