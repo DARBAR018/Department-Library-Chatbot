@@ -1,0 +1,743 @@
+<!-- ================================
+     LIBRARIAN PROFILE
+================================ -->
+
+<section id="librarianProfile" class="librarian-section">
+
+    <div class="librarian-card">
+
+        <!-- Profile Image -->
+        <div class="librarian-image-box">
+            <img
+                id="librarianPhoto"
+                src="librarian.jpg"
+                alt="Librarian Profile"
+                onerror="this.src='https://via.placeholder.com/160?text=Librarian'"
+            >
+        </div>
+
+        <!-- Profile Information -->
+        <div class="librarian-info">
+
+            <h2> <span id="libName">Department Librarian</span></h2>
+
+            <p class="designation">
+                <b>Designation:</b>
+                <span id="libDesignation">
+                    Librarian
+                </span>
+            </p>
+
+            <p>
+                <b> Department:</b>
+                <span id="libDepartment">
+                    Engineering Department
+                </span>
+            </p>
+
+            <p>
+                <b>📧 Email:</b>
+                <span id="libEmail">
+                    librarian@example.com
+                </span>
+            </p>
+
+            <p>
+                <b> Contact:</b>
+                <span id="libPhone">
+                    +91 00000 00000
+                </span>
+            </p>
+
+            <p>
+                <b> Library Timing:</b>
+                <span id="libTiming">
+                    9:00 AM - 5:00 PM
+                </span>
+            </p>
+
+            <p>
+                <b> Experience:</b>
+                <span id="libExperience">
+                    5 Years
+                </span>
+            </p>
+
+            <p>
+                <b>📖 Total Books:</b>
+                <span id="libBooks">
+                    200 Engineering Books
+                </span>
+            </p>
+
+            <button
+                class="profile-btn"
+                onclick="openLibrarianEditor()">
+                 Edit Profile
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================================
+     EDIT PROFILE POPUP
+================================ -->
+
+<div id="librarianModal" class="librarian-modal">
+
+    <div class="modal-content">
+
+        <span
+            class="close-modal"
+            onclick="closeLibrarianEditor()">
+            &times;
+        </span>
+
+        <h2>Edit Librarian Profile</h2>
+
+        <label>Librarian Name</label>
+
+        <input
+            id="editName"
+            type="text"
+            placeholder="Enter librarian name"
+        >
+
+
+        <label>Designation</label>
+
+        <input
+            id="editDesignation"
+            type="text"
+            placeholder="Librarian"
+        >
+
+
+        <label>Department</label>
+
+        <input
+            id="editDepartment"
+            type="text"
+            placeholder="Engineering Department"
+        >
+
+
+        <label>Email</label>
+
+        <input
+            id="editEmail"
+            type="email"
+            placeholder="librarian@example.com"
+        >
+
+
+        <label>Contact Number</label>
+
+        <input
+            id="editPhone"
+            type="text"
+            placeholder="+91 00000 00000"
+        >
+
+
+        <label>Library Timing</label>
+
+        <input
+            id="editTiming"
+            type="text"
+            placeholder="9:00 AM - 5:00 PM"
+        >
+
+
+        <label>Experience</label>
+
+        <input
+            id="editExperience"
+            type="text"
+            placeholder="5 Years"
+        >
+
+
+        <label>Total Books</label>
+
+        <input
+            id="editBooks"
+            type="text"
+            value="200 Engineering Books"
+        >
+
+
+        <button
+            class="save-profile-btn"
+            onclick="saveLibrarianProfile()">
+             Save Profile
+        </button>
+
+    </div>
+
+</div>
+
+
+<style>
+
+/* =================================
+   LIBRARIAN SECTION
+================================= */
+
+.librarian-section{
+
+    padding:40px 20px;
+
+    background:#f4f6f9;
+
+}
+
+
+.librarian-card{
+
+    max-width:900px;
+
+    margin:auto;
+
+    padding:30px;
+
+    background:white;
+
+    border-radius:18px;
+
+    box-shadow:
+        0 5px 20px
+        rgba(0,0,0,.15);
+
+    display:flex;
+
+    align-items:center;
+
+    gap:35px;
+
+}
+
+
+/* =================================
+   PROFILE IMAGE
+================================= */
+
+.librarian-image-box{
+
+    min-width:180px;
+
+    text-align:center;
+
+}
+
+
+.librarian-image-box img{
+
+    width:160px;
+
+    height:160px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:5px solid #182848;
+
+}
+
+
+/* =================================
+   PROFILE INFORMATION
+================================= */
+
+.librarian-info{
+
+    flex:1;
+
+}
+
+
+.librarian-info h2{
+
+    margin-top:0;
+
+    color:#182848;
+
+}
+
+
+.librarian-info p{
+
+    margin:10px 0;
+
+    color:#444;
+
+}
+
+
+.designation{
+
+    color:#198754 !important;
+
+}
+
+
+/* =================================
+   BUTTON
+================================= */
+
+.profile-btn{
+
+    margin-top:15px;
+
+    padding:11px 20px;
+
+    border:none;
+
+    border-radius:7px;
+
+    background:#182848;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+}
+
+
+.profile-btn:hover{
+
+    background:#29477d;
+
+}
+
+
+/* =================================
+   MODAL
+================================= */
+
+.librarian-modal{
+
+    display:none;
+
+    position:fixed;
+
+    z-index:9999;
+
+    left:0;
+
+    top:0;
+
+    width:100%;
+
+    height:100%;
+
+    background:
+        rgba(0,0,0,.65);
+
+    overflow:auto;
+
+}
+
+
+.modal-content{
+
+    background:white;
+
+    max-width:500px;
+
+    margin:50px auto;
+
+    padding:30px;
+
+    border-radius:15px;
+
+    position:relative;
+
+}
+
+
+.modal-content h2{
+
+    color:#182848;
+
+    margin-top:0;
+
+}
+
+
+.modal-content label{
+
+    display:block;
+
+    margin-top:12px;
+
+    font-weight:bold;
+
+}
+
+
+.modal-content input{
+
+    width:100%;
+
+    padding:11px;
+
+    margin-top:5px;
+
+    border:1px solid #ccc;
+
+    border-radius:6px;
+
+}
+
+
+.close-modal{
+
+    position:absolute;
+
+    right:20px;
+
+    top:12px;
+
+    font-size:30px;
+
+    cursor:pointer;
+
+}
+
+
+.save-profile-btn{
+
+    width:100%;
+
+    margin-top:20px;
+
+    padding:13px;
+
+    border:none;
+
+    border-radius:7px;
+
+    background:#198754;
+
+    color:white;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+}
+
+
+.save-profile-btn:hover{
+
+    background:#146c43;
+
+}
+
+
+/* =================================
+   MOBILE
+================================= */
+
+@media(max-width:650px){
+
+    .librarian-card{
+
+        flex-direction:column;
+
+        text-align:center;
+
+        padding:25px;
+
+    }
+
+    .librarian-image-box{
+
+        min-width:auto;
+
+    }
+
+    .librarian-info{
+
+        width:100%;
+
+    }
+
+}
+
+</style>
+
+
+<script>
+
+/* =================================
+   DEFAULT LIBRARIAN DATA
+================================= */
+
+const defaultLibrarian = {
+
+    name:
+        "Department Librarian",
+
+    designation:
+        "Librarian",
+
+    department:
+        "Engineering Department",
+
+    email:
+        "librarian@example.com",
+
+    phone:
+        "+91 00000 00000",
+
+    timing:
+        "9:00 AM - 5:00 PM",
+
+    experience:
+        "5 Years",
+
+    books:
+        "200 Engineering Books"
+
+};
+
+
+/* =================================
+   LOAD PROFILE
+================================= */
+
+function loadLibrarianProfile(){
+
+    let saved =
+        localStorage.getItem(
+            "librarianProfile"
+        );
+
+    let data =
+        saved
+        ? JSON.parse(saved)
+        : defaultLibrarian;
+
+
+    document.getElementById(
+        "libName"
+    ).innerText=data.name;
+
+
+    document.getElementById(
+        "libDesignation"
+    ).innerText=data.designation;
+
+
+    document.getElementById(
+        "libDepartment"
+    ).innerText=data.department;
+
+
+    document.getElementById(
+        "libEmail"
+    ).innerText=data.email;
+
+
+    document.getElementById(
+        "libPhone"
+    ).innerText=data.phone;
+
+
+    document.getElementById(
+        "libTiming"
+    ).innerText=data.timing;
+
+
+    document.getElementById(
+        "libExperience"
+    ).innerText=data.experience;
+
+
+    document.getElementById(
+        "libBooks"
+    ).innerText=data.books;
+
+}
+
+
+/* =================================
+   OPEN EDITOR
+================================= */
+
+function openLibrarianEditor(){
+
+    let saved =
+        localStorage.getItem(
+            "librarianProfile"
+        );
+
+    let data =
+        saved
+        ? JSON.parse(saved)
+        : defaultLibrarian;
+
+
+    document.getElementById(
+        "editName"
+    ).value=data.name;
+
+
+    document.getElementById(
+        "editDesignation"
+    ).value=data.designation;
+
+
+    document.getElementById(
+        "editDepartment"
+    ).value=data.department;
+
+
+    document.getElementById(
+        "editEmail"
+    ).value=data.email;
+
+
+    document.getElementById(
+        "editPhone"
+    ).value=data.phone;
+
+
+    document.getElementById(
+        "editTiming"
+    ).value=data.timing;
+
+
+    document.getElementById(
+        "editExperience"
+    ).value=data.experience;
+
+
+    document.getElementById(
+        "editBooks"
+    ).value=data.books;
+
+
+    document.getElementById(
+        "librarianModal"
+    ).style.display="block";
+
+}
+
+
+/* =================================
+   CLOSE EDITOR
+================================= */
+
+function closeLibrarianEditor(){
+
+    document.getElementById(
+        "librarianModal"
+    ).style.display="none";
+
+}
+
+
+/* =================================
+   SAVE PROFILE
+================================= */
+
+function saveLibrarianProfile(){
+
+    const data={
+
+        name:
+            document.getElementById(
+                "editName"
+            ).value,
+
+        designation:
+            document.getElementById(
+                "editDesignation"
+            ).value,
+
+        department:
+            document.getElementById(
+                "editDepartment"
+            ).value,
+
+        email:
+            document.getElementById(
+                "editEmail"
+            ).value,
+
+        phone:
+            document.getElementById(
+                "editPhone"
+            ).value,
+
+        timing:
+            document.getElementById(
+                "editTiming"
+            ).value,
+
+        experience:
+            document.getElementById(
+                "editExperience"
+            ).value,
+
+        books:
+            document.getElementById(
+                "editBooks"
+            ).value
+
+    };
+
+
+    localStorage.setItem(
+        "librarianProfile",
+        JSON.stringify(data)
+    );
+
+
+    loadLibrarianProfile();
+
+    closeLibrarianEditor();
+
+
+    alert(
+        " Librarian Profile Saved Successfully!"
+    );
+
+}
+
+
+/* =================================
+   START
+================================= */
+
+loadLibrarianProfile();
+
+
+/* Close popup when clicking outside */
+
+window.onclick=function(event){
+
+    const modal=
+        document.getElementById(
+            "librarianModal"
+        );
+
+    if(event.target===modal){
+
+        closeLibrarianEditor();
+
+    }
+
+};
+
+</script>
