@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Department Library Chatbot</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#172033;
+}
+
+header{
+    background:linear-gradient(135deg,#123c69,#1976a8);
+    color:white;
+    padding:25px 15px;
+    text-align:center;
+}
+
+header h1{
+    font-size:30px;
+}
+
+header p{
+    margin-top:8px;
+}
+
+/* NAVIGATION */
+
+nav{
+    background:white;
+    padding:12px;
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+    position:sticky;
+    top:0;
+    z-index:100;
+    box-shadow:0 2px 10px #0002;
+}
+
+nav button{
+    border:none;
+    background:#123c69;
+    color:white;
+    padding:10px 16px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+nav button:hover{
+    background:#1976a8;
+}
+
+/* MAIN */
+
+.container{
+    width:94%;
+    max-width:1250px;
+    margin:25px auto;
+}
+
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
+}
+
+/* DASHBOARD */
+
+.dashboard{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(190px,1fr));
+    gap:18px;
+}
+
+.stat{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 3px 12px #0002;
+    text-align:center;
+}
+
+.stat .icon{
+    font-size:35px;
+}
+
+.stat h2{
+    color:#123c69;
+    margin-top:10px;
+}
+
+/* SEARCH */
+
+.search-box{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 3px 12px #0002;
+    margin-bottom:20px;
+}
+
+.search-box input,
+.search-box select{
+    width:100%;
+    padding:13px;
+    border:1px solid #ccd3dd;
+    border-radius:9px;
+    margin-top:10px;
+    font-size:15px;
+}
+
+/* BOOK GRID */
+
+.book-grid{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(250px,1fr));
+    gap:18px;
+}
+
+.book-card{
+    background:white;
+    border-radius:15px;
+    padding:20px;
+    box-shadow:0 3px 12px #0002;
+    transition:.25s;
+}
+
+.book-card:hover{
+    transform:translateY(-4px);
+}
+
+.book-card h3{
+    color:#123c69;
+    margin-bottom:10px;
+}
+
+.book-card p{
+    margin:7px 0;
+}
+
+.available{
+    color:#138a3d;
+    font-weight:bold;
+}
+
+.issued{
+    color:#d62828;
+    font-weight:bold;
+}
+
+button{
+    border:none;
+    padding:10px 14px;
+    border-radius:8px;
+    background:#123c69;
+    color:white;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1976a8;
+}
+
+.return{
+    background:#198754;
+}
+
+/* FACULTY */
+
+.faculty-grid{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.faculty-card{
+    background:white;
+    text-align:center;
+    padding:22px;
+    border-radius:18px;
+    box-shadow:0 3px 12px #0002;
+}
+
+.faculty-card img{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+    border:4px solid #1976a8;
+}
+
+.faculty-card h3{
+    margin-top:12px;
+    color:#123c69;
+}
+
+.faculty-card p{
+    margin:7px 0;
+}
+
+.phone{
+    color:#087f3e;
+    font-weight:bold;
+}
+
+/* MODAL */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#0008;
+    z-index:500;
+}
+
+.modal-content{
+    background:white;
+    width:92%;
+    max-width:450px;
+    margin:8% auto;
+    padding:25px;
+    border-radius:15px;
+}
+
+.close{
+    float:right;
+    font-size:28px;
+    cursor:pointer;
+}
+
+/* FOOTER */
+
+footer{
+    background:#123c69;
+    color:white;
+    text-align:center;
+    padding:20px;
+    margin-top:40px;
+}
+
+.no-result{
+    text-align:center;
+    padding:30px;
+    background:white;
+    border-radius:12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>📚 Department Library Chatbot</h1>
+
+<p>
+Smart Department Library Management System
+</p>
+
+</header>
+
+
+<!-- NAVIGATION -->
+
+<nav>
+
+<button onclick="showSection('dashboard')">
+📊 Dashboard
+</button>
+
+<button onclick="showSection('books')">
+📚 Books
+</button>
+
+<button onclick="showSection('faculty')">
+👨‍🏫 Faculty
+</button>
+
+<button onclick="showSection('issued')">
+📕 Issued Books
+</button>
+
+</nav>
+
+
+<div class="container">
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<section id="dashboard"
+class="section active">
+
+<h2>📊 Library Dashboard</h2>
+
+<br>
+
+<div class="dashboard">
+
+<div class="stat">
+<div class="icon">📚</div>
+<h3>Total Books</h3>
+<h2 id="totalBooks">0</h2>
+</div>
+
+<div class="stat">
+<div class="icon">✅</div>
+<h3>Available</h3>
+<h2 id="availableBooks">0</h2>
+</div>
+
+<div class="stat">
+<div class="icon">📕</div>
+<h3>Issued</h3>
+<h2 id="issuedBooks">0</h2>
+</div>
+
+<div class="stat">
+<div class="icon">👨‍🏫</div>
+<h3>Faculty</h3>
+<h2>10</h2>
+</div>
+
+<div class="stat">
+<div class="icon">💻</div>
+<h3>Computer</h3>
+<h2>50</h2>
+</div>
+
+<div class="stat">
+<div class="icon">🏗️</div>
+<h3>Civil</h3>
+<h2>50</h2>
+</div>
+
+<div class="stat">
+<div class="icon">⚙️</div>
+<h3>Mechanical</h3>
+<h2>50</h2>
+</div>
+
+<div class="stat">
+<div class="icon">⚡</div>
+<h3>Electrical</h3>
+<h2>50</h2>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= BOOKS ================= -->
+
+<section id="books"
+class="section">
+
+<h2>📚 Book Search</h2>
+
+<br>
+
+<div class="search-box">
+
+<input
+type="text"
+id="bookSearch"
+placeholder="🔍 Search book, author, ID..."
+oninput="filterBooks()"
+>
+
+<select id="categoryFilter"
+onchange="filterBooks()">
+
+<option value="All">
+All Categories
+</option>
+
+<option value="Computer">
+Computer Engineering
+</option>
+
+<option value="Civil">
+Civil Engineering
+</option>
+
+<option value="Mechanical">
+Mechanical Engineering
+</option>
+
+<option value="Electrical">
+Electrical Engineering
+</option>
+
+</select>
+
+</div>
+
+
+<div id="bookList"
+class="book-grid"></div>
+
+</section>
+
+
+<!-- ================= FACULTY ================= -->
+
+<section id="faculty"
+class="section">
+
+<h2>👨‍🏫 Faculty Directory</h2>
+
+<br>
+
+<div class="search-box">
+
+<input
+type="text"
+id="facultySearch"
+placeholder="🔍 Search faculty..."
+oninput="filterFaculty()"
+>
+
+</div>
+
+<div id="facultyList"
+class="faculty-grid"></div>
+
+</section>
+
+
+<!-- ================= ISSUED ================= -->
+
+<section id="issued"
+class="section">
+
+<h2>📕 Issued Books</h2>
+
+<br>
+
+<div id="issuedList"
+class="book-grid"></div>
+
+</section>
+
+</div>
+
+
+<!-- ================= MODAL ================= -->
+
+<div id="modal"
+class="modal">
+
+<div class="modal-content">
+
+<span
+class="close"
+onclick="closeModal()">
+×
+</span>
+
+<h2 id="modalName"></h2>
+
+<br>
+
+<p id="modalDepartment"></p>
+
+<p id="modalMobile"></p>
+
+<p id="modalEmail"></p>
+
+<br>
+
+<a id="callLink">
+
+<button>
+📞 Call Faculty
+</button>
+
+</a>
+
+</div>
+
+</div>
+
+
+<footer>
+
+<p>
+© 2026 Department Library Chatbot |
+Smart Library System
+</p>
+
+</footer>
+
+
+<script>
+
+/* =========================================
+   FACULTY DATA - 10 FACULTY
+========================================= */
+
+const faculty = [
+
+{
+name:"Dr. Rajesh Patel",
+department:"Computer Engineering",
+mobile:"9876543210",
+email:"rajesh@example.com",
+image:"https://i.pravatar.cc/300?img=12"
+},
+
+{
+name:"Prof. Neha Shah",
+department:"Computer Engineering",
+mobile:"9876543211",
+email:"neha@example.com",
+image:"https://i.pravatar.cc/300?img=11"
+},
+
+{
+name:"Dr. Amit Desai",
+department:"Civil Engineering",
+mobile:"9876543212",
+email:"amit@example.com",
+image:"https://i.pravatar.cc/300?img=13"
+},
+
+{
+name:"Prof. Priya Mehta",
+department:"Civil Engineering",
+mobile:"9876543213",
+email:"priya@example.com",
+image:"https://i.pravatar.cc/300?img=14"
+},
+
+{
+name:"Dr. Kiran Joshi",
+department:"Mechanical Engineering",
+mobile:"9876543214",
+email:"kiran@example.com",
+image:"https://i.pravatar.cc/300?img=15"
+},
+
+{
+name:"Prof. Pooja Parmar",
+department:"Mechanical Engineering",
+mobile:"9876543215",
+email:"pooja@example.com",
+image:"https://i.pravatar.cc/300?img=16"
+},
+
+{
+name:"Dr. Hardik Trivedi",
+department:"Electrical Engineering",
+mobile:"9876543216",
+email:"hardik@example.com",
+image:"https://i.pravatar.cc/300?img=17"
+},
+
+{
+name:"Prof. Rina Patel",
+department:"Electrical Engineering",
+mobile:"9876543217",
+email:"rina@example.com",
+image:"https://i.pravatar.cc/300?img=18"
+},
+
+{
+name:"Dr. Sagar Shah",
+department:"Information Technology",
+mobile:"9876543218",
+email:"sagar@example.com",
+image:"https://i.pravatar.cc/300?img=19"
+},
+
+{
+name:"Prof. Komal Joshi",
+department:"Information Technology",
+mobile:"9876543219",
+email:"komal@example.com",
+image:"https://i.pravatar.cc/300?img=20"
+}
+
+];
+
+
+/* =========================================
+   BOOK DATA
+   50 COMPUTER
+   50 CIVIL
+   50 MECHANICAL
+   50 ELECTRICAL
+========================================= */
+
+const books = [];
+
+const computerBooks = [
+
+"Computer Fundamentals",
+"Programming in C",
+"Programming in C++",
+"Java Programming",
+"Python Programming",
+"Data Structures",
+"Algorithms",
+"Database Management System",
+"Operating System",
+"Computer Networks",
+"Software Engineering",
+"Web Technology",
+"Artificial Intelligence",
+"Machine Learning",
+"Deep Learning",
+"Cloud Computing",
+"Cyber Security",
+"Information Security",
+"Computer Graphics",
+"Digital Logic",
+"Compiler Design",
+"Distributed Systems",
+"Computer Architecture",
+"Microprocessor",
+"Microcontroller",
+"Internet of Things",
+"Big Data",
+"Data Mining",
+"Data Analytics",
+"Mobile Computing",
+"Android Programming",
+"Linux Administration",
+"Unix Programming",
+"System Programming",
+"Network Security",
+"Cryptography",
+"Blockchain Technology",
+"Natural Language Processing",
+"Computer Vision",
+"Expert Systems",
+"Human Computer Interaction",
+"Web Development",
+"React Programming",
+"Node.js Programming",
+"PHP Programming",
+"SQL Programming",
+"Git and GitHub",
+"DevOps",
+"Software Testing",
+"Computer Engineering Handbook"
+
+];
+
+const civilBooks = [
+
+"Engineering Drawing",
+"Engineering Mechanics",
+"Building Materials",
+"Building Construction",
+"Concrete Technology",
+"Structural Analysis",
+"Strength of Materials",
+"Fluid Mechanics",
+"Hydraulics",
+"Surveying",
+"Advanced Surveying",
+"Geotechnical Engineering",
+"Soil Mechanics",
+"Foundation Engineering",
+"Transportation Engineering",
+"Highway Engineering",
+"Railway Engineering",
+"Environmental Engineering",
+"Water Resources Engineering",
+"Irrigation Engineering",
+"Structural Design",
+"RCC Design",
+"Steel Structures",
+"Earthquake Engineering",
+"Construction Management",
+"Quantity Surveying",
+"Estimation and Costing",
+"Engineering Geology",
+"Remote Sensing",
+"GIS for Civil Engineering",
+"Bridge Engineering",
+"Tunnel Engineering",
+"Airport Engineering",
+"Urban Planning",
+"Town Planning",
+"Environmental Pollution",
+"Wastewater Engineering",
+"Water Supply Engineering",
+"Advanced Concrete Technology",
+"Prestressed Concrete",
+"Construction Safety",
+"Project Management",
+"Disaster Management",
+"Coastal Engineering",
+"Hydrology",
+"Open Channel Flow",
+"Applied Mechanics",
+"Engineering Materials",
+"Modern Construction",
+"Civil Engineering Handbook"
+
+];
+
+const mechanicalBooks = [
+
+"Engineering Mechanics",
+"Thermodynamics",
+"Fluid Mechanics",
+"Heat Transfer",
+"Machine Design",
+"Manufacturing Processes",
+"Engineering Materials",
+"Production Engineering",
+"Automobile Engineering",
+"Refrigeration and Air Conditioning",
+"Internal Combustion Engines",
+"Mechanical Measurements",
+"Metrology",
+"Industrial Engineering",
+"Operations Research",
+"CAD CAM",
+"Computer Aided Design",
+"Computer Aided Manufacturing",
+"Robotics",
+"Mechatronics",
+"Engineering Drawing",
+"Theory of Machines",
+"Machine Tools",
+"Manufacturing Technology",
+"Power Plant Engineering",
+"Turbo Machines",
+"Steam Engineering",
+"Gas Turbines",
+"Renewable Energy",
+"Solar Energy",
+"Wind Energy",
+"Mechanical Vibrations",
+"Finite Element Analysis",
+"Engineering Optimization",
+"Production Planning",
+"Quality Control",
+"Maintenance Engineering",
+"Industrial Automation",
+"Control Engineering",
+"Advanced Manufacturing",
+"Non Conventional Machining",
+"Welding Technology",
+"Foundry Technology",
+"Metal Forming",
+"Tribology",
+"Composite Materials",
+"Energy Engineering",
+"Thermal Engineering",
+"Mechanical Engineering Handbook"
+
+];
+
+const electricalBooks = [
+
+"Basic Electrical Engineering",
+"Electrical Circuit Theory",
+"Electrical Machines",
+"Electrical Measurements",
+"Power Systems",
+"Power Electronics",
+"Digital Electronics",
+"Analog Electronics",
+"Electrical Drives",
+"Control Systems",
+"Signals and Systems",
+"Microprocessor",
+"Microcontroller",
+"Embedded Systems",
+"Power System Protection",
+"High Voltage Engineering",
+"Electrical Wiring",
+"Electrical Installation",
+"Switchgear",
+"Transformers",
+"DC Machines",
+"AC Machines",
+"Induction Motors",
+"Synchronous Machines",
+"Electrical Instrumentation",
+"Industrial Electronics",
+"Renewable Energy Systems",
+"Solar Power Systems",
+"Wind Energy Systems",
+"Smart Grid",
+"Power Quality",
+"Energy Management",
+"Electrical Safety",
+"Electromagnetic Theory",
+"Network Analysis",
+"Communication Systems",
+"Digital Signal Processing",
+"VLSI Design",
+"PLC Programming",
+"Industrial Automation",
+"Robotics",
+"Electric Vehicles",
+"Battery Technology",
+"Power Semiconductor Devices",
+"Electrical Materials",
+"Power Generation",
+"Power Transmission",
+"Power Distribution",
+"Electrical Engineering Design",
+"Electrical Engineering Handbook"
+
+];
+
+
+/* =========================================
+   CREATE 200 BOOKS
+========================================= */
+
+function addBooks(list,category,prefix){
+
+    list.forEach((name,index)=>{
+
+        books.push({
+
+            id:
+            prefix +
+            String(index+1).padStart(3,"0"),
+
+            name:name,
+
+            author:
+            "Engineering Author " +
+            (index+1),
+
+            category:category,
+
+            status:
+            "Available",
+
+            issueDate:"",
+
+            returnDate:""
+
+        });
+
+    });
+
+}
+
+addBooks(
+computerBooks,
+"Computer",
+"CE"
+);
+
+addBooks(
+civilBooks,
+"Civil",
+"CV"
+);
+
+addBooks(
+mechanicalBooks,
+"Mechanical",
+"ME"
+);
+
+addBooks(
+electricalBooks,
+"Electrical",
+"EE"
+);
+
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+function showSection(id){
+
+    document
+    .querySelectorAll(".section")
+    .forEach(section=>{
+
+        section.classList.remove("active");
+
+    });
+
+    document
+    .getElementById(id)
+    .classList.add("active");
+
+    if(id==="issued"){
+
+        displayIssued();
+
+    }
+
+}
+
+
+/* =========================================
+   BOOK DISPLAY
+========================================= */
+
+function displayBooks(list){
+
+    const container =
+    document.getElementById("bookList");
+
+    container.innerHTML="";
+
+    if(list.length===0){
+
+        container.innerHTML=
+        `<div class="no-result">
+        ❌ No book found
+        </div>`;
+
+        return;
+
+    }
+
+    list.forEach(book=>{
+
+        const card=
+        document.createElement("div");
+
+        card.className="book-card";
+
+        const statusClass=
+        book.status==="Available"
+        ?"available"
+        :"issued";
+
+        let button="";
+
+        if(book.status==="Available"){
+
+            button=
+            `<button
+            onclick="issueBook('${book.id}')">
+            📕 Issue Book
+            </button>`;
+
+        }else{
+
+            button=
+            `<button
+            class="return"
+            onclick="returnBook('${book.id}')">
+            🔄 Return Book
+            </button>`;
+
+        }
+
+        card.innerHTML=`
+
+        <h3>📖 ${book.name}</h3>
+
+        <p>
+        <b>Book ID:</b>
+        ${book.id}
+        </p>
+
+        <p>
+        <b>Author:</b>
+        ${book.author}
+        </p>
+
+        <p>
+        <b>Category:</b>
+        ${book.category}
+        </p>
+
+        <p class="${statusClass}">
+        ${book.status==="Available"
+        ?"✅ Available"
+        :"❌ Issued"}
+        </p>
+
+        ${
+        book.issueDate
+        ?
+        `<p>
+        <b>Issue Date:</b>
+        ${book.issueDate}
+        </p>`
+        :""
+        }
+
+        ${
+        book.returnDate
+        ?
+        `<p>
+        <b>Return Date:</b>
+        ${book.returnDate}
+        </p>`
+        :""
+        }
+
+        ${button}
+
+        `;
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================================
+   BOOK SEARCH
+========================================= */
+
+function filterBooks(){
+
+    const search=
+    document
+    .getElementById("bookSearch")
+    .value
+    .toLowerCase();
+
+    const category=
+    document
+    .getElementById("categoryFilter")
+    .value;
+
+    const result=
+    books.filter(book=>{
+
+        const textMatch=
+
+        book.name
+        .toLowerCase()
+        .includes(search)
+
+        ||
+
+        book.author
+        .toLowerCase()
+        .includes(search)
+
+        ||
+
+        book.id
+        .toLowerCase()
+        .includes(search);
+
+        const categoryMatch=
+
+        category==="All"
+        ||
+        book.category===category;
+
+        return textMatch && categoryMatch;
+
+    });
+
+    displayBooks(result);
+
+}
+
+
+/* =========================================
+   ISSUE BOOK
+========================================= */
+
+function issueBook(id){
+
+    const book=
+    books.find(b=>b.id===id);
+
+    if(!book)return;
+
+    if(book.status==="Issued"){
+
+        alert("Book is already issued.");
+
+        return;
+
+    }
+
+    const today=
+    new Date()
+    .toLocaleDateString("en-IN");
+
+    book.status="Issued";
+
+    book.issueDate=today;
+
+    book.returnDate="";
+
+    alert(
+    "📕 "+book.name+
+    "\\nBook issued successfully!"
+    );
+
+    updateDashboard();
+
+    filterBooks();
+
+}
+
+
+/* =========================================
+   RETURN BOOK
+========================================= */
+
+function returnBook(id){
+
+    const book=
+    books.find(b=>b.id===id);
+
+    if(!book)return;
+
+    const today=
+    new Date()
+    .toLocaleDateString("en-IN");
+
+    book.status="Available";
+
+    book.returnDate=today;
+
+    alert(
+    "🔄 "+book.name+
+    "\\nBook returned successfully!"
+    );
+
+    updateDashboard();
+
+    filterBooks();
+
+    displayIssued();
+
+}
+
+
+/* =========================================
+   ISSUED BOOKS
+========================================= */
+
+function displayIssued(){
+
+    const container=
+    document.getElementById("issuedList");
+
+    const issued=
+    books.filter(
+    book=>book.status==="Issued"
+    );
+
+    container.innerHTML="";
+
+    if(issued.length===0){
+
+        container.innerHTML=
+        `<div class="no-result">
+        ✅ No books are currently issued.
+        </div>`;
+
+        return;
+
+    }
+
+    issued.forEach(book=>{
+
+        const card=
+        document.createElement("div");
+
+        card.className="book-card";
+
+        card.innerHTML=`
+
+        <h3>📕 ${book.name}</h3>
+
+        <p>
+        <b>Book ID:</b>
+        ${book.id}
+        </p>
+
+        <p>
+        <b>Category:</b>
+        ${book.category}
+        </p>
+
+        <p>
+        <b>Issue Date:</b>
+        ${book.issueDate}
+        </p>
+
+        <button
+        class="return"
+        onclick="returnBook('${book.id}')">
+
+        🔄 Return Book
+
+        </button>
+
+        `;
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================================
+   DASHBOARD
+========================================= */
+
+function updateDashboard(){
+
+    const total=books.length;
+
+    const available=
+    books.filter(
+    book=>book.status==="Available"
+    ).length;
+
+    const issued=
+    books.filter(
+    book=>book.status==="Issued"
+    ).length;
+
+    document
+    .getElementById("totalBooks")
+    .innerText=total;
+
+    document
+    .getElementById("availableBooks")
+    .innerText=available;
+
+    document
+    .getElementById("issuedBooks")
+    .innerText=issued;
+
+}
+
+
+/* =========================================
+   FACULTY DISPLAY
+========================================= */
+
+function displayFaculty(list){
+
+    const container=
+    document.getElementById("facultyList");
+
+    container.innerHTML="";
+
+    list.forEach((person,index)=>{
+
+        const card=
+        document.createElement("div");
+
+        card.className="faculty-card";
+
+        card.innerHTML=`
+
+        <img
+        src="${person.image}"
+        alt="${person.name}"
+        >
+
+        <h3>
+        ${person.name}
+    
