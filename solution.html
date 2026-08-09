@@ -1,0 +1,381 @@
+<!-- ================= LIBRARY DASHBOARD ================= -->
+<section id="dashboard" class="dashboard-section">
+
+  <div class="dashboard-header">
+    <div>
+      <h2>📊 Library Dashboard</h2>
+      <p>Department Library Overview</p>
+    </div>
+    <div class="dashboard-date" id="dashboardDate"></div>
+  </div>
+
+  <div class="dashboard-cards">
+
+    <!-- Total Books -->
+    <div class="dash-card">
+      <div class="dash-icon">📚</div>
+      <div class="dash-info">
+        <h3>Total Books</h3>
+        <span id="totalBooks">0</span>
+        <p>All library books</p>
+      </div>
+    </div>
+
+    <!-- Available Books -->
+    <div class="dash-card available">
+      <div class="dash-icon">✅</div>
+      <div class="dash-info">
+        <h3>Available</h3>
+        <span id="availableBooks">0</span>
+        <p>Books available</p>
+      </div>
+    </div>
+
+    <!-- Issued Books -->
+    <div class="dash-card issued">
+      <div class="dash-icon">📖</div>
+      <div class="dash-info">
+        <h3>Issued</h3>
+        <span id="issuedBooks">0</span>
+        <p>Currently issued</p>
+      </div>
+    </div>
+
+    <!-- Students -->
+    <div class="dash-card students">
+      <div class="dash-icon">👨‍🎓</div>
+      <div class="dash-info">
+        <h3>Students</h3>
+        <span id="totalStudents">0</span>
+        <p>Registered students</p>
+      </div>
+    </div>
+
+    <!-- Reservations -->
+    <div class="dash-card reservation">
+      <div class="dash-icon">🔖</div>
+      <div class="dash-info">
+        <h3>Reservations</h3>
+        <span id="totalReservations">0</span>
+        <p>Book reservations</p>
+      </div>
+    </div>
+
+    <!-- Overdue -->
+    <div class="dash-card overdue">
+      <div class="dash-icon">⚠️</div>
+      <div class="dash-info">
+        <h3>Overdue</h3>
+        <span id="overdueBooks">0</span>
+        <p>Books overdue</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <h3>⚡ Quick Actions</h3>
+
+    <div class="action-buttons">
+      <button onclick="showBooks()">📚 View Books</button>
+      <button onclick="issueBook()">📤 Issue Book</button>
+      <button onclick="returnBook()">📥 Return Book</button>
+      <button onclick="addStudent()">👨‍🎓 Add Student</button>
+      <button onclick="reserveBook()">🔖 Reservation</button>
+    </div>
+  </div>
+
+</section>
+
+
+<style>
+
+/* ================= DASHBOARD ================= */
+
+.dashboard-section {
+  padding: 25px;
+  background: #f5f7fb;
+  border-radius: 20px;
+  margin: 20px auto;
+  max-width: 1200px;
+  box-sizing: border-box;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.dashboard-header h2 {
+  margin: 0;
+  font-size: 28px;
+  color: #1f2937;
+}
+
+.dashboard-header p {
+  margin: 5px 0 0;
+  color: #6b7280;
+}
+
+.dashboard-date {
+  background: white;
+  padding: 10px 15px;
+  border-radius: 10px;
+  color: #374151;
+  font-size: 14px;
+}
+
+/* Cards */
+
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.dash-card {
+  background: white;
+  padding: 22px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+  transition: 0.3s;
+  border-left: 5px solid #4f46e5;
+}
+
+.dash-card:hover {
+  transform: translateY(-5px);
+}
+
+.dash-icon {
+  width: 55px;
+  height: 55px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 27px;
+  background: #eef2ff;
+}
+
+.dash-info h3 {
+  margin: 0;
+  color: #374151;
+  font-size: 16px;
+}
+
+.dash-info span {
+  display: block;
+  font-size: 30px;
+  font-weight: bold;
+  color: #111827;
+  margin-top: 4px;
+}
+
+.dash-info p {
+  margin: 3px 0 0;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+/* Card Colors */
+
+.available {
+  border-left-color: #16a34a;
+}
+
+.available .dash-icon {
+  background: #dcfce7;
+}
+
+.issued {
+  border-left-color: #f59e0b;
+}
+
+.issued .dash-icon {
+  background: #fef3c7;
+}
+
+.students {
+  border-left-color: #2563eb;
+}
+
+.students .dash-icon {
+  background: #dbeafe;
+}
+
+.reservation {
+  border-left-color: #9333ea;
+}
+
+.reservation .dash-icon {
+  background: #f3e8ff;
+}
+
+.overdue {
+  border-left-color: #dc2626;
+}
+
+.overdue .dash-icon {
+  background: #fee2e2;
+}
+
+/* Quick Actions */
+
+.quick-actions {
+  margin-top: 25px;
+  background: white;
+  padding: 22px;
+  border-radius: 18px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+}
+
+.quick-actions h3 {
+  margin-top: 0;
+  color: #1f2937;
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.action-buttons button {
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: #4f46e5;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.action-buttons button:hover {
+  background: #3730a3;
+  transform: translateY(-2px);
+}
+
+/* Mobile */
+
+@media (max-width: 800px) {
+
+  .dashboard-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+@media (max-width: 550px) {
+
+  .dashboard-section {
+    padding: 15px;
+  }
+
+  .dashboard-header {
+    display: block;
+  }
+
+  .dashboard-date {
+    display: inline-block;
+    margin-top: 10px;
+  }
+
+  .dashboard-cards {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+</style>
+
+
+<script>
+
+/* ================= LIBRARY DATA ================= */
+
+let libraryData = {
+  totalBooks: 200,
+  availableBooks: 150,
+  issuedBooks: 50,
+  totalStudents: 120,
+  totalReservations: 12,
+  overdueBooks: 5
+};
+
+
+/* ================= UPDATE DASHBOARD ================= */
+
+function updateDashboard() {
+
+  document.getElementById("totalBooks").textContent =
+    libraryData.totalBooks;
+
+  document.getElementById("availableBooks").textContent =
+    libraryData.availableBooks;
+
+  document.getElementById("issuedBooks").textContent =
+    libraryData.issuedBooks;
+
+  document.getElementById("totalStudents").textContent =
+    libraryData.totalStudents;
+
+  document.getElementById("totalReservations").textContent =
+    libraryData.totalReservations;
+
+  document.getElementById("overdueBooks").textContent =
+    libraryData.overdueBooks;
+}
+
+
+/* ================= DATE ================= */
+
+function showDashboardDate() {
+
+  const today = new Date();
+
+  document.getElementById("dashboardDate").textContent =
+    today.toLocaleDateString("en-IN", {
+      weekday: "short",
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    });
+}
+
+
+/* ================= QUICK ACTIONS ================= */
+
+function showBooks() {
+  alert("📚 Opening Books Section...");
+}
+
+function issueBook() {
+  alert("📤 Issue Book Section...");
+}
+
+function returnBook() {
+  alert("📥 Return Book Section...");
+}
+
+function addStudent() {
+  alert("👨‍🎓 Add Student Section...");
+}
+
+function reserveBook() {
+  alert("🔖 Book Reservation Section...");
+}
+
+
+/* ================= START ================= */
+
+updateDashboard();
+showDashboardDate();
+
+</script>
