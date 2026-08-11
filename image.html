@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>KDP LIBRARY CHATBOT</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#eef7ff,#f5f0ff);
+    color:#172033;
+}
+
+/* HEADER */
+header{
+    background:white;
+    padding:18px 7%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 3px 15px rgba(0,0,0,.08);
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:bold;
+    color:#1769d1;
+}
+
+.logo span{
+    display:block;
+    font-size:12px;
+    color:#777;
+    margin-top:3px;
+}
+
+nav a{
+    text-decoration:none;
+    color:#333;
+    margin-left:22px;
+    font-size:15px;
+}
+
+nav a:hover{
+    color:#1769d1;
+}
+
+/* HERO */
+.hero{
+    text-align:center;
+    padding:55px 20px 35px;
+}
+
+.hero h1{
+    font-size:38px;
+    margin-bottom:12px;
+}
+
+.hero p{
+    color:#666;
+    font-size:16px;
+}
+
+/* SEARCH */
+.search-box{
+    width:90%;
+    max-width:750px;
+    margin:20px auto 35px;
+    display:flex;
+    background:white;
+    padding:8px;
+    border-radius:50px;
+    box-shadow:0 5px 20px rgba(0,0,0,.10);
+}
+
+.search-box input{
+    flex:1;
+    border:0;
+    outline:none;
+    padding:14px 20px;
+    font-size:15px;
+    border-radius:50px;
+}
+
+.search-box button{
+    border:0;
+    background:#1769d1;
+    color:white;
+    padding:13px 28px;
+    border-radius:30px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+/* FILTER */
+.filters{
+    width:90%;
+    max-width:1100px;
+    margin:auto;
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:30px;
+}
+
+.filters button{
+    border:1px solid #1769d1;
+    background:white;
+    color:#1769d1;
+    padding:10px 20px;
+    border-radius:25px;
+    cursor:pointer;
+}
+
+.filters button:hover,
+.filters button.active{
+    background:#1769d1;
+    color:white;
+}
+
+/* BOOK GRID */
+.book-container{
+    width:90%;
+    max-width:1150px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:25px;
+    padding-bottom:50px;
+}
+
+.book{
+    background:white;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 5px 20px rgba(0,0,0,.09);
+    transition:.3s;
+}
+
+.book:hover{
+    transform:translateY(-7px);
+    box-shadow:0 12px 28px rgba(0,0,0,.15);
+}
+
+.book-img{
+    height:180px;
+    background:linear-gradient(135deg,#dcecff,#edf3ff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:65px;
+}
+
+.book-content{
+    padding:20px;
+}
+
+.book h3{
+    font-size:18px;
+    margin-bottom:8px;
+}
+
+.author{
+    color:#777;
+    font-size:14px;
+    margin-bottom:12px;
+}
+
+.category{
+    display:inline-block;
+    background:#e9f2ff;
+    color:#1769d1;
+    padding:5px 10px;
+    border-radius:15px;
+    font-size:12px;
+}
+
+.status{
+    margin-top:15px;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.available{
+    color:#159447;
+}
+
+.issued{
+    color:#e04747;
+}
+
+.read-btn{
+    width:100%;
+    margin-top:15px;
+    padding:11px;
+    border:0;
+    border-radius:8px;
+    background:#1769d1;
+    color:white;
+    cursor:pointer;
+}
+
+.read-btn:hover{
+    background:#0d4fa8;
+}
+
+/* FOOTER */
+footer{
+    background:#172033;
+    color:white;
+    text-align:center;
+    padding:25px;
+}
+
+@media(max-width:600px){
+
+    header{
+        padding:15px 5%;
+    }
+
+    nav{
+        display:none;
+    }
+
+    .hero h1{
+        font-size:29px;
+    }
+
+    .search-box{
+        width:94%;
+    }
+
+    .search-box button{
+        padding:12px 18px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        📚 KDP LIBRARY PORTAL
+        <span>Engineering Department</span>
+    </div>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="books.html">Books</a>
+        <a href="#">Notices</a>
+        <a href="#">Faculty</a>
+        <a href="#">Papers</a>
+        <a href="#">E-Books</a>
+    </nav>
+
+</header>
+
+
+<section class="hero">
+
+    <h1>📚 KDP LIBRARY 📚</h1>
+
+    <p>
+        Search and explore books available in the Kdp library
+    </p>
+
+</section>
+
+
+<div class="search-box">
+
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Search book title, author or subject..."
+        onkeyup="searchBooks()"
+    >
+
+    <button onclick="searchBooks()">Search</button>
+
+</div>
+
+
+<div class="filters">
+
+    <button class="active" onclick="filterBooks('All',this)">
+        All
+    </button>
+
+    <button onclick="filterBooks('Computer',this)">
+        Computer
+    </button>
+
+    <button onclick="filterBooks('Civil',this)">
+        Civil
+    </button>
+
+    <button onclick="filterBooks('Mechanical',this)">
+        Mechanical
+    </button>
+
+    <button onclick="filterBooks('Electrical',this)">
+        Electrical
+    </button>
+
+</div>
+
+
+<div class="book-container" id="bookContainer">
+
+
+    <!-- BOOK 1 -->
+
+    <div class="book" data-category="Computer">
+
+        <div class="book-img">💻</div>
+
+        <div class="book-content">
+
+            <h3>Data Structures</h3>
+
+            <p class="author">
+                Author: Seymour Lipschutz
+            </p>
+
+            <span class="category">
+                Computer
+            </span>
+
+            <p class="status available">
+                ● Available
+            </p>
+
+            <button class="read-btn"
+            onclick="readBook('Data Structures')">
+                Read / View Book
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- BOOK 2 -->
+
+    <div class="book" data-category="Computer">
+
+        <div class="book-img">📘</div>
+
+        <div class="book-content">
+
+            <h3>Computer Networks</h3>
+
+            <p class="author">
+                Author: Andrew S. Tanenbaum
+            </p>
+
+            <span class="category">
+                Computer
+            </span>
+
+            <p class="status available">
+                ● Available
+            </p>
+
+            <button class="read-btn"
+            onclick="readBook('Computer Networks')">
+                Read / View Book
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- BOOK 3 -->
+
+    <div class="book" data-category="Civil">
+
+        <div class="book-img">🏗️</div>
+
+        <div class="book-content">
+
+            <h3>Engineering Mechanics</h3>
+
+            <p class="author">
+                Author: R.S. Khurmi
+            </p>
+
+            <span class="category">
+                Civil
+            </span>
+
+            <p class="status available">
+                ● Available
+            </p>
+
+            <button class="read-btn"
+            onclick="readBook('Engineering Mechanics')">
+                Read / View Book
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- BOOK 4 -->
+
+    <div class="book" data-category="Mechanical">
+
+        <div class="book-img">⚙️</div>
+
+        <div class="book-content">
+
+            <h3>Thermodynamics</h3>
+
+            <p class="author">
+                Author: P.K. Nag
+            </p>
+
+            <span class="category">
+                Mechanical
+            </span>
+
+            <p class="status issued">
+                ● Issued
+            </p>
+
+            <button class="read-btn"
+            onclick="readBook('Thermodynamics')">
+                Read / View Book
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- BOOK 5 -->
+
+    <div class="book" data-category="Electrical">
+
+        <div class="book-img">⚡</div>
+
+        <div class="book-content">
+
+            <h3>Basic Electrical Engineering</h3>
+
+            <p class="author">
+                Author: V.K. Mehta
+            </p>
+
+            <span class="category">
+                Electrical
+            </span>
+
+            <p class="status available">
+                ● Available
+            </p>
+
+            <button class="read-btn"
+            onclick="readBook('Basic Electrical Engineering')">
+                Read / View Book
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- BOOK 6 -->
+
+    <div class="book" data-category="Computer">
+
+        <div class="book-img">🖥️</div>
+
+        <div class="book-content">
+
+            <h3>Operating System</h3>
+
+            <p class="author">
+                Author: Abraham Silberschatz
+            </p>
+
+            <span class="category">
+                Computer
+            </span>
+
+            <p class="status available">
+                ● Available
+            </p>
+
+            <button class="read-btn"
+            onclick="readBook('Operating System')">
+                Read / View Book
+            </button>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<footer>
+
+    © 2026 Department Library Portal
+    <br>
+    Engineering Department
+
+</footer>
+
+
+<script>
+
+/* SEARCH BOOK */
+
+function searchBooks(){
+
+    let input =
+        document.getElementById("searchInput")
+        .value.toLowerCase();
+
+    let books =
+        document.querySelectorAll(".book");
+
+    books.forEach(function(book){
+
+        let text =
+            book.innerText.toLowerCase();
+
+        if(text.includes(input)){
+            book.style.display = "";
+        }
+        else{
+            book.style.display = "none";
+        }
+
+    });
+
+}
+
+
+/* CATEGORY FILTER */
+
+function filterBooks(category,button){
+
+    let books =
+        document.querySelectorAll(".book");
+
+    document.querySelectorAll(".filters button")
+    .forEach(btn =>
+        btn.classList.remove("active")
+    );
+
+    button.classList.add("active");
+
+    books.forEach(function(book){
+
+        if(category === "All" ||
+           book.dataset.category === category){
+
+            book.style.display = "";
+
+        }
+        else{
+
+            book.style.display = "none";
+
+        }
+
+    });
+
+}
+
+
+/* READ BOOK */
+
+function readBook(bookName){
+
+    alert(
+        "📚 " + bookName +
+        "\\n\\nBook reading / PDF link can be added here."
+    );
+
+}
+
+</script>
+
+</body>
+</html>
