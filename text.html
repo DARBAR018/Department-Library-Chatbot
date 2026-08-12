@@ -1,0 +1,470 @@
+<!-- COMPUTER ENGINEERING BOOK LIBRARY -->
+<section id="computerBooks">
+    <h2>💻 Computer Engineering Library</h2>
+
+    <input type="text" id="bookSearch"
+           placeholder="🔍 Search Computer Engineering Book..."
+           onkeyup="searchBooks()">
+
+    <div id="bookContainer"></div>
+</section>
+
+<style>
+#computerBooks {
+    padding: 25px;
+    background: #f5f7fb;
+}
+
+#computerBooks h2 {
+    text-align: center;
+    color: #172554;
+    margin-bottom: 20px;
+}
+
+#bookSearch {
+    display: block;
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto 25px;
+    padding: 13px;
+    border: 2px solid #2563eb;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+#bookContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.book-card {
+    background: white;
+    padding: 18px;
+    border-radius: 15px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.12);
+    text-align: center;
+    transition: 0.3s;
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+}
+
+.book-icon {
+    font-size: 55px;
+    margin-bottom: 10px;
+}
+
+.book-card h3 {
+    font-size: 18px;
+    color: #111827;
+    min-height: 48px;
+}
+
+.book-card p {
+    color: #555;
+    font-size: 14px;
+}
+
+.qr-code {
+    width: 130px;
+    height: 130px;
+    margin: 12px auto;
+    display: block;
+}
+
+.read-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.read-btn:hover {
+    background: #1d4ed8;
+}
+</style>
+
+<script>
+
+const computerBooks = [
+
+{
+title:"Computer Fundamentals",
+author:"P.K. Sinha",
+url:"https://books.google.com/books?q=Computer+Fundamentals+P.K.+Sinha"
+},
+
+{
+title:"Computer Organization and Architecture",
+author:"William Stallings",
+url:"https://books.google.com/books?q=Computer+Organization+and+Architecture+William+Stallings"
+},
+
+{
+title:"Computer Architecture",
+author:"Morris Mano",
+url:"https://books.google.com/books?q=Computer+Architecture+Morris+Mano"
+},
+
+{
+title:"Operating System Concepts",
+author:"Silberschatz",
+url:"https://books.google.com/books?q=Operating+System+Concepts+Silberschatz"
+},
+
+{
+title:"Modern Operating Systems",
+author:"Andrew S. Tanenbaum",
+url:"https://books.google.com/books?q=Modern+Operating+Systems+Tanenbaum"
+},
+
+{
+title:"Database System Concepts",
+author:"Silberschatz",
+url:"https://books.google.com/books?q=Database+System+Concepts+Silberschatz"
+},
+
+{
+title:"Database Management Systems",
+author:"Raghu Ramakrishnan",
+url:"https://books.google.com/books?q=Database+Management+Systems+Raghu+Ramakrishnan"
+},
+
+{
+title:"Data Structures Using C",
+author:"Reema Thareja",
+url:"https://books.google.com/books?q=Data+Structures+Using+C+Reema+Thareja"
+},
+
+{
+title:"Data Structures and Algorithms",
+author:"Narasimha Karumanchi",
+url:"https://books.google.com/books?q=Data+Structures+and+Algorithms+Karumanchi"
+},
+
+{
+title:"Introduction to Algorithms",
+author:"Thomas H. Cormen",
+url:"https://books.google.com/books?q=Introduction+to+Algorithms+Cormen"
+},
+
+{
+title:"Programming in C",
+author:"E. Balagurusamy",
+url:"https://books.google.com/books?q=Programming+in+C+Balagurusamy"
+},
+
+{
+title:"Programming in C++",
+author:"E. Balagurusamy",
+url:"https://books.google.com/books?q=Programming+in+C%2B%2B+Balagurusamy"
+},
+
+{
+title:"Object Oriented Programming with C++",
+author:"E. Balagurusamy",
+url:"https://books.google.com/books?q=Object+Oriented+Programming+C%2B%2B+Balagurusamy"
+},
+
+{
+title:"Java The Complete Reference",
+author:"Herbert Schildt",
+url:"https://books.google.com/books?q=Java+The+Complete+Reference+Herbert+Schildt"
+},
+
+{
+title:"Core Java",
+author:"Cay S. Horstmann",
+url:"https://books.google.com/books?q=Core+Java+Cay+Horstmann"
+},
+
+{
+title:"Head First Java",
+author:"Kathy Sierra",
+url:"https://books.google.com/books?q=Head+First+Java+Kathy+Sierra"
+},
+
+{
+title:"Python Crash Course",
+author:"Eric Matthes",
+url:"https://books.google.com/books?q=Python+Crash+Course+Eric+Matthes"
+},
+
+{
+title:"Learning Python",
+author:"Mark Lutz",
+url:"https://books.google.com/books?q=Learning+Python+Mark+Lutz"
+},
+
+{
+title:"Automate the Boring Stuff with Python",
+author:"Al Sweigart",
+url:"https://books.google.com/books?q=Automate+the+Boring+Stuff+with+Python"
+},
+
+{
+title:"JavaScript: The Definitive Guide",
+author:"David Flanagan",
+url:"https://books.google.com/books?q=JavaScript+The+Definitive+Guide"
+},
+
+{
+title:"HTML and CSS",
+author:"Jon Duckett",
+url:"https://books.google.com/books?q=HTML+and+CSS+Jon+Duckett"
+},
+
+{
+title:"Learning Web Design",
+author:"Jennifer Robbins",
+url:"https://books.google.com/books?q=Learning+Web+Design+Jennifer+Robbins"
+},
+
+{
+title:"Computer Networks",
+author:"Andrew S. Tanenbaum",
+url:"https://books.google.com/books?q=Computer+Networks+Tanenbaum"
+},
+
+{
+title:"Data Communications and Networking",
+author:"Behrouz A. Forouzan",
+url:"https://books.google.com/books?q=Data+Communications+and+Networking+Forouzan"
+},
+
+{
+title:"Computer Networking: A Top-Down Approach",
+author:"Kurose and Ross",
+url:"https://books.google.com/books?q=Computer+Networking+Top+Down+Approach"
+},
+
+{
+title:"Cryptography and Network Security",
+author:"William Stallings",
+url:"https://books.google.com/books?q=Cryptography+and+Network+Security+Stallings"
+},
+
+{
+title:"Network Security Essentials",
+author:"William Stallings",
+url:"https://books.google.com/books?q=Network+Security+Essentials+Stallings"
+},
+
+{
+title:"Software Engineering",
+author:"Ian Sommerville",
+url:"https://books.google.com/books?q=Software+Engineering+Ian+Sommerville"
+},
+
+{
+title:"Software Engineering: A Practitioner's Approach",
+author:"Roger Pressman",
+url:"https://books.google.com/books?q=Software+Engineering+Pressman"
+},
+
+{
+title:"Software Testing",
+author:"Ron Patton",
+url:"https://books.google.com/books?q=Software+Testing+Ron+Patton"
+},
+
+{
+title:"Artificial Intelligence",
+author:"Stuart Russell",
+url:"https://books.google.com/books?q=Artificial+Intelligence+Russell+Norvig"
+},
+
+{
+title:"Artificial Intelligence: A Modern Approach",
+author:"Russell and Norvig",
+url:"https://books.google.com/books?q=Artificial+Intelligence+A+Modern+Approach"
+},
+
+{
+title:"Machine Learning",
+author:"Tom M. Mitchell",
+url:"https://books.google.com/books?q=Machine+Learning+Tom+Mitchell"
+},
+
+{
+title:"Hands-On Machine Learning",
+author:"Aurélien Géron",
+url:"https://books.google.com/books?q=Hands+On+Machine+Learning+Aurelien+Geron"
+},
+
+{
+title:"Deep Learning",
+author:"Ian Goodfellow",
+url:"https://books.google.com/books?q=Deep+Learning+Goodfellow"
+},
+
+{
+title:"Cloud Computing",
+author:"Rajkumar Buyya",
+url:"https://books.google.com/books?q=Cloud+Computing+Rajkumar+Buyya"
+},
+
+{
+title:"Distributed Systems",
+author:"Andrew S. Tanenbaum",
+url:"https://books.google.com/books?q=Distributed+Systems+Tanenbaum"
+},
+
+{
+title:"Computer Graphics",
+author:"Donald Hearn",
+url:"https://books.google.com/books?q=Computer+Graphics+Donald+Hearn"
+},
+
+{
+title:"Digital Image Processing",
+author:"Rafael C. Gonzalez",
+url:"https://books.google.com/books?q=Digital+Image+Processing+Gonzalez"
+},
+
+{
+title:"Compiler Design",
+author:"Aho, Lam, Sethi",
+url:"https://books.google.com/books?q=Compiler+Design+Aho+Lam+Sethi"
+},
+
+{
+title:"Theory of Computation",
+author:"Michael Sipser",
+url:"https://books.google.com/books?q=Theory+of+Computation+Michael+Sipser"
+},
+
+{
+title:"Discrete Mathematics",
+author:"Kenneth Rosen",
+url:"https://books.google.com/books?q=Discrete+Mathematics+Kenneth+Rosen"
+},
+
+{
+title:"Engineering Mathematics",
+author:"B.S. Grewal",
+url:"https://books.google.com/books?q=Engineering+Mathematics+B.S.+Grewal"
+},
+
+{
+title:"Digital Logic Design",
+author:"Morris Mano",
+url:"https://books.google.com/books?q=Digital+Logic+Design+Morris+Mano"
+},
+
+{
+title:"Microprocessor Architecture",
+author:"Ramesh Gaonkar",
+url:"https://books.google.com/books?q=Microprocessor+Architecture+Gaonkar"
+},
+
+{
+title:"Embedded Systems",
+author:"Shibu K.V.",
+url:"https://books.google.com/books?q=Embedded+Systems+Shibu"
+},
+
+{
+title:"Internet of Things",
+author:"Arshdeep Bahga",
+url:"https://books.google.com/books?q=Internet+of+Things+Arshdeep+Bahga"
+},
+
+{
+title:"Big Data",
+author:"V.K. Jain",
+url:"https://books.google.com/books?q=Big+Data+V.K.+Jain"
+},
+
+{
+title:"Data Mining",
+author:"Jiawei Han",
+url:"https://books.google.com/books?q=Data+Mining+Jiawei+Han"
+},
+
+{
+title:"Information Security",
+author:"Mark Stamp",
+url:"https://books.google.com/books?q=Information+Security+Mark+Stamp"
+},
+
+{
+title:"Mobile Computing",
+author:"Raj Kamal",
+url:"https://books.google.com/books?q=Mobile+Computing+Raj+Kamal"
+},
+
+{
+title:"Web Technologies",
+author:"Uttam K. Roy",
+url:"https://books.google.com/books?q=Web+Technologies+Uttam+Roy"
+}
+
+];
+
+function displayBooks(books) {
+
+    const container = document.getElementById("bookContainer");
+
+    container.innerHTML = "";
+
+    books.forEach((book, index) => {
+
+        const qrURL =
+        "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data="
+        + encodeURIComponent(book.url);
+
+        container.innerHTML += `
+
+        <div class="book-card">
+
+            <div class="book-icon">📚</div>
+
+            <h3>${index + 1}. ${book.title}</h3>
+
+            <p>👨‍💻 Author: ${book.author}</p>
+
+            <p>📖 Computer Engineering</p>
+
+            <img class="qr-code"
+                 src="${qrURL}"
+                 alt="QR Code">
+
+            <p>📱 Scan QR Code to Open Book</p>
+
+            <a class="read-btn"
+               href="${book.url}"
+               target="_blank">
+               📖 Open / Read
+            </a>
+
+        </div>
+
+        `;
+
+    });
+}
+
+function searchBooks() {
+
+    const search =
+        document.getElementById("bookSearch")
+        .value.toLowerCase();
+
+    const filtered =
+        computerBooks.filter(book =>
+            book.title.toLowerCase().includes(search) ||
+            book.author.toLowerCase().includes(search)
+        );
+
+    displayBooks(filtered);
+}
+
+displayBooks(computerBooks);
+
+</script>
