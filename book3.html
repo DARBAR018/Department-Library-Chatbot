@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>QR & Barcode Scanner | KDP Library</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/scanner.css">
+
+  <!-- QR + Barcode Scanner -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+
+  <aside class="sidebar">
+
+    <div class="logo">
+
+      <div class="logo-icon">
+        <i class="fa-solid fa-book-open"></i>
+      </div>
+
+      <div>
+        <strong>KDP LIBRARY</strong>
+        <small>Digital Library</small>
+      </div>
+
+    </div>
+
+
+    <nav class="navigation">
+
+      <p class="nav-title">MAIN</p>
+
+      <a href="../index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i>
+        <span>Dashboard</span>
+      </a>
+
+      <a href="books.html" class="nav-link">
+        <i class="fa-solid fa-book"></i>
+        <span>All Books</span>
+      </a>
+
+
+      <p class="nav-title">SCANNING</p>
+
+      <a href="scanner.html"
+         class="nav-link active">
+
+        <i class="fa-solid fa-qrcode"></i>
+
+        <span>QR Scanner</span>
+
+      </a>
+
+
+      <a href="scanner.html"
+         class="nav-link">
+
+        <i class="fa-solid fa-barcode"></i>
+
+        <span>Barcode Scanner</span>
+
+      </a>
+
+
+      <p class="nav-title">DEPARTMENTS</p>
+
+      <a href="books.html?department=Computer Engineering"
+         class="nav-link">
+
+        <i class="fa-solid fa-computer"></i>
+
+        <span>Computer Engineering</span>
+
+      </a>
+
+
+      <a href="books.html?department=Mechanical Engineering"
+         class="nav-link">
+
+        <i class="fa-solid fa-gears"></i>
+
+        <span>Mechanical Engineering</span>
+
+      </a>
+
+
+      <a href="books.html?department=Civil Engineering"
+         class="nav-link">
+
+        <i class="fa-solid fa-building"></i>
+
+        <span>Civil Engineering</span>
+
+      </a>
+
+
+      <a href="books.html?department=Electrical Engineering"
+         class="nav-link">
+
+        <i class="fa-solid fa-bolt"></i>
+
+        <span>Electrical Engineering</span>
+
+      </a>
+
+
+      <a href="books.html?department=EC Engineering"
+         class="nav-link">
+
+        <i class="fa-solid fa-microchip"></i>
+
+        <span>EC Engineering</span>
+
+      </a>
+
+    </nav>
+
+  </aside>
+
+
+  <!-- MAIN -->
+
+  <main class="main-content">
+
+
+    <!-- HEADER -->
+
+    <header class="top-header">
+
+      <div class="header-left">
+
+        <button class="menu-button"
+                id="menuButton">
+
+          <i class="fa-solid fa-bars"></i>
+
+        </button>
+
+        <div>
+
+          <h1>Book Scanner</h1>
+
+          <p>
+            QR & Barcode Library Scanner
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="header-actions">
+
+        <button class="icon-button"
+                id="themeButton">
+
+          <i class="fa-solid fa-moon"></i>
+
+        </button>
+
+
+        <div class="profile">
+
+          <div class="profile-avatar">
+
+            <i class="fa-solid fa-user"></i>
+
+          </div>
+
+
+          <div class="profile-info">
+
+            <strong>Library Admin</strong>
+
+            <small>Librarian</small>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <!-- PAGE -->
+
+    <div class="page-container">
+
+
+      <section class="scanner-heading">
+
+        <span class="section-label">
+          SMART LIBRARY
+        </span>
+
+        <h2>
+          Scan Library Book
+        </h2>
+
+        <p>
+          Scan a QR Code or Barcode to
+          instantly find a book.
+        </p>
+
+      </section>
+
+
+      <!-- SCANNER TYPE -->
+
+      <div class="scanner-tabs">
+
+        <button
+          class="scanner-tab active"
+          data-mode="qr">
+
+          <i class="fa-solid fa-qrcode"></i>
+
+          QR Scanner
+
+        </button>
+
+
+        <button
+          class="scanner-tab"
+          data-mode="barcode">
+
+          <i class="fa-solid fa-barcode"></i>
+
+          Barcode Scanner
+
+        </button>
+
+      </div>
+
+
+      <!-- SCANNER -->
+
+      <section class="scanner-container">
+
+        <div class="scanner-header">
+
+          <div>
+
+            <h3 id="scannerTitle">
+              QR Code Scanner
+            </h3>
+
+            <p id="scannerDescription">
+              Point your camera at the
+              book QR code.
+            </p>
+
+          </div>
+
+          <span class="camera-status"
+                id="cameraStatus">
+
+            Camera Ready
+
+          </span>
+
+        </div>
+
+
+        <!-- CAMERA -->
+
+        <div id="reader"></div>
+
+
+        <!-- SCAN RESULT -->
+
+        <div id="scanResult"
+             class="scan-result">
+
+          <div class="scan-success-icon">
+
+            <i class="fa-solid fa-check"></i>
+
+          </div>
+
+          <div>
+
+            <strong id="scanMessage">
+              Ready to scan
+            </strong>
+
+            <p id="scanSubMessage">
+              Your scanned book will
+              appear here.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- START BUTTON -->
+
+        <button
+          id="startScanner"
+          class="start-scanner">
+
+          <i class="fa-solid fa-camera"></i>
+
+          Start Camera
+
+        </button>
+
+
+        <button
+          id="stopScanner"
+          class="stop-scanner"
+          style="display:none;">
+
+          <i class="fa-solid fa-stop"></i>
+
+          Stop Camera
+
+        </button>
+
+      </section>
+
+
+      <!-- MANUAL SEARCH -->
+
+      <section class="manual-search">
+
+        <div class="manual-icon">
+
+          <i class="fa-solid fa-keyboard"></i>
+
+        </div>
+
+
+        <div class="manual-content">
+
+          <h3>
+            Enter Book ID Manually
+          </h3>
+
+          <p>
+            Don't have a camera?
+            Enter Book ID such as
+            <strong>CE001</strong>.
+          </p>
+
+
+          <div class="manual-form">
+
+            <input
+              id="manualBookId"
+              type="text"
+              placeholder="Enter Book ID e.g. CE001"
+            >
+
+            <button id="manualSearchButton">
+
+              <i class="fa-solid fa-magnifying-glass"></i>
+
+              Find Book
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- SCAN INFORMATION -->
+
+      <section class="scanner-info">
+
+        <div class="info-card">
+
+          <i class="fa-solid fa-qrcode"></i>
+
+          <h3>QR Code</h3>
+
+          <p>
+            Scan the QR code attached
+            to any library book.
+          </p>
+
+        </div>
+
+
+        <div class="info-card">
+
+          <i class="fa-solid fa-barcode"></i>
+
+          <h3>Barcode</h3>
+
+          <p>
+            Scan the book barcode to
+            find its library record.
+          </p>
+
+        </div>
+
+
+        <div class="info-card">
+
+          <i class="fa-solid fa-mobile-screen"></i>
+
+          <h3>Mobile Camera</h3>
+
+          <p>
+            Works with your phone
+            camera on HTTPS.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <footer class="footer">
+
+        <div>
+
+          <strong>
+            KDP DEPARTMENT LIBRARY CHATBOT
+          </strong>
+
+          <p>
+            Smart Digital Engineering Library
+          </p>
+
+        </div>
+
+        <div>
+          © 2026 KDP Department Library
+        </div>
+
+      </footer>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<!-- BOOK MODAL -->
+
+<div class="book-modal"
+     id="bookModal">
+
+  <div class="modal-content">
+
+    <button
+      class="modal-close"
+      id="modalClose">
+
+      <i class="fa-solid fa-xmark"></i>
+
+    </button>
+
+    <div id="modalBookContent"></div>
+
+  </div>
+
+</div>
+
+
+<script src="../js/app.js"></script>
+<script src="../js/books.js"></script>
+<script src="../js/scanner.js"></script>
+
+</body>
+
+</html>
