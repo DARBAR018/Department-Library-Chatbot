@@ -1,438 +1,1194 @@
+"use strict";
+
+/*
+============================================================
+ DEPARTMENT LIBRARY CHATBOT
+ QR + BARCODE BOOK SCANNER
+============================================================
+
+ Features:
+ 1. QR Code Scanner
+ 2. Barcode Scanner
+ 3. Camera Start / Stop
+ 4. Front / Back Camera Support
+ 5. Camera Permission Error Handling
+ 6. Duplicate Scan Protection
+ 7. Book ID Extraction
+ 8. URL Book ID Extraction
+ 9. Manual Book ID Search
+10. Enter Key Search
+11. Scanner Status
+12. Scanner Messages
+13. Book Validation
+14. Automatic Book Details Opening
+15. Camera Switching
+16. Safe DOM Handling
+17. Error Handling
+18. Mobile Friendly Camera Settings
+19. Scan Cooldown
+20. Prevent Multiple Scanner Instances
+============================================================
+*/
+
+
+// ==========================================================
+// GLOBAL VARIABLES
+// ==========================================================
+
 let html5QrCode = null;
 
 let scannerRunning = false;
 
+let scannerStarting = false;
+
+let scannerStopping = false;
+
 let scannerMode = "qr";
 
+let currentCameraId = null;
 
-// ============================
-// ELEMENTS
-// ============================
+let availableCameras = [];
+
+let lastScannedCode = "";
+
+let lastScanTime = 0;
+
+let scanCooldown = 2500;
+
+let scannerInitialized = false;
+
+
+// ==========================================================
+// DOM ELEMENTS
+// ==========================================================
 
 const startButton =
-  document.getElementById("startScanner");
+    document.getElementById("startScanner");
 
 const stopButton =
-  document.getElementById("stopScanner");
+    document.getElementById("stopScanner");
 
 const cameraStatus =
-  document.getElementById("cameraStatus");
+    document.getElementById("cameraStatus");
 
 const scannerTitle =
-  document.getElementById("scannerTitle");
+    document.getElementById("scannerTitle");
 
 const scannerDescription =
-  document.getElementById(
-    "scannerDescription"
-  );
+    document.getElementById("scannerDescription");
+
+const manualInput =
+    document.getElementById("manualBookId");
+
+const manualButton =
+    document.getElementById("manualSearchButton");
+
+const readerElement =
+    document.getElementById("reader");
+
+const scanMessage =
+    document.getElementById("scanMessage");
+
+const scanSubMessage =
+    document.getElementById("scanSubMessage");
 
 
-// ============================
-// SCANNER MODE
-// ============================
+// ==========================================================
+// OPTIONAL ELEMENTS
+// ==========================================================
 
-document
-  .querySelectorAll(".scanner-tab")
-  .forEach(tab => {
+const switchCameraButton =
+    document.getElementById("switchCamera");
 
-    tab.addEventListener("click", () => {
+const clearManualButton =
+    document.getElementById("clearManualBookId");
 
-      document
-        .querySelectorAll(".scanner-tab")
-        .forEach(item =>
-          item.classList.remove("active")
+const scannerTabs =
+    document.querySelectorAll(".scanner-tab");
+
+
+// ==========================================================
+// INITIALIZATION
+// ==========================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    initializeScanner
+);
+
+
+function initializeScanner() {
+
+    if (scannerInitialized) {
+        return;
+    }
+
+    scannerInitialized = true;
+
+
+    // ------------------------------------------
+    // Check HTML5 QR Code Library
+    // ------------------------------------------
+
+    if (
+        typeof Html5Qrcode ===
+        "undefined"
+    ) {
+
+        console.error(
+            "Html5Qrcode library is not loaded."
         );
 
 
-      tab.classList.add("active");
+        updateCameraStatus(
+            "Scanner Library Missing",
+            "error"
+        );
 
 
-      scannerMode =
-        tab.dataset.mode;
+        showScannerMessage(
+            "Scanner unavailable",
+            "Please load the html5-qrcode library."
+        );
 
 
-      if (scannerMode === "qr") {
-
-        scannerTitle.innerText =
-          "QR Code Scanner";
-
-        scannerDescription.innerText =
-          "Point your camera at the book QR code.";
-
-      } else {
-
-        scannerTitle.innerText =
-          "Barcode Scanner";
-
-        scannerDescription.innerText =
-          "Point your camera at the book barcode.";
-
-      }
-
-    });
-
-  });
+        return;
+    }
 
 
-// ============================
-// START CAMERA
-// ============================
+    // ------------------------------------------
+    // Start Button
+    // ------------------------------------------
 
-startButton.addEventListener(
-  "click",
-  startScanner
-);
+    if (startButton) {
 
+        startButton.addEventListener(
+            "click",
+            startScanner
+        );
+
+    }
+
+
+    // ------------------------------------------
+    // Stop Button
+    // ------------------------------------------
+
+    if (stopButton) {
+
+        stopButton.addEventListener(
+            "click",
+            stopScanner
+        );
+
+    }
+
+
+    // ------------------------------------------
+    // Manual Search Button
+    // ------------------------------------------
+
+    if (manualButton) {
+
+        manualButton.addEventListener(
+            "click",
+            manualSearch
+        );
+
+    }
+
+
+    // ------------------------------------------
+    // Manual Search Enter
+    // ------------------------------------------
+
+    if (manualInput) {
+
+        manualInput.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key ===
+                    "Enter"
+                ) {
+
+                    event.preventDefault();
+
+                    manualSearch();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // ------------------------------------------
+    // Clear Manual Input
+    // ------------------------------------------
+
+    if (clearManualButton) {
+
+        clearManualButton.addEventListener(
+            "click",
+            clearManualInput
+        );
+
+    }
+
+
+    // ------------------------------------------
+    // Camera Switch
+    // ------------------------------------------
+
+    if (switchCameraButton) {
+
+        switchCameraButton.addEventListener(
+            "click",
+            switchCamera
+        );
+
+    }
+
+
+    // ------------------------------------------
+    // Scanner Tabs
+    // ------------------------------------------
+
+    scannerTabs.forEach(
+        function (tab) {
+
+            tab.addEventListener(
+                "click",
+                function () {
+
+                    changeScannerMode(
+                        tab.dataset.mode
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+    // ------------------------------------------
+    // Initial UI
+    // ------------------------------------------
+
+    updateScannerUI();
+
+    updateCameraStatus(
+        "Camera Ready",
+        "ready"
+    );
+
+
+    showScannerMessage(
+        "Ready to scan",
+        "Start the camera and point it at a book QR code or barcode."
+    );
+
+
+    console.log(
+        "Library Scanner initialized."
+    );
+
+}
+
+
+// ==========================================================
+// CHANGE SCANNER MODE
+// ==========================================================
+
+function changeScannerMode(mode) {
+
+    if (
+        mode !== "qr" &&
+        mode !== "barcode"
+    ) {
+
+        mode = "qr";
+
+    }
+
+
+    scannerMode = mode;
+
+
+    // ------------------------------------------
+    // Active Tab
+    // ------------------------------------------
+
+    scannerTabs.forEach(
+        function (tab) {
+
+            tab.classList.remove(
+                "active"
+            );
+
+
+            if (
+                tab.dataset.mode ===
+                scannerMode
+            ) {
+
+                tab.classList.add(
+                    "active"
+                );
+
+            }
+
+        }
+    );
+
+
+    // ------------------------------------------
+    // QR Mode
+    // ------------------------------------------
+
+    if (
+        scannerMode ===
+        "qr"
+    ) {
+
+        if (scannerTitle) {
+
+            scannerTitle.innerText =
+                "QR Code Scanner";
+
+        }
+
+
+        if (scannerDescription) {
+
+            scannerDescription.innerText =
+                "Point your camera at the book QR code.";
+
+        }
+
+
+        showScannerMessage(
+            "QR Scanner",
+            "Ready to scan a library book QR code."
+        );
+
+    }
+
+
+    // ------------------------------------------
+    // Barcode Mode
+    // ------------------------------------------
+
+    else {
+
+        if (scannerTitle) {
+
+            scannerTitle.innerText =
+                "Barcode Scanner";
+
+        }
+
+
+        if (scannerDescription) {
+
+            scannerDescription.innerText =
+                "Point your camera at the book barcode.";
+
+        }
+
+
+        showScannerMessage(
+            "Barcode Scanner",
+            "Ready to scan a library book barcode."
+        );
+
+    }
+
+
+    /*
+    IMPORTANT:
+
+    If scanner is already running,
+    restart it so the scanning configuration
+    can change.
+    */
+
+    if (scannerRunning) {
+
+        restartScanner();
+
+    }
+
+}
+
+
+// ==========================================================
+// START SCANNER
+// ==========================================================
 
 async function startScanner() {
 
-  if (scannerRunning) return;
+    // ------------------------------------------
+    // Prevent duplicate start
+    // ------------------------------------------
 
+    if (
+        scannerRunning ||
+        scannerStarting
+    ) {
 
-  html5QrCode =
-    new Html5Qrcode("reader");
+        return;
 
-
-  const config = {
-
-    fps: 10,
-
-    qrbox: {
-      width: 250,
-      height: 180
     }
 
-  };
+
+    scannerStarting = true;
 
 
-  try {
-
-    await html5QrCode.start(
-
-      {
-        facingMode: "environment"
-      },
-
-      config,
-
-      onScanSuccess,
-
-      onScanError
-
+    updateCameraStatus(
+        "Starting Camera...",
+        "loading"
     );
-
-
-    scannerRunning = true;
-
-
-    startButton.style.display =
-      "none";
-
-
-    stopButton.style.display =
-      "block";
-
-
-    cameraStatus.innerText =
-      "Camera Active";
-
-
-    cameraStatus.style.background =
-      "#dcfce7";
-
-
-  } catch (error) {
-
-    console.error(error);
-
-
-    cameraStatus.innerText =
-      "Camera Error";
 
 
     showScannerMessage(
-      "Camera access denied",
-      "Please allow camera permission or use Manual Book ID."
+        "Starting camera",
+        "Please allow camera permission if your browser asks."
     );
 
-  }
-
-}
-
-
-// ============================
-// STOP CAMERA
-// ============================
-
-stopButton.addEventListener(
-  "click",
-  stopScanner
-);
-
-
-async function stopScanner() {
-
-  if (
-    html5QrCode &&
-    scannerRunning
-  ) {
 
     try {
 
-      await html5QrCode.stop();
+        // --------------------------------------
+        // Check secure context
+        // --------------------------------------
 
-      html5QrCode.clear();
+        if (
+            !isCameraEnvironmentSupported()
+        ) {
 
-    } catch (error) {
+            throw new Error(
+                "Camera requires HTTPS or localhost."
+            );
 
-      console.log(error);
+        }
+
+
+        // --------------------------------------
+        // Get cameras
+        // --------------------------------------
+
+        availableCameras =
+            await getAvailableCameras();
+
+
+        if (
+            !availableCameras ||
+            availableCameras.length === 0
+        ) {
+
+            throw new Error(
+                "No camera was detected."
+            );
+
+        }
+
+
+        // --------------------------------------
+        // Select camera
+        // --------------------------------------
+
+        currentCameraId =
+            selectBestCamera(
+                availableCameras
+            );
+
+
+        // --------------------------------------
+        // Create scanner
+        // --------------------------------------
+
+        if (!html5QrCode) {
+
+            html5QrCode =
+                new Html5Qrcode(
+                    "reader"
+                );
+
+        }
+
+
+        // --------------------------------------
+        // Build scanner config
+        // --------------------------------------
+
+        const config =
+            createScannerConfig();
+
+
+        // --------------------------------------
+        // Start camera
+        // --------------------------------------
+
+        await html5QrCode.start(
+
+            currentCameraId,
+
+            config,
+
+            onScanSuccess,
+
+            onScanError
+
+        );
+
+
+        scannerRunning = true;
+
+        scannerStarting = false;
+
+
+        // --------------------------------------
+        // UI
+        // --------------------------------------
+
+        updateScannerUI();
+
+        updateCameraStatus(
+            "Camera Active",
+            "active"
+        );
+
+
+        showScannerMessage(
+            "Scanner active",
+            scannerMode === "qr"
+                ? "Point the camera at a QR code."
+                : "Point the camera at a barcode."
+        );
+
+
+        console.log(
+            "Scanner started."
+        );
+
+        console.log(
+            "Camera:",
+            currentCameraId
+        );
 
     }
 
-  }
 
+    catch (error) {
 
-  scannerRunning = false;
+        console.error(
+            "Scanner start error:",
+            error
+        );
 
 
-  startButton.style.display =
-    "block";
+        scannerRunning = false;
 
+        scannerStarting = false;
 
-  stopButton.style.display =
-    "none";
 
+        updateScannerUI();
 
-  cameraStatus.innerText =
-    "Camera Ready";
 
-}
-
-
-// ============================
-// SUCCESS
-// ============================
-
-function onScanSuccess(decodedText) {
-
-  console.log(
-    "Scanned:",
-    decodedText
-  );
-
-
-  showScannerMessage(
-    "Book detected!",
-    decodedText
-  );
-
-
-  stopScanner();
-
-
-  /*
-   QR / Barcode can contain:
-
-   CE001
-
-   OR
-
-   https://darbar018.github.io/
-   Department-Library-Chatbot/pages/
-   books.html?book=CE001
-  */
-
-
-  let bookId =
-    extractBookId(decodedText);
-
-
-  if (bookId) {
-
-    findScannedBook(bookId);
-
-  }
-
-}
-
-
-// ============================
-// SCAN ERROR
-// ============================
-
-function onScanError(error) {
-
-  // Ignore continuous camera scan errors
-
-}
-
-
-// ============================
-// EXTRACT BOOK ID
-// ============================
-
-function extractBookId(text) {
-
-  text =
-    String(text)
-      .trim();
-
-
-  /*
-    Find IDs like:
-
-    CE001
-    ME025
-    CV100
-    EE050
-    EC010
-  */
-
-  const match =
-    text.match(
-      /\b(CE|ME|CV|EE|EC)\d{3}\b/i
-    );
-
-
-  if (match) {
-
-    return match[0].toUpperCase();
-
-  }
-
-
-  return null;
-
-}
-
-
-// ============================
-// FIND BOOK
-// ============================
-
-function findScannedBook(bookId) {
-
-  const book =
-    books.find(
-      item =>
-        item.id.toUpperCase() ===
-        bookId.toUpperCase()
-    );
-
-
-  if (!book) {
-
-    showScannerMessage(
-      "Book not found",
-      `No library record found for ${bookId}`
-    );
-
-    return;
-
-  }
-
-
-  showScannerMessage(
-    "Book found",
-    `${book.id} — ${book.title}`
-  );
-
-
-  setTimeout(() => {
-
-    showBook(book.id);
-
-  }, 500);
-
-}
-
-
-// ============================
-// MANUAL SEARCH
-// ============================
-
-const manualInput =
-  document.getElementById(
-    "manualBookId"
-  );
-
-
-const manualButton =
-  document.getElementById(
-    "manualSearchButton"
-  );
-
-
-manualButton.addEventListener(
-  "click",
-  manualSearch
-);
-
-
-manualInput.addEventListener(
-  "keydown",
-  event => {
-
-    if (event.key === "Enter") {
-
-      manualSearch();
+        handleCameraError(
+            error
+        );
 
     }
 
-  }
-);
+}
 
 
-function manualSearch() {
+// ==========================================================
+// CREATE SCANNER CONFIG
+// ==========================================================
 
-  const id =
-    manualInput.value
-      .trim()
-      .toUpperCase();
+function createScannerConfig() {
+
+    /*
+    FPS:
+    Higher = faster detection
+    Lower = less CPU usage
+    */
+
+    const config = {
+
+        fps: 10,
+
+        qrbox: function (
+            viewfinderWidth,
+            viewfinderHeight
+        ) {
+
+            let width =
+                Math.floor(
+                    viewfinderWidth * 0.75
+                );
 
 
-  if (!id) {
-
-    showScannerMessage(
-      "Enter Book ID",
-      "Example: CE001"
-    );
-
-    return;
-
-  }
+            let height =
+                Math.floor(
+                    viewfinderHeight * 0.45
+                );
 
 
-  findScannedBook(id);
+            width =
+                Math.max(
+                    220,
+                    Math.min(
+                        width,
+                        350
+                    )
+                );
+
+
+            height =
+                Math.max(
+                    150,
+                    Math.min(
+                        height,
+                        280
+                    )
+                );
+
+
+            return {
+                width: width,
+                height: height
+            };
+
+        },
+
+        aspectRatio:
+            1.7777778,
+
+        disableFlip:
+            false
+
+    };
+
+
+    return config;
 
 }
 
 
-// ============================
-// MESSAGE
-// ============================
+// ==========================================================
+// GET CAMERAS
+// ==========================================================
 
-function showScannerMessage(
-  title,
-  message
+async function getAvailableCameras() {
+
+    try {
+
+        const cameras =
+            await Html5Qrcode.getCameras();
+
+
+        if (
+            !Array.isArray(cameras)
+        ) {
+
+            return [];
+
+        }
+
+
+        return cameras;
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Unable to get cameras:",
+            error
+        );
+
+
+        return [];
+
+    }
+
+}
+
+
+// ==========================================================
+// SELECT BEST CAMERA
+// ==========================================================
+
+function selectBestCamera(
+    cameras
 ) {
 
-  const scanMessage =
-    document.getElementById(
-      "scanMessage"
-    );
+    if (
+        !cameras ||
+        cameras.length === 0
+    ) {
 
-  const scanSubMessage =
-    document.getElementById(
-      "scanSubMessage"
-    );
+        return null;
 
-
-  scanMessage.innerText =
-    title;
+    }
 
 
-  scanSubMessage.innerText =
-    message;
+    /*
+    Prefer rear/back/environment camera
+    */
+
+    const backCamera =
+        cameras.find(
+            function (camera) {
+
+                const label =
+                    String(
+                        camera.label || ""
+                    ).toLowerCase();
+
+
+                return (
+                    label.includes("back") ||
+                    label.includes("rear") ||
+                    label.includes("environment") ||
+                    label.includes("world")
+                );
+
+            }
+        );
+
+
+    if (backCamera) {
+
+        return backCamera.id;
+
+    }
+
+
+    /*
+    Otherwise use first available camera.
+    */
+
+    return cameras[0].id;
 
 }
+
+
+// ==========================================================
+// STOP SCANNER
+// ==========================================================
+
+async function stopScanner() {
+
+    if (
+        scannerStopping
+    ) {
+
+        return;
+
+    }
+
+
+    scannerStopping = true;
+
+
+    try {
+
+        if (
+            html5QrCode &&
+            scannerRunning
+        ) {
+
+            await html5QrCode.stop();
+
+
+            try {
+
+                html5QrCode.clear();
+
+            }
+
+            catch (clearError) {
+
+                console.warn(
+                    "Scanner clear warning:",
+                    clearError
+                );
+
+            }
+
+        }
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Scanner stop error:",
+            error
+        );
+
+    }
+
+
+    finally {
+
+        scannerRunning = false;
+
+        scannerStarting = false;
+
+        scannerStopping = false;
+
+
+        updateScannerUI();
+
+
+        updateCameraStatus(
+            "Camera Ready",
+            "ready"
+        );
+
+
+        showScannerMessage(
+            "Scanner stopped",
+            "Press Start Camera to scan another book."
+        );
+
+    }
+
+}
+
+
+// ==========================================================
+// RESTART SCANNER
+// ==========================================================
+
+async function restartScanner() {
+
+    if (
+        scannerStarting ||
+        scannerStopping
+    ) {
+
+        return;
+
+    }
+
+
+    if (scannerRunning) {
+
+        await stopScanner();
+
+    }
+
+
+    setTimeout(
+        function () {
+
+            startScanner();
+
+        },
+        300
+    );
+
+}
+
+
+// ==========================================================
+// SWITCH CAMERA
+// ==========================================================
+
+async function switchCamera() {
+
+    if (
+        !scannerRunning
+    ) {
+
+        showScannerMessage(
+            "Camera not active",
+            "Start the scanner before switching cameras."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        updateCameraStatus(
+            "Switching Camera...",
+            "loading"
+        );
+
+
+        availableCameras =
+            await getAvailableCameras();
+
+
+        if (
+            availableCameras.length <
+            2
+        ) {
+
+            showScannerMessage(
+                "Only one camera found",
+                "Your device does not appear to have another camera."
+            );
+
+
+            updateCameraStatus(
+                "Camera Active",
+                "active"
+            );
+
+
+            return;
+
+        }
+
+
+        const currentIndex =
+            availableCameras.findIndex(
+                function (camera) {
+
+                    return (
+                        camera.id ===
+                        currentCameraId
+                    );
+
+                }
+            );
+
+
+        let nextIndex =
+            currentIndex + 1;
+
+
+        if (
+            nextIndex >=
+            availableCameras.length
+        ) {
+
+            nextIndex = 0;
+
+        }
+
+
+        const nextCamera =
+            availableCameras[
+                nextIndex
+            ];
+
+
+        await html5QrCode.stop();
+
+
+        currentCameraId =
+            nextCamera.id;
+
+
+        const config =
+            createScannerConfig();
+
+
+        await html5QrCode.start(
+
+            currentCameraId,
+
+            config,
+
+            onScanSuccess,
+
+            onScanError
+
+        );
+
+
+        scannerRunning = true;
+
+
+        updateCameraStatus(
+            "Camera Active",
+            "active"
+        );
+
+
+        showScannerMessage(
+            "Camera switched",
+            nextCamera.label ||
+            "Camera changed successfully."
+        );
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Camera switch error:",
+            error
+        );
+
+
+        updateCameraStatus(
+            "Camera Error",
+            "error"
+        );
+
+
+        showScannerMessage(
+            "Camera switch failed",
+            "Unable to switch camera. Please try again."
+        );
+
+    }
+
+}
+
+
+// ==========================================================
+// SCAN SUCCESS
+// ==========================================================
+
+function onScanSuccess(
+    decodedText,
+    decodedResult
+) {
+
+    if (
+        !decodedText
+    ) {
+
+        return;
+
+    }
+
+
+    const now =
+        Date.now();
+
+
+    /*
+    Prevent duplicate scans.
+
+    Mobile cameras often detect the
+    same QR/barcode many times per second.
+    */
+
+    if (
+        decodedText ===
+        lastScannedCode &&
+        (
+            now -
+            lastScanTime
+        ) <
+        scanCooldown
+    ) {
+
+        return;
+
+    }
+
+
+    lastScannedCode =
+        decodedText;
+
+
+    lastScanTime =
+        now;
+
+
+    console.log(
+        "Scanned value:",
+        decodedText
+    );
+
+
+    console.log(
+        "Scan result:",
+        decodedResult
+    );
+
+
+    // ------------------------------------------
+    // Show success
+    // ------------------------------------------
+
+    showScannerMessage(
+        "Book detected!",
+        decodedText
+    );
+
+
+    updateCameraStatus(
+        "Book Detected",
+        "success"
+    );
+
+
+    // ------------------------------------------
+    // Extract Book ID
+    // ------------------------------------------
+
+    const bookId =
+        extractBookId(
+            decodedText
+        );
+
+
+    if (!bookId) {
+
+        showScannerMessage(
+            "Code detected",
+            "The QR/barcode was scanned, but no valid Book ID was found."
+        );
+
+
+        return;
+
+    }
+
+
+    console.log(
+        "Book ID:",
+        bookId
+    );
+
+
+    // ------------------------------------------
+    // Stop camera
+    // ------------------------------------------
+
+    stopScanner();
+
+
+    // ------------------------------------------
+    // Find book
+    // ------------------------------------------
+
+    setTimeout(
+        function () {
+
+            findScannedBook(
+                bookId
+            );
+
+        },
+        300
+    );
+
+}
+
+
+// ====================
