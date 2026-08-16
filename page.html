@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>All Books | KDP Department Library</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/books.css">
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+      <div class="logo-icon">
+        <i class="fa-solid fa-book-open"></i>
+      </div>
+
+      <div>
+        <strong>KDP LIBRARY</strong>
+        <small>Digital Library</small>
+      </div>
+    </div>
+
+    <nav class="navigation">
+
+      <p class="nav-title">MAIN</p>
+
+      <a href="../index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i>
+        <span>Dashboard</span>
+      </a>
+
+      <a href="books.html" class="nav-link active">
+        <i class="fa-solid fa-book"></i>
+        <span>All Books</span>
+      </a>
+
+      <p class="nav-title">DEPARTMENTS</p>
+
+      <a href="books.html?department=Computer Engineering" class="nav-link">
+        <i class="fa-solid fa-computer"></i>
+        <span>Computer Engineering</span>
+      </a>
+
+      <a href="books.html?department=Mechanical Engineering" class="nav-link">
+        <i class="fa-solid fa-gears"></i>
+        <span>Mechanical Engineering</span>
+      </a>
+
+      <a href="books.html?department=Civil Engineering" class="nav-link">
+        <i class="fa-solid fa-building"></i>
+        <span>Civil Engineering</span>
+      </a>
+
+      <a href="books.html?department=Electrical Engineering" class="nav-link">
+        <i class="fa-solid fa-bolt"></i>
+        <span>Electrical Engineering</span>
+      </a>
+
+      <a href="books.html?department=EC Engineering" class="nav-link">
+        <i class="fa-solid fa-microchip"></i>
+        <span>EC Engineering</span>
+      </a>
+
+      <p class="nav-title">LIBRARY</p>
+
+      <a href="#" class="nav-link">
+        <i class="fa-solid fa-book-open-reader"></i>
+        <span>E-Books</span>
+      </a>
+
+      <a href="#" class="nav-link">
+        <i class="fa-solid fa-file-lines"></i>
+        <span>GTU Papers</span>
+      </a>
+
+      <a href="#" class="nav-link">
+        <i class="fa-solid fa-qrcode"></i>
+        <span>QR Scanner</span>
+      </a>
+
+      <a href="#" class="nav-link">
+        <i class="fa-solid fa-barcode"></i>
+        <span>Barcode Scanner</span>
+      </a>
+
+    </nav>
+
+  </aside>
+
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <header class="top-header">
+
+      <div class="header-left">
+
+        <button class="menu-button" id="menuButton">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <div>
+          <h1>All Books</h1>
+          <p>KDP Engineering Digital Library</p>
+        </div>
+
+      </div>
+
+      <div class="header-actions">
+
+        <button class="icon-button" id="themeButton">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <div class="profile">
+          <div class="profile-avatar">
+            <i class="fa-solid fa-user"></i>
+          </div>
+
+          <div class="profile-info">
+            <strong>Library Admin</strong>
+            <small>Librarian</small>
+          </div>
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <div class="page-container">
+
+      <!-- PAGE TITLE -->
+
+      <section class="books-heading">
+
+        <div>
+
+          <span class="section-label">
+            DIGITAL CATALOG
+          </span>
+
+          <h2>Engineering Book Collection</h2>
+
+          <p>
+            Explore 500 books across five engineering departments.
+          </p>
+
+        </div>
+
+        <div class="book-count">
+          <i class="fa-solid fa-books"></i>
+          <strong id="bookCount">500</strong>
+          <span>Books</span>
+        </div>
+
+      </section>
+
+
+      <!-- SEARCH -->
+
+      <section class="book-search-panel">
+
+        <div class="book-search">
+
+          <i class="fa-solid fa-magnifying-glass"></i>
+
+          <input
+            id="bookSearch"
+            type="text"
+            placeholder="Search book name, author, subject, Book ID or ISBN..."
+          >
+
+        </div>
+
+
+        <select id="departmentFilter">
+
+          <option value="all">
+            All Departments
+          </option>
+
+          <option value="Computer Engineering">
+            Computer Engineering
+          </option>
+
+          <option value="Mechanical Engineering">
+            Mechanical Engineering
+          </option>
+
+          <option value="Civil Engineering">
+            Civil Engineering
+          </option>
+
+          <option value="Electrical Engineering">
+            Electrical Engineering
+          </option>
+
+          <option value="EC Engineering">
+            EC Engineering
+          </option>
+
+        </select>
+
+
+        <select id="statusFilter">
+
+          <option value="all">
+            All Status
+          </option>
+
+          <option value="Available">
+            Available
+          </option>
+
+          <option value="Issued">
+            Issued
+          </option>
+
+        </select>
+
+      </section>
+
+
+      <!-- DEPARTMENT QUICK FILTER -->
+
+      <div class="quick-filters">
+
+        <button class="filter-chip active"
+                data-department="all">
+          All
+        </button>
+
+        <button class="filter-chip"
+                data-department="Computer Engineering">
+          💻 Computer
+        </button>
+
+        <button class="filter-chip"
+                data-department="Mechanical Engineering">
+          ⚙️ Mechanical
+        </button>
+
+        <button class="filter-chip"
+                data-department="Civil Engineering">
+          🏗️ Civil
+        </button>
+
+        <button class="filter-chip"
+                data-department="Electrical Engineering">
+          ⚡ Electrical
+        </button>
+
+        <button class="filter-chip"
+                data-department="EC Engineering">
+          📡 EC
+        </button>
+
+      </div>
+
+
+      <!-- BOOK GRID -->
+
+      <section>
+
+        <div id="booksGrid"
+             class="books-grid">
+        </div>
+
+        <div id="noBooks"
+             class="no-books"
+             style="display:none;">
+
+          <i class="fa-solid fa-book-open"></i>
+
+          <h3>No books found</h3>
+
+          <p>
+            Try another search or department.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- PAGINATION -->
+
+      <div class="pagination"
+           id="pagination">
+      </div>
+
+
+      <!-- FOOTER -->
+
+      <footer class="footer">
+
+        <div>
+          <strong>KDP DEPARTMENT LIBRARY CHATBOT</strong>
+          <p>Smart Digital Engineering Library</p>
+        </div>
+
+        <div>
+          © 2026 KDP Department Library
+        </div>
+
+      </footer>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<!-- BOOK DETAILS MODAL -->
+
+<div class="book-modal"
+     id="bookModal">
+
+  <div class="modal-content">
+
+    <button class="modal-close"
+            id="modalClose">
+
+      <i class="fa-solid fa-xmark"></i>
+
+    </button>
+
+    <div id="modalBookContent"></div>
+
+  </div>
+
+</div>
+
+
+<script src="../js/app.js"></script>
+<script src="../js/books.js"></script>
+
+</body
+</html>
