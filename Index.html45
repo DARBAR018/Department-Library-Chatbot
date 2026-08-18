@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KDP LIBRARY CHATBOT</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7fc;color:#172033}
+button,input,select{font:inherit}
+button{cursor:pointer}
+
+.sidebar{
+position:fixed;left:0;top:0;bottom:0;width:250px;
+background:#101827;color:white;padding:15px;overflow-y:auto
+}
+.logo{text-align:center;font-size:20px;font-weight:bold;padding:15px 5px 20px}
+.logo span{color:#60a5fa}
+
+.menu button{
+width:100%;border:0;background:transparent;color:#ddd;
+padding:12px;margin:3px 0;border-radius:9px;text-align:left
+}
+.menu button:hover,.menu button.active{background:#2563eb;color:white}
+
+.main{margin-left:250px;min-height:100vh}
+.topbar{
+height:70px;background:white;display:flex;align-items:center;
+gap:10px;padding:10px 20px;position:sticky;top:0;z-index:10;
+box-shadow:0 2px 10px #0001
+}
+.search{flex:1;padding:12px;border:1px solid #ddd;border-radius:10px}
+.icon{width:42px;height:42px;border:0;border-radius:10px}
+
+.content{padding:25px}
+.page{display:none}
+.page.active{display:block}
+
+h1{margin-top:0}
+.sub{color:#667085;margin-bottom:22px}
+
+.stats{
+display:grid;grid-template-columns:repeat(4,1fr);
+gap:15px;margin-bottom:25px
+}
+.stat,.card,.book,.person,.dept{
+background:white;padding:20px;border-radius:15px;
+box-shadow:0 4px 18px #0000000d
+}
+.stat h2{font-size:32px;margin:8px 0}
+.stat p{color:#667085;margin:0}
+
+.depts{
+display:grid;grid-template-columns:repeat(5,1fr);gap:15px
+}
+.dept{text-align:center;cursor:pointer}
+.dept:hover{transform:translateY(-3px)}
+.dept .ico{font-size:35px}
+
+.toolbar{
+display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px
+}
+.toolbar input,.toolbar select{
+padding:11px;border:1px solid #ddd;border-radius:9px;background:white
+}
+
+.primary,.success,.danger,.secondary{
+border:0;padding:10px 14px;border-radius:8px
+}
+.primary{background:#2563eb;color:white}
+.success{background:#16a34a;color:white}
+.danger{background:#dc2626;color:white}
+.secondary{background:#e5e7eb;color:#111}
+
+.books{
+display:grid;grid-template-columns:repeat(4,1fr);gap:16px
+}
+.cover{
+height:120px;border-radius:12px;
+background:linear-gradient(135deg,#2563eb,#7c3aed);
+display:flex;justify-content:center;align-items:center;
+color:white;font-size:45px;margin-bottom:12px
+}
+.book h3{font-size:16px;margin:5px 0}
+.book p{font-size:13px;color:#667085}
+
+.status{
+display:inline-block;padding:5px 9px;border-radius:20px;
+font-size:12px;margin:6px 0
+}
+.available{background:#dcfce7;color:#166534}
+.issued{background:#fee2e2;color:#991b1b}
+
+.book-actions{display:flex;gap:6px}
+.book-actions button{flex:1}
+
+.tablewrap{overflow:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:12px;border-bottom:1px solid #e5e7eb;text-align:left}
+
+.people{
+display:grid;grid-template-columns:repeat(3,1fr);gap:16px
+}
+.person{text-align:center}
+
+.avatar{
+width:80px;height:80px;border-radius:50%;background:#dbeafe;
+display:flex;justify-content:center;align-items:center;
+font-size:35px;margin:auto auto 10px
+}
+
+.scanner{max-width:650px;margin:auto;text-align:center}
+.camera{
+height:300px;background:#111827;color:white;border-radius:14px;
+display:flex;align-items:center;justify-content:center;
+margin:18px 0;overflow:hidden
+}
+.camera video{width:100%;height:100%;object-fit:cover}
+
+.chat{
+max-width:750px;margin:auto;background:white;border-radius:15px;
+overflow:hidden;box-shadow:0 4px 18px #0001
+}
+.chathead{background:#2563eb;color:white;padding:16px}
+.messages{height:400px;padding:18px;overflow:auto}
+.msg{max-width:80%;padding:10px 13px;border-radius:12px;margin:8px 0}
+.bot{background:#e5e7eb}
+.user{background:#2563eb;color:white;margin-left:auto}
+.chatinput{display:flex;gap:8px;padding:12px}
+.chatinput input{
+flex:1;padding:12px;border:1px solid #ddd;border-radius:9px
+}
+
+.detail-buttons{
+display:flex;gap:10px;flex-wrap:wrap;margin-top:20px
+}
+
+#toast{
+display:none;position:fixed;right:18px;bottom:18px;
+background:#111827;color:white;padding:13px 18px;
+border-radius:9px;z-index:1000
+}
+
+body.dark{background:#111827;color:#f3f4f6}
+body.dark .topbar,
+body.dark .card,
+body.dark .stat,
+body.dark .book,
+body.dark .person,
+body.dark .dept,
+body.dark .chat{
+background:#1f2937;color:#f3f4f6
+}
+body.dark input,body.dark select{
+background:#374151;color:white;border-color:#4b5563
+}
+
+@media(max-width:1100px){
+.stats{grid-template-columns:repeat(2,1fr)}
+.depts{grid-template-columns:repeat(3,1fr)}
+.books{grid-template-columns:repeat(3,1fr)}
+}
+
+@media(max-width:800px){
+.sidebar{width:70px}
+.logo span{display:none}
+.menu button{font-size:0;text-align:center}
+.menu button:first-letter{font-size:20px}
+.main{margin-left:70px}
+.books{grid-template-columns:repeat(2,1fr)}
+.people{grid-template-columns:repeat(2,1fr)}
+}
+
+@media(max-width:520px){
+.content{padding:14px}
+.depts,.books,.people{grid-template-columns:1fr}
+.stats{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+
+<div class="logo">📚 <span>KDP LIBRARY</span></div>
+
+<nav class="menu">
+
+<button data-page="dashboard">🏠 Dashboard</button>
+<button data-page="books">📚 All Books</button>
+
+<button data-dept="Computer Engineering">💻 Computer</button>
+<button data-dept="Mechanical Engineering">⚙️ Mechanical</button>
+<button data-dept="Civil Engineering">🏗️ Civil</button>
+<button data-dept="Electrical Engineering">⚡ Electrical</button>
+<button data-dept="EC Engineering">📡 EC</button>
+
+<button data-page="scanner">📷 QR Scanner</button>
+<button data-page="barcode">🔳 Barcode</button>
+<button data-page="reader">📖 Digital Reader</button>
+<button data-page="students">👨‍🎓 Students</button>
+<button data-page="faculty">👨‍🏫 Faculty</button>
+<button data-page="librarian">👨‍💼 Librarian</button>
+<button data-page="chatbot">🤖 AI Chatbot</button>
+<button data-page="reports">📊 Reports</button>
+<button data-page="admin">⚙️ Admin</button>
+
+</nav>
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+
+<input id="globalSearch" class="search"
+placeholder="🔍 Search books, ID, subject...">
+
+<button class="icon" id="darkBtn">🌙</button>
+<button class="icon" id="notifyBtn">🔔</button>
+
+</header>
+
+<div class="content">
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page">
+
+<h1>KDP LIBRARY CHATBOT</h1>
+<p class="sub">Advanced Engineering Department Library Management System</p>
+
+<div class="stats">
+
+<div class="stat">
+<div>📚</div>
+<h2 id="total">500</h2>
+<p>Total Books</p>
+</div>
+
+<div class="stat">
+<div>✅</div>
+<h2 id="available">500</h2>
+<p>Available</p>
+</div>
+
+<div class="stat">
+<div>📕</div>
+<h2 id="issued">0</h2>
+<p>Issued</p>
+</div>
+
+<div class="stat">
+<div>👨‍🏫</div>
+<h2>10</h2>
+<p>Faculty</p>
+</div>
+
+</div>
+
+<h2>Engineering Departments</h2>
+
+<div class="depts">
+
+<div class="dept" data-dept="Computer Engineering">
+<div class="ico">💻</div>
+<b>Computer</b><p>100 Books</p>
+</div>
+
+<div class="dept" data-dept="Mechanical Engineering">
+<div class="ico">⚙️</div>
+<b>Mechanical</b><p>100 Books</p>
+</div>
+
+<div class="dept" data-dept="Civil Engineering">
+<div class="ico">🏗️</div>
+<b>Civil</b><p>100 Books</p>
+</div>
+
+<div class="dept" data-dept="Electrical Engineering">
+<div class="ico">⚡</div>
+<b>Electrical</b><p>100 Books</p>
+</div>
+
+<div class="dept" data-dept="EC Engineering">
+<div class="ico">📡</div>
+<b>EC</b><p>100 Books</p>
+</div>
+
+</div>
+
+<br>
+
+<div class="card">
+
+<h2>⚡ Quick Tools</h2>
+
+<button class="primary" data-page="books">📚 Books</button>
+<button class="primary" data-page="scanner">📷 Scanner</button>
+<button class="primary" data-page="reader">📖 Reader</button>
+<button class="primary" data-page="chatbot">🤖 AI</button>
+
+</div>
+
+</section>
+
+
+<!-- BOOKS -->
+<section id="books" class="page">
+
+<h1>📚 All Books</h1>
+<p class="sub">500 Advanced Engineering Books</p>
+
+<div class="toolbar">
+
+<input id="bookSearch" placeholder="Search book...">
+
+<select id="deptFilter">
+<option value="">All Departments</option>
+<option>Computer Engineering</option>
+<option>Mechanical Engineering</option>
+<option>Civil Engineering</option>
+<option>Electrical Engineering</option>
+<option>EC Engineering</option>
+</select>
+
+<select id="statusFilter">
+<option value="">All Status</option>
+<option>Available</option>
+<option>Issued</option>
+</select>
+
+</div>
+
+<div id="bookGrid" class="books"></div>
+
+</section>
+
+
+<!-- BOOK DETAILS -->
+<section id="bookDetails" class="page">
+
+<h1>📖 Book Details</h1>
+
+<div id="bookDetail" class="card"></div>
+
+</section>
+
+
+<!-- QR -->
+<section id="scanner" class="page">
+
+<h1>📷 QR Scanner</h1>
+<p class="sub">Book ID નાખીને book details ખોલો.</p>
+
+<div class="card scanner">
+
+<button class="primary" id="startCamera">📷 Start Camera</button>
+<button class="danger" id="stopCamera">Stop</button>
+
+<div id="camera" class="camera">
+Camera Preview
+</div>
+
+<input id="scanId"
+style="width:100%;padding:12px"
+placeholder="Book ID e.g. CE001">
+
+<br><br>
+
+<button class="primary" id="scanFind">🔍 Find Book</button>
+
+<div id="scanResult"></div>
+
+</div>
+
+</section>
+
+
+<!-- BARCODE -->
+<section id="barcode" class="page">
+
+<h1>🔳 Barcode Scanner</h1>
+<p class="sub">Enter Book ID / Barcode.</p>
+
+<div class="card scanner">
+
+<div style="font-size:70px">▌▌▌ ▌▌ ▌▌▌</div>
+
+<input id="barcodeId"
+style="width:100%;padding:12px"
+placeholder="Book ID e.g. ME001">
+
+<br><br>
+
+<button class="primary" id="barcodeFind">🔍 Find Book</button>
+
+<div id="barcodeResult"></div>
+
+</div>
+
+</section>
+
+
+<!-- READER -->
+<section id="reader" class="page">
+
+<h1>📖 Digital Book Reader</h1>
+
+<p class="sub">
+PDF file select કરો અને browserમાં વાંચો.
+</p>
+
+<div class="card">
+
+<input type="file" id="pdfFile" accept=".pdf,application/pdf">
+
+<br><br>
+
+<iframe id="pdf"
+style="width:100%;height:600px;border:0">
+</iframe>
+
+</div>
+
+</section>
+
+
+<!-- STUDENTS -->
+<section id="students" class="page">
+
+<h1>👨‍🎓 Students</h1>
+<p class="sub">Student Library Records</p>
+
+<div class="card tablewrap">
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Department</th>
+<th>Issued</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="studentTable"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- STUDENT DETAILS -->
+<section id="studentDetails" class="page">
+
+<h1>👨‍🎓 Student Details</h1>
+
+<div id="studentDetail" class="card"></div>
+
+</section>
+
+
+<!-- FACULTY -->
+<section id="faculty" class="page">
+
+<h1>👨‍🏫 Faculty Directory</h1>
+<p class="sub">Faculty Members</p>
+
+<div id="facultyList" class="people"></div>
+
+</section>
+
+
+<!-- FACULTY DETAILS -->
+<section id="facultyDetails" class="page">
+
+<h1>👨‍🏫 Faculty Details</h1>
+
+<div id="facultyDetail" class="card"></div>
+
+</section>
+
+
+<!-- LIBRARIAN -->
+<section id="librarian" class="page">
+
+<h1>👨‍💼 Librarian Profile</h1>
+
+<div class="card" style="max-width:600px;margin:auto;text-align:center">
+
+<div class="avatar">👨‍💼</div>
+
+<h2>KDP Library Librarian</h2>
+<p>Chief Librarian</p>
+<p>📧 librarian@kdplibrary.edu</p>
+<p>📞 +91 98765 43210</p>
+
+<button class="primary" id="contactBtn">Contact</button>
+
+</div>
+
+</section>
+
+
+<!-- CHATBOT -->
+<section id="chatbot" class="page">
+
+<h1>🤖 AI Library Chatbot</h1>
+<p class="sub">Ask anything about library.</p>
+
+<div class="chat">
+
+<div class="chathead">
+📚 KDP Library AI Assistant
+</div>
+
+<div id="messages" class="messages">
+
+<div class="msg bot">
+Hello! 👋 Ask me about books, departments,
+students, faculty, availability or issue/return.
+</div>
+
+</div>
+
+<div class="chatinput">
+
+<input id="chatInput"
+placeholder="Ask your question...">
+
+<button class="primary" id="chatSend">Send</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- REPORTS -->
+<section id="reports" class="page">
+
+<h1>📊 Reports</h1>
+
+<div class="stats">
+
+<div class="stat">
+<h2 id="rTotal">500</h2>
+<p>Total</p>
+</div>
+
+<div class="stat">
+<h2 id="rAvailable">500</h2>
+<p>Available</p>
+</div>
+
+<div class="stat">
+<h2 id="rIssued">0</h2>
+<p>Issued</p>
+</div>
+
+<div class="stat">
+<h2>5</h2>
+<p>Departments</p>
+</div>
+
+</div>
+
+<div class="card tablewrap">
+
+<table>
+
+<thead>
+<tr>
+<th>Department</th>
+<th>Total</th>
+<th>Available</th>
+<th>Issued</th>
+</tr>
+</thead>
+
+<tbody id="reportTable"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- ADMIN -->
+<section id="admin" class="page">
+
+<h1>⚙️ Admin Panel</h1>
+
+<div class="card">
+
+<h2>➕ Add Book</h2>
+
+<div class="toolbar">
+
+<input id="newName" placeholder="Book Name">
+<input id="newAuthor" placeholder="Author">
+
+<select id="newDept">
+
+<option>Computer Engineering</option>
+<option>Mechanical Engineering</option>
+<option>Civil Engineering</option>
+<option>Electrical Engineering</option>
+<option>EC Engineering</option>
+
+</select>
+
+<button class="primary" id="addBookBtn">
+Add Book
+</button>
+
+</div>
+
+</div>
+
+<br>
+
+<div class="card">
+
+<h2>System Information</h2>
+
+<p>📚 Books: <b id="adminTotal">500</b></p>
+<p>🏫 Departments: <b>5</b></p>
+<p>👨‍🏫 Faculty: <b>10</b></p>
+<p>👨‍🎓 Students: <b>7</b></p>
+
+</div>
+
+</section>
+
+</div>
+</main>
+
+<div id="toast"></div>
+
+
+<script>
+
+"use strict";
+
+/* ================= DATA ================= */
+
+const departments=[
+"Computer Engineering",
+"Mechanical Engineering",
+"Civil Engineering",
+"Electrical Engineering",
+"EC Engineering"
+];
+
+const prefixes=["CE","ME","CV","EE","EC"];
+
+const subjects={
+
+"Computer Engineering":[
+"Programming in C","C++ Programming","Java Programming",
+"Python Programming","Data Structures","Algorithms",
+"Database Management System","Operating System",
+"Computer Networks","Web Technology",
+"Artificial Intelligence","Machine Learning",
+"Cyber Security","Cloud Computing","Software Engineering"
+],
+
+"Mechanical Engineering":[
+"Engineering Mechanics","Thermodynamics","Fluid Mechanics",
+"Heat Transfer","Machine Design","Manufacturing Processes",
+"Engineering Materials","Production Engineering",
+"Automobile Engineering","CAD CAM","Robotics",
+"Industrial Engineering"
+],
+
+"Civil Engineering":[
+"Engineering Drawing","Building Materials",
+"Building Construction","Concrete Technology",
+"Structural Analysis","Strength of Materials",
+"Fluid Mechanics","Hydraulics","Surveying",
+"Geotechnical Engineering","Transportation Engineering",
+"Environmental Engineering"
+],
+
+"Electrical Engineering":[
+"Basic Electrical Engineering","Electrical Circuit Theory",
+"Electrical Machines","Electrical Measurements",
+"Power Systems","Power Electronics","Digital Electronics",
+"Analog Electronics","Control Systems","Electrical Drives",
+"Microprocessors"
+],
+
+"EC Engineering":[
+"Electronic Devices","Digital Electronics",
+"Analog Electronics","Communication Systems",
+"Microprocessors","Microcontrollers",
+"Embedded Systems","VLSI Design",
+"Signal Processing","Wireless Communication",
+"Antenna Theory"
+]
+
+};
+
+let books=[];
+
+/* CREATE 500 BOOKS */
+
+departments.forEach((department,index)=>{
+
+for(let i=1;i<=100;i++){
+
+let subject=
+subjects[department][
+(i-1)%subjects[department].length
+];
+
+books.push({
+
+id:prefixes[index]+String(i).padStart(3,"0"),
+name:subject+" - Advanced Engineering",
+subject:subject,
+author:"Engineering Subject Author",
+department:department,
+status:"Available"
+
+});
+
+}
+
+});
+
+
+/* STUDENTS */
+
+const students=[
+["ST001","Rahul Patel","Computer Engineering",2],
+["ST002","Amit Shah","Mechanical Engineering",1],
+["ST003","Jay Patel","Civil Engineering",3],
+["ST004","Dhruv Mehta","Electrical Engineering",1],
+["ST005","Yash Desai","EC Engineering",2],
+["ST006","Harsh Trivedi","Computer Engineering",0],
+["ST007","Krish Patel","Civil Engineering",1]
+];
+
+
+/* FACULTY */
+
+const faculty=[
+["Dr. Rahul Patel","Computer Engineering","rahul@college.edu"],
+["Prof. Amit Shah","Mechanical Engineering","amit@college.edu"],
+["Prof. Jay Mehta","Civil Engineering","jay@college.edu"],
+["Prof. Dhruv Patel","Electrical Engineering","dhruv@college.edu"],
+["Prof. Yash Shah","EC Engineering","yash@college.edu"],
+["Prof. Harsh Desai","Computer Engineering","harsh@college.edu"],
+["Prof. Krunal Patel","Mechanical Engineering","krunal@college.edu"],
+["Prof. Raj Mehta","Civil Engineering","raj@college.edu"],
+["Prof. Nikhil Shah","Electrical Engineering","nikhil@college.edu"],
+["Prof. Ketan Patel","EC Engineering","ketan@college.edu"]
+];
+
+
+/* ================= BASIC FUNCTIONS ================= */
+
+function $(id){
+return document.getElementById(id);
+}
+
+function safeText(value){
+
+return String(value).replace(/[&<>"']/g,function(m){
+
+return {
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
+}[m];
+
+});
+
+}
+
+
+function showToast(message){
+
+const toast=$("toast");
+
+toast.textContent=message;
+toast.style.display="block";
+
+setTimeout(()=>{
+toast.style.display="none";
+},2500);
+
+}
+
+
+/* ================= PAGE OPEN ================= */
+
+function showPage(id){
+
+document.querySelectorAll(".page").forEach(page=>{
+page.classList.remove("active");
+});
+
+const page=$(id);
+
+if(!page){
+console.error("Page not found:",id);
+return;
+}
+
+page.classList.add("active");
+
+document.querySelectorAll(".menu button").forEach(btn=>{
+btn.classList.remove("active");
+});
+
+const matching=
+document.querySelector('.menu button[data-page="'+id+'"]');
+
+if(matching){
+matching.classList.add("active");
+}
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+
+
+/* ================= DEPARTMENT ================= */
+
+function openDepartment(department){
+
+showPage("books");
+
+$("deptFilter").value=department;
+
+renderBooks();
+
+}
+
+
+/* ================= BOOKS ================= */
+
+function renderBooks(){
+
+const search=
+($("bookSearch").value||"").toLowerCase();
+
+const department=$("deptFilter").value;
+
+const status=$("statusFilter").value;
+
+const list=books.filter(book=>{
+
+const text=(
+book.name+" "+
+book.id+" "+
+book.subject+" "+
+book.author+" "+
+book.department
+).toLowerCase();
+
+return (!search||text.includes(search))
+&&(!department||book.department===department)
+&&(!status||book.status===status);
+
+});
+
+
+if(list.length===0){
+
+$("bookGrid").innerHTML=`
+
+<div class="card">
+
+<h3>❌ No books found</h3>
+
+<p>Try another search or department.</p>
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+$("bookGrid").innerHTML=list.map(book=>`
+
+<div class="book">
+
+<div class="cover">📘</div>
+
+<h3>${safeText(book.name)}</h3>
+
+<p><b>ID:</b> ${book.id}</p>
+
+<p><b>Subject:</b> ${safeText(book.subject)}</p>
+
+<p><b>Department:</b> ${safeText(book.department)}</p>
+
+<p><b>Author:</b> ${safeText(book.author)}</p>
+
+<span class="status ${
+book.status==="Available"
+?"available"
+:"issued"
+}">
+
+${book.status}
+
+</span>
+
+<div class="book-actions">
+
+<button class="secondary"
+onclick="viewBook('${book.id}')">
+
+📖 View
+
+</button>
+
+${
+book.status==="Available"
+
+?
+
+`<button class="success"
+onclick="issueBook('${book.id}')">
+
+Issue
+
+</button>`
+
+:
+
+`<button class="danger"
+onclick="returnBook('${book.id}')">
+
+Return
+
+</button>`
+}
+
+</div>
+
+</div>
+
+`).join("");
+
+}
+
+
+/* ================= BOOK DETAILS ================= */
+
+function viewBook(id){
+
+const book=books.find(b=>b.id===id);
+
+if(!book){
+
+showToast("❌ Book not found");
+return;
+
+}
+
+showPage("bookDetails");
+
+$("bookDetail").innerHTML=`
+
+<div style="text-align:center">
+
+<div class="cover"
+style="max-width:240px;margin:auto">
+
+📖
+
+</div>
+
+<h2>${safeText(book.name)}</h2>
+
+</div>
+
+<table>
+
+<tr>
+<th>Book ID</th>
+<td>${book.id}</td>
+</tr>
+
+<tr>
+<th>Subject</th>
+<td>${safeText(book.subject)}</td>
+</tr>
+
+<tr>
+<th>Department</th>
+<td>${safeText(book.department)}</td>
+</tr>
+
+<tr>
+<th>Author</th>
+<td>${safeText(book.author)}</td>
+</tr>
+
+<tr>
+<th>Status</th>
+<td>${book.status}</td>
+</tr>
+
+</table>
+
+<div class="detail-buttons">
+
+${
+book.status==="Available"
+
+?
+
+`<button class="success"
+onclick="issueBook('${book.id}')">
+
+📕 Issue Book
+
+</button>`
+
+:
+
+`<button class="danger"
+onclick="returnBook('${book.id}')">
+
+📗 Return Book
+
+</button>`
+}
+
+<button class="primary"
+onclick="openReaderForBook('${book.id}')">
+
+📖 Open Reader
+
+</button>
+
+<button class="secondary"
+onclick="showPage('books')">
+
+← Back to Books
+
+</button>
+
+</div>
+
+`;
+
+}
+
+
+/* ================= ISSUE / RETURN ================= */
+
+function issueBook(id){
+
+const book=books.find(b=>b.id===id);
+
+if(!book)return;
+
+book.status="Issued";
+
+updateStats();
+renderBooks();
+
+if($("bookDetails").classList.contains("active")){
+viewBook(id);
+}
+
+showToast("📕 Book Issued Successfully");
+
+}
+
+
+function returnBook(id){
+
+const book=books.find(b=>b.id===id);
+
+if(!book)return;
+
+book.status="Available";
+
+updateStats();
+renderBooks();
+
+if($("bookDetails").classList.contains("active")){
+viewBook(id);
+}
+
+showToast("✅ Book Returned Successfully");
+
+}
+
+
+/* ================= STATS ================= */
+
+function updateStats(){
+
+const issued=
+books.filter(b=>b.status==="Issued").length;
+
+const available=books.length-issued;
+
+$("total").textContent=books.length;
+$("available").textContent=available;
+$("issued").textContent=issued;
+
+$("rTotal").textContent=books.length;
+$("rAvailable").textContent=available;
+$("rIssued").textContent=issued;
+
+$("adminTotal").textContent=books.length;
+
+renderReports();
+
+}
+
+
+/* ================= STUDENTS ================= */
+
+function renderStudents(){
+
+$("studentTable").innerHTML=students.map((s,index)=>`
+
+<tr>
+
+<td>${s[0]}</td>
+<td>${safeText(s[1])}</td>
+<td>${safeText(s[2])}</td>
+<td>${s[3]}</td>
+
+<td>
+
+<button class="primary"
+onclick="viewStudent(${index})">
+
+View
+
+</button>
+
+</td>
+
+</tr>
+
+`).join("");
+
+}
+
+
+function viewStudent(index){
+
+const s=students[index];
+
+if(!s)return;
+
+showPage("studentDetails");
+
+$("studentDetail").innerHTML=`
+
+<div style="text-align:center">
+
+<div class="avatar">👨‍🎓</div>
+
+<h2>${safeText(s[1])}</h2>
+
+</div>
+
+<table>
+
+<tr>
+<th>Student ID</th>
+<td>${s[0]}</td>
+</tr>
+
+<tr>
+<th>Name</th>
+<td>${safeText(s[1])}</td>
+</tr>
+
+<tr>
+<th>Department</th>
+<td>${safeText(s[2])}</td>
+</tr>
+
+<tr>
+<th>Issued Books</th>
+<td>${s[3]}</td>
+</tr>
+
+</table>
+
+<br>
+
+<button class="secondary"
+onclick="showPage('students')">
+
+← Back to Students
+
+</button>
+
+`;
+
+}
+
+
+/* ================= FACULTY ================= */
+
+function renderFaculty(){
+
+$("facultyList").innerHTML=faculty.map((f,index)=>`
+
+<div class="person">
+
+<div class="avatar">👨‍🏫</div>
+
+<h3>${safeText(f[0])}</h3>
+
+<p>${safeText(f[1])}</p>
+
+<p>📧 ${safeText(f[2])}</p>
+
+<button class="primary"
+onclick="viewFaculty(${index})">
+
+View Profile
+
+</button>
+
+</div>
+
+`).join("");
+
+}
+
+
+function viewFaculty(index){
+
+const f=faculty[index];
+
+if(!f)return;
+
+showPage("facultyDetails");
+
+$("facultyDetail").innerHTML=`
+
+<div style="text-align:center">
+
+<div class="avatar">👨‍🏫</div>
+
+<h2>${safeText(f[0])}</h2>
+
+<p><b>${safeText(f[1])}</b></p>
+
+</div>
+
+<table>
+
+<tr>
+<th>Name</th>
+<td>${safeText(f[0])}</td>
+</tr>
+
+<tr>
+<th>Department</th>
+<td>${safeText(f[1])}</td>
+</tr>
+
+<tr>
+<th>Email</th>
+<td>${safeText(f[2])}</td>
+</tr>
+
+</table>
+
+<div class="detail-buttons">
+
+<a
+href="mailto:${f[2]}"
+class="primary"
+style="text-decoration:none">
+
+📧 Email
+
+</a>
+
+<button class="secondary"
+onclick="showPage('faculty')">
+
+← Back to Faculty
+
+</button>
+
+</div>
+
+`;
+
+}
+
+
+/* ================= REPORT ================= */
+
+function renderReports(){
+
+$("reportTable").innerHTML=departments.map(dept=>{
+
+const deptBooks=
+books.filter(b=>b.department===dept);
+
+const available=
+deptBooks.filter(b=>b.status==="Available").length;
+
+const issued=
+deptBooks.filter(b=>b.status==="Issued").length;
+
+return `
+
+<tr>
+
+<td>${safeText(dept)}</td>
+<td>${deptBooks.length}</td>
+<td>${available}</td>
+<td>${issued}</td>
+
+</tr>
+
+`;
+
+}).join("");
+
+}
+
+
+/* ================= SCANNER / BARCODE ================= */
+
+function findBookByInput(inputId,resultId){
+
+const value=
+($(inputId).value||"").trim().toUpperCase();
+
+if(!value){
+
+$(resultId).innerHTML=`
+<p>⚠️ Please enter Book ID.</p>
+`;
+
+return;
+
+}
+
+const book=
+books.find(b=>b.id.toUpperCase()===value);
+
+if(!book){
+
+$(resultId).innerHTML=`
+<div class="card">
+<h3>❌ Book Not Found</h3>
+<p>Book ID: ${safeText(value)}</p>
+</div>
+`;
+
+return;
+
+}
+
+$(resultId).innerHTML=`
+
+<div class="card">
+
+<h3>📖 ${safeText(book.name)}</h3>
+
+<p><b>ID:</b> ${book.id}</p>
+
+<p><b>Department:</b>
+${safeText(book.department)}</p>
+
+<p><b>Status:</b> ${book.status}</p>
+
+<br>
+
+<button class="primary"
+onclick="viewBook('${book.id}')">
+
+Open Book Details
+
+</button>
+
+</div>
+
+`;
+
+}
+
+
+/* ================= CAMERA ================= */
+
+let cameraStream=null;
+
+async function startCamera(){
+
+const camera=$("camera");
+
+if(!navigator.mediaDevices||
+!navigator.mediaDevices.getUserMedia){
+
+camera.textContent=
+"Camera is not supported in this browser.";
+
+return;
+
+}
+
+try{
+
+cameraStream=
+await navigator.mediaDevices.getUserMedia({
+video:{facingMode:"environment"}
+});
+
+camera.innerHTML="";
+
+const video=document.createElement("video");
+
+video.autoplay=true;
+video.playsInline=true;
+video.muted=true;
+
+video.srcObject=cameraStream;
+
+camera.appendChild(video);
+
+showToast("📷 Camera Started");
+
+}catch(error){
+
+camera.textContent=
+"Camera permission not allowed. Use Book ID instead.";
+
+showToast("Camera permission required");
+
+}
+
+}
+
+
+function stopCamera(){
+
+if(cameraStream){
+
+cameraStream.getTracks().forEach(track=>{
+track.stop();
+});
+
+cameraStream=null;
+
+}
+
+$("camera").textContent="Camera Preview";
+
+}
+
+
+/* ================= PDF READER ================= */
+
+$("pdfFile").addEventListener("change",function(){
+
+const file=this.files[0];
+
+if(!file)return;
+
+if(file.type!=="application/pdf"){
+
+showToast("❌ Please select PDF file");
+return;
+
+}
+
+const url=URL.createObjectURL(file);
+
+$("pdf").src=url;
+
+showToast("📖 PDF Opened");
+
+});
+
+
+function openReaderForBook(id){
+
+showPage("reader");
+
+showToast(
+"📖 Select the PDF file for Book "+id
+);
+
+}
+
+
+/* ================= CHATBOT ================= */
+
+function addMessage(text,type){
+
+const div=document.createElement("div");
+
+div.className="msg "+type;
+
+div.textContent=text;
+
+$("messages").appendChild(div);
+
+$("messages").scrollTop=
+$("messages").scrollHeight;
+
+}
+
+
+function chatbotReply(question){
+
+const q=question.toLowerCase();
+
+if(q.includes("book")||q.includes("books")){
+
+return "📚 We have "+books.length+
+" books in the KDP Library.";
+
+}
+
+if(q.includes("computer")){
+
+return "💻 Computer Engineering has 100 books.";
+
+}
+
+if(q.includes("mechanical")){
+
+return "⚙️ Mechanical Engineering has 100 books.";
+
+}
+
+if(q.includes("civil")){
+
+return "🏗️ Civil Engineering has 100 books.";
+
+}
+
+if(q.includes("electrical")){
+
+return "⚡ Electrical Engineering has 100 books.";
+
+}
+
+if(q.includes("ec")){
+
+return "📡 EC Engineering has 100 books.";
+
+}
+
+if(q.includes("student")){
+
+return "👨‍🎓 There are "+students.length+
+" demo student records.";
+
+}
+
+if(q.includes("faculty")){
+
+return "👨‍🏫 There are "+faculty.length+
+" faculty members.";
+
+}
+
+if(q.includes("available")){
+
+const count=
+books.filter(b=>b.status==="Available").length;
+
+return "✅ "+count+
+" books are currently available.";
+
+}
+
+if(q.includes("issued")){
+
+const count=
+books.filter(b=>b.status==="Issued").length;
+
+return "📕 "+count+
+" books are currently issued.";
+
+}
+
+if(q.includes("hello")||q.includes("hi")){
+
+return "Hello! 👋 How can I help you with KDP Library?";
+
+}
+
+return "🤖 I can help you with Books, Departments, Students, Faculty, Availability, Issue and Return.";
+
+}
+
+
+function sendChat(){
+
+const input=$("chatInput");
+
+const text=input.value.trim();
+
+if(!text)return;
+
+addMessage(text,"user");
+
+input.value="";
+
+setTimeout(()=>{
+
+addMessage(
+chatbotReply(text),
+"bot"
+);
+
+},400);
+
+}
+
+
+/* ================= ADMIN ================= */
+
+function addBook(){
+
+const name=
+$("newName").value.trim();
+
+const author=
+$("newAuthor").value.trim();
+
+const department=
+$("newDept").value;
+
+if(!name){
+
+showToast("⚠️ Enter book name");
+return;
+
+}
+
+const prefix=
+prefixes[departments.indexOf(department)]||"BK";
+
+const id=
+prefix+String(
+books.length+1
+).padStart(3,"0");
+
+books.push({
+
+id:id,
+name:name,
+subject:name,
+author:author||"Unknown Author",
+department:department,
+status:"Available"
+
+});
+
+$("newName").value="";
+$("newAuthor").value="";
+
+updateStats();
+renderBooks();
+
+showToast("✅ Book Added Successfully");
+
+}
+
+
+/* ================= EVENTS ================= */
+
+
+/* ALL DATA-PAGE BUTTONS */
+
+document.querySelectorAll("[data-page]").forEach(button=>{
+
+button.addEventListener("click",function(){
+
+const page=this.getAttribute("data-page");
+
+showPage(page);
+
+if(page==="books"){
+renderBooks();
+}
+
+if(page==="students"){
+renderStudents();
+}
+
+if(page==="faculty"){
+renderFaculty();
+}
+
+if(page==="reports"){
+renderReports();
+}
+
+});
+
+});
+
+
+/* DEPARTMENT BUTTONS */
+
+document.querySelectorAll("[data-dept]").forEach(button=>{
+
+button.addEventListener("click",function(){
+
+openDepartment(
+this.getAttribute("data-dept")
+);
+
+});
+
+});
+
+
+/* BOOK SEARCH */
+
+$("bookSearch").addEventListener(
+"input",
+renderBooks
+);
+
+$("deptFilter").addEventListener(
+"change",
+renderBooks
+);
+
+$("statusFilter").addEventListener(
+"change",
+renderBooks
+);
+
+
+/* GLOBAL SEARCH */
+
+$("globalSearch").addEventListener(
+"keydown",
+function(e){
+
+if(e.key!=="Enter")return;
+
+const value=this.value.trim();
+
+if(!value)return;
+
+showPage("books");
+
+$("bookSearch").value=value;
+
+renderBooks();
+
+});
+
+$("globalSearch").addEventListener(
+"input",
+function(){
+
+if(this.value.trim()===""){
+
+$("bookSearch").value="";
+renderBooks();
+
+}
+
+});
+
+
+/* SCANNER */
+
+$("scanFind").addEventListener(
+"click",
+function(){
+
+findBookByInput(
+"scanId",
+"scanResult"
+);
+
+});
+
+
+/* BARCODE */
+
+$("barcodeFind").addEventListener(
+"click",
+function(){
+
+findBookByInput(
+"barcodeId",
+"barcodeResult"
+);
+
+});
+
+
+/* CAMERA */
+
+$("startCamera").addEventListener(
+"click",
+startCamera
+);
+
+$("stopCamera").addEventListener(
+"click",
+stopCamera
+);
+
+
+/* CHAT */
+
+$("chatSend").addEventListener(
+"click",
+sendChat
+);
+
+$("chatInput").addEventListener(
+"keydown",
+function(e){
+
+if(e.key==="Enter"){
+sendChat();
+}
+
+});
+
+
+/* DARK MODE */
+
+$("darkBtn").addEventListener(
+"click",
+function(){
+
+document.body.classList.toggle("dark");
+
+this.textContent=
+document.body.classList.contains("dark")
+?"☀️"
+:"🌙";
+
+});
+
+
+/* NOTIFICATION */
+
+$("notifyBtn").addEventListener(
+"click",
+function(){
+
+showToast("🔔 No new notifications");
+
+});
+
+
+/* LIBRARIAN CONTACT */
+
+$("contactBtn").addEventListener(
+"click",
+function(){
+
+window.location.href=
+"mailto:librarian@kdplibrary.edu";
+
+});
+
+
+/* ADMIN ADD */
+
+$("addBookBtn").addEventListener(
+"click",
+addBook
+);
+
+
+/* INITIALIZE */
+
+renderBooks();
+renderStudents();
+renderFaculty();
+renderReports();
+updateStats();
+
+/* IMPORTANT:
+   Dashboard first page.
+*/
+
+showPage("dashboard");
+
+</script>
+
+</body>
+</html>
