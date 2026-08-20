@@ -1,298 +1,1758 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Official Department Library Portal with AI Librarian Chatbot, GTU Exam Papers, E-Books, and Real-time Notice Board.">
-    <title>Department Library AI Chatbot Portal</title>
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Material Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Font Awesome Icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- AOS Animate On Scroll -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <!-- Custom Style -->
-    <link href="css/style.css" rel="stylesheet">
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>KDP LIBRARY CHATBOT</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f1f5f9;
+    color:#172033;
+    min-height:100vh;
+}
+
+/* HEADER */
+
+header{
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    color:white;
+    text-align:center;
+    padding:25px 15px;
+}
+
+header h1{
+    font-size:30px;
+    margin-bottom:8px;
+}
+
+header p{
+    font-size:16px;
+}
+
+/* MAIN */
+
+.container{
+    width:95%;
+    max-width:1200px;
+    margin:25px auto;
+}
+
+/* SEARCH */
+
+.search{
+    width:100%;
+    padding:15px 18px;
+    border:1px solid #cbd5e1;
+    border-radius:12px;
+    font-size:16px;
+    outline:none;
+    margin-bottom:25px;
+}
+
+.search:focus{
+    border-color:#2563eb;
+}
+
+/* SECTIONS */
+
+.sections{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.section{
+    background:white;
+    min-height:220px;
+    padding:25px 15px;
+    border-radius:20px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    cursor:pointer;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+    border:3px solid transparent;
+    transition:.2s;
+    user-select:none;
+    -webkit-tap-highlight-color:transparent;
+}
+
+.section:hover{
+    transform:translateY(-5px);
+    border-color:#2563eb;
+}
+
+.section:active{
+    transform:scale(.96);
+}
+
+.icon{
+    font-size:60px;
+    margin-bottom:15px;
+}
+
+.section h2{
+    font-size:23px;
+    line-height:1.2;
+}
+
+.section p{
+    margin-top:10px;
+    font-size:18px;
+    color:#64748b;
+}
+
+/* BOOK AREA */
+
+#bookArea{
+    display:none;
+}
+
+.backBtn{
+    background:#475569;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:9px;
+    font-size:16px;
+    cursor:pointer;
+    margin-bottom:20px;
+}
+
+.backBtn:active{
+    transform:scale(.96);
+}
+
+.bookTitle{
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    color:white;
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:20px;
+}
+
+.bookTitle h2{
+    font-size:25px;
+}
+
+/* BOOK GRID */
+
+.books{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(240px,1fr));
+    gap:18px;
+}
+
+/* BOOK CARD */
+
+.book{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 5px 18px rgba(0,0,0,.08);
+    transition:.2s;
+}
+
+.book:hover{
+    transform:translateY(-4px);
+}
+
+.book:active{
+    transform:scale(.98);
+}
+
+.bookIcon{
+    font-size:42px;
+    margin-bottom:10px;
+}
+
+.book h3{
+    font-size:18px;
+    margin-bottom:12px;
+    line-height:1.3;
+}
+
+.book p{
+    color:#64748b;
+    margin:7px 0;
+    font-size:14px;
+}
+
+/* BUTTON ROW */
+
+.btnRow{
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+}
+
+/* OPEN BUTTON */
+
+.openBookButton{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:9px;
+    background:#2563eb;
+    color:white;
+    font-size:15px;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+}
+
+.openBookButton:hover{
+    background:#1d4ed8;
+}
+
+.openBookButton:active{
+    transform:scale(.97);
+}
+
+.readBookButton{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:9px;
+    background:#16a34a;
+    color:white;
+    font-size:15px;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+}
+
+.readBookButton:hover{
+    background:#15803d;
+}
+
+.readBookButton:active{
+    transform:scale(.97);
+}
+
+/* MODAL */
+
+#bookModal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.75);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:99999;
+}
+
+.modalBox{
+    background:white;
+    width:100%;
+    max-width:500px;
+    padding:28px;
+    border-radius:18px;
+    text-align:center;
+}
+
+.modalIcon{
+    font-size:60px;
+}
+
+.modalBox h2{
+    margin:12px 0;
+    color:#2563eb;
+}
+
+.modalBox p{
+    margin:10px 0;
+    color:#475569;
+}
+
+.closeButton{
+    margin-top:15px;
+    padding:12px 30px;
+    border:none;
+    border-radius:8px;
+    background:#ef4444;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+/* READER (full text view) */
+
+#readerOverlay{
+    position:fixed;
+    inset:0;
+    background:#f1f5f9;
+    z-index:999999;
+    display:none;
+    overflow-y:auto;
+}
+
+.readerTop{
+    position:sticky;
+    top:0;
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    color:white;
+    padding:18px 15px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    z-index:2;
+}
+
+.readerCloseBtn{
+    background:rgba(255,255,255,.15);
+    border:none;
+    color:white;
+    padding:10px 16px;
+    border-radius:8px;
+    font-size:15px;
+    cursor:pointer;
+    flex-shrink:0;
+}
+
+.readerCloseBtn:active{
+    transform:scale(.95);
+}
+
+.readerTop h2{
+    font-size:18px;
+    line-height:1.3;
+}
+
+.readerBody{
+    max-width:800px;
+    margin:0 auto;
+    padding:25px 20px 60px;
+}
+
+.readerMeta{
+    background:white;
+    border-radius:12px;
+    padding:15px 18px;
+    margin-bottom:20px;
+    box-shadow:0 4px 14px rgba(0,0,0,.06);
+    font-size:14px;
+    color:#475569;
+}
+
+.chapter{
+    background:white;
+    border-radius:14px;
+    padding:20px;
+    margin-bottom:18px;
+    box-shadow:0 4px 14px rgba(0,0,0,.06);
+}
+
+.chapter h3{
+    color:#2563eb;
+    font-size:19px;
+    margin-bottom:10px;
+}
+
+.chapter p{
+    font-size:15px;
+    line-height:1.7;
+    color:#334155;
+    margin-bottom:10px;
+}
+
+/* NO BOOK */
+
+.noBook{
+    background:white;
+    padding:35px;
+    text-align:center;
+    border-radius:15px;
+    grid-column:1/-1;
+}
+
+/* FOOTER */
+
+footer{
+    margin-top:40px;
+    background:#0f172a;
+    color:white;
+    text-align:center;
+    padding:25px 15px;
+    font-size:17px;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    header h1{
+        font-size:24px;
+    }
+
+    header p{
+        font-size:14px;
+    }
+
+    .sections{
+        grid-template-columns:1fr 1fr;
+        gap:15px;
+    }
+
+    .section{
+        min-height:190px;
+        padding:15px 8px;
+    }
+
+    .icon{
+        font-size:45px;
+    }
+
+    .section h2{
+        font-size:18px;
+    }
+
+    .section p{
+        font-size:15px;
+    }
+
+    .books{
+        grid-template-columns:1fr;
+    }
+
+    .btnRow{
+        flex-direction:column;
+    }
+
+}
+
+</style>
+
 </head>
-<body class="d-flex flex-column min-vh-100">
-
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <div class="spinner-custom"></div>
-        <div class="logo-loading">DEPT LIBRARY</div>
-        <p class="text-muted mt-2 fs-14">Preparing learning resources...</p>
-    </div>
-
-    <!-- Global Header (Navbar injected here) -->
-    <header></header>
-
-    <!-- Hero Section -->
-    <section class="hero-section mt-5 d-flex align-items-center">
-        <div class="hero-shape hero-shape-1"></div>
-        <div class="hero-shape hero-shape-2"></div>
-        <div class="container">
-            <div class="row align-items-center g-5">
-                <div class="col-lg-6" data-aos="fade-right">
-                    <span class="badge bg-primary-light text-primary px-3 py-2 rounded-pill fw-600 mb-3 fs-12 uppercase">Academic Library Portal</span>
-                    <h1 class="hero-title">Unlock Knowledge with <br><span>AI Assistance</span></h1>
-                    <p class="hero-subtitle">Access department books, previous year GTU papers, electronic study guides, and chat with Liby, our virtual assistant librarian, for instant queries.</p>
-                    
-                    <!-- Hero Book Search Input -->
-                    <div class="glass-card p-2 mb-4 d-flex align-items-center gap-2">
-                        <span class="material-icons text-primary ms-3">search</span>
-                        <input type="text" id="hero-search-input" class="form-control border-0 bg-transparent text-color" placeholder="Search books by title, author, or subject..." style="box-shadow:none;">
-                        <button class="btn btn-primary-custom" id="hero-search-btn">Search</button>
-                    </div>
-
-                    <div class="d-flex flex-wrap gap-2 align-items-center">
-                        <span class="fs-12 text-muted fw-600">Quick Searches:</span>
-                        <a href="books.html?query=Data" class="badge bg-light text-muted px-3 py-2 rounded-pill fs-11" style="text-decoration:none;">Data Structures</a>
-                        <a href="books.html?query=Tanenbaum" class="badge bg-light text-muted px-3 py-2 rounded-pill fs-11" style="text-decoration:none;">Tanenbaum</a>
-                        <a href="books.html?query=Algorithms" class="badge bg-light text-muted px-3 py-2 rounded-pill fs-11" style="text-decoration:none;">Algorithms</a>
-                    </div>
-                </div>
-                <div class="col-lg-6 text-center" data-aos="zoom-in" data-aos-delay="200">
-                    <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600&h=450" alt="Department Library Learning Center" class="img-fluid rounded-lg shadow-lg border border-light" style="max-height:400px; border-radius: var(--border-radius-lg); object-fit: cover;">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Breadcrumbs Placeholder -->
-    <div class="container" id="breadcrumbs-container"></div>
-
-    <!-- Quick Access Hub -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row text-center mb-5">
-                <div class="col" data-aos="fade-up">
-                    <h2 class="fw-800">Explore Portal Services</h2>
-                    <p class="text-muted">Instant access to resources prepared for engineering diploma semesters</p>
-                </div>
-            </div>
-            <div class="row g-4">
-                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
-                    <div class="glass-card quick-access-card" onclick="window.location.href='books.html'">
-                        <div class="quick-icon-box">
-                            <span class="material-icons">menu_book</span>
-                        </div>
-                        <h5 class="fw-700">Book Catalog</h5>
-                        <p class="text-muted fs-13 mb-0">Search library stack shelves, filter by authors or subjects, and check availability status.</p>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
-                    <div class="glass-card quick-access-card" onclick="window.location.href='papers.html'">
-                        <div class="quick-icon-box">
-                            <span class="material-icons">history_edu</span>
-                        </div>
-                        <h5 class="fw-700">GTU Papers</h5>
-                        <p class="text-muted fs-13 mb-0">Prepare for exams by downloading previous years' semester-wise subject papers.</p>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
-                    <div class="glass-card quick-access-card" onclick="window.location.href='ebooks.html'">
-                        <div class="quick-icon-box">
-                            <span class="material-icons">tablet_mac</span>
-                        </div>
-                        <h5 class="fw-700">E-Books Library</h5>
-                        <p class="text-muted fs-13 mb-0">Download curriculum textbooks, digital references, and programming PDF sheets instantly.</p>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
-                    <div class="glass-card quick-access-card" onclick="window.location.href='notice.html'">
-                        <div class="quick-icon-box">
-                            <span class="material-icons">campaign</span>
-                        </div>
-                        <h5 class="fw-700">Notice Board</h5>
-                        <p class="text-muted fs-13 mb-0">Stay informed on exam schedule forms, operational guidelines, and placement circulars.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Library Live Statistics -->
-    <section class="py-5 bg-primary-light" style="background: var(--primary-light);">
-        <div class="container">
-            <div class="row align-items-center g-5">
-                <div class="col-lg-5" data-aos="fade-right">
-                    <span class="badge bg-primary text-white px-3 py-2 rounded-pill fw-600 mb-3 fs-12 uppercase">Statistics Dashboard</span>
-                    <h2 class="fw-800">Library Holdings & Activities</h2>
-                    <p class="text-muted">A dynamic look at our department libraries' size, user engagements, and issued resources. Stats update instantly as records are modified.</p>
-                    <a href="books.html" class="btn btn-primary-custom mt-2 d-inline-flex align-items-center gap-2">
-                        Browse Full Stack <span class="material-icons">chevron_right</span>
-                    </a>
-                </div>
-                <div class="col-lg-7">
-                    <div class="row g-4">
-                        <div class="col-sm-6" data-aos="zoom-in" data-aos-delay="100">
-                            <div class="glass-card stat-card">
-                                <span class="material-icons stat-icon">menu_book</span>
-                                <h6 class="text-muted">Total Books</h6>
-                                <div class="stat-number text-primary" id="stat-total-books">0</div>
-                                <span class="fs-12 text-muted fw-500">Distributed across racks</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-6" data-aos="zoom-in" data-aos-delay="200">
-                            <div class="glass-card stat-card">
-                                <span class="material-icons stat-icon">check_circle</span>
-                                <h6 class="text-muted">Available Now</h6>
-                                <div class="stat-number text-success" id="stat-avail-books">0</div>
-                                <span class="fs-12 text-muted fw-500">Ready to borrow</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-6" data-aos="zoom-in" data-aos-delay="300">
-                            <div class="glass-card stat-card">
-                                <span class="material-icons stat-icon">bookmark</span>
-                                <h6 class="text-muted">Currently Issued</h6>
-                                <div class="stat-number text-warning" id="stat-issued-books">0</div>
-                                <span class="fs-12 text-muted fw-500">With students & faculty</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-6" data-aos="zoom-in" data-aos-delay="400">
-                            <div class="glass-card stat-card">
-                                <span class="material-icons stat-icon">people</span>
-                                <h6 class="text-muted">Department Faculty</h6>
-                                <div class="stat-number text-info" id="stat-faculty">0</div>
-                                <span class="fs-12 text-muted fw-500">Mentors & instructors</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Notice Ticker & Highlights -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-lg-8" data-aos="fade-up">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h4 class="fw-800 mb-0 d-flex align-items-center gap-2"><span class="material-icons text-primary">campaign</span> Latest Announcements</h4>
-                        <a href="notice.html" class="text-primary fw-600 fs-14 hover-link">View All Notices</a>
-                    </div>
-                    <div class="d-flex flex-column gap-3" id="home-notices-container">
-                        <!-- Dynamic notices injected here -->
-                    </div>
-                </div>
-                
-                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="glass-card p-4 h-100">
-                        <h5 class="fw-800 mb-3 d-flex align-items-center gap-2 text-primary">
-                            <span class="material-icons">info</span> Library Operational Info
-                        </h5>
-                        <ul class="list-unstyled d-flex flex-column gap-3 fs-14">
-                            <li class="d-flex align-items-start gap-2">
-                                <span class="material-icons text-success fs-18">check_circle</span>
-                                <div>
-                                    <strong class="text-color">Book Limit:</strong>
-                                    <p class="text-muted mb-0">Max 3 books per student can be checked out at once.</p>
-                                </div>
-                            </li>
-                            <li class="d-flex align-items-start gap-2">
-                                <span class="material-icons text-success fs-18">check_circle</span>
-                                <div>
-                                    <strong class="text-color">Borrowing Duration:</strong>
-                                    <p class="text-muted mb-0">Issued books must be returned within 14 days.</p>
-                                </div>
-                            </li>
-                            <li class="d-flex align-items-start gap-2">
-                                <span class="material-icons text-success fs-18">check_circle</span>
-                                <div>
-                                    <strong class="text-color">Late Return Penalty:</strong>
-                                    <p class="text-muted mb-0">₹2 per day per book fine thereafter.</p>
-                                </div>
-                            </li>
-                            <li class="d-flex align-items-start gap-2">
-                                <span class="material-icons text-success fs-18">check_circle</span>
-                                <div>
-                                    <strong class="text-color">ID Cards Mandatory:</strong>
-                                    <p class="text-muted mb-0">Barcode scanning requires physical student ID card.</p>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Global Footer (Footer injected here) -->
-    <footer></footer>
 
 
+<body>
 
 
-    <!-- Bootstrap 5 Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- AOS Library -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <!-- Page Logic Integration -->
-    <script type="module" src="js/app.js"></script>
-    <script type="module">
-        import { getBooks, getNotices, getFaculty } from "./js/db.js";
+<!-- HEADER -->
 
-        document.addEventListener("DOMContentLoaded", async () => {
-            // Load homepage stats
-            try {
-                const books = await getBooks();
-                const notices = await getNotices();
-                const faculty = await getFaculty();
+<header>
 
-                // Compute stats variables
-                let totalBooks = 0;
-                let availBooks = 0;
-                books.forEach(b => {
-                    totalBooks += b.quantity || 0;
-                    availBooks += b.available || 0;
-                });
-                
-                document.getElementById("stat-total-books").textContent = totalBooks;
-                document.getElementById("stat-avail-books").textContent = availBooks;
-                document.getElementById("stat-issued-books").textContent = totalBooks - availBooks;
-                document.getElementById("stat-faculty").textContent = faculty.length;
+<h1>📚 KDP LIBRARY CHATBOT</h1>
 
-                // Load first 3 notices
-                const noticesContainer = document.getElementById("home-notices-container");
-                const latestNotices = notices.slice(0, 3);
-                
-                if (latestNotices.length === 0) {
-                    noticesContainer.innerHTML = `<div class="text-muted text-center py-4">No notices found.</div>`;
-                } else {
-                    noticesContainer.innerHTML = latestNotices.map(notice => `
-                        <div class="glass-card p-4 ${notice.important ? 'border-start border-4 border-danger' : ''}">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="badge ${notice.category === 'Exam' ? 'bg-danger' : 'bg-primary'} px-3 py-1 rounded-pill fs-11">${notice.category}</span>
-                                <span class="fs-12 text-muted fw-500">${notice.date}</span>
-                            </div>
-                            <h5 class="fw-700">${notice.title}</h5>
-                            <p class="text-muted mb-0 fs-14">${notice.content}</p>
-                        </div>
-                    `).join('');
-                }
-            } catch (e) {
-                console.error("Error loading home details:", e);
+<p>
+Department Engineering Library —
+500 Books
+</p>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- SEARCH -->
+
+<input
+type="text"
+id="search"
+class="search"
+placeholder="🔍 Search book, subject or Book ID..."
+autocomplete="off"
+>
+
+
+<!-- =================================================
+     FIVE DEPARTMENT SECTIONS
+================================================= -->
+
+<div class="sections" id="sections">
+
+
+<!-- COMPUTER -->
+
+<div
+class="section"
+data-department="Computer Engineering">
+
+<div class="icon">💻</div>
+
+<h2>
+Computer<br>
+Engineering
+</h2>
+
+<p>100 Books</p>
+
+</div>
+
+
+<!-- ELECTRICAL -->
+
+<div
+class="section"
+data-department="Electrical Engineering">
+
+<div class="icon">⚡</div>
+
+<h2>
+Electrical<br>
+Engineering
+</h2>
+
+<p>100 Books</p>
+
+</div>
+
+
+<!-- MECHANICAL -->
+
+<div
+class="section"
+data-department="Mechanical Engineering">
+
+<div class="icon">⚙️</div>
+
+<h2>
+Mechanical<br>
+Engineering
+</h2>
+
+<p>100 Books</p>
+
+</div>
+
+
+<!-- CIVIL -->
+
+<div
+class="section"
+data-department="Civil Engineering">
+
+<div class="icon">🏗️</div>
+
+<h2>
+Civil<br>
+Engineering
+</h2>
+
+<p>100 Books</p>
+
+</div>
+
+
+<!-- EC -->
+
+<div
+class="section"
+data-department="EC Engineering">
+
+<div class="icon">📡</div>
+
+<h2>
+EC<br>
+Engineering
+</h2>
+
+<p>100 Books</p>
+
+</div>
+
+
+</div>
+
+
+<!-- =================================================
+     BOOK AREA
+================================================= -->
+
+<div id="bookArea">
+
+<button
+class="backBtn"
+id="backButton">
+
+← Back to Sections
+
+</button>
+
+
+<div class="bookTitle">
+
+<h2 id="departmentTitle"></h2>
+
+<p id="bookCount"></p>
+
+</div>
+
+
+<div
+class="books"
+id="books">
+</div>
+
+
+</div>
+
+
+</div>
+
+
+<!-- READER FULL VIEW -->
+
+<div id="readerOverlay">
+
+<div class="readerTop">
+
+<button class="readerCloseBtn" id="readerCloseBtn">← Back</button>
+
+<h2 id="readerTitle"></h2>
+
+</div>
+
+<div class="readerBody" id="readerBody"></div>
+
+</div>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+© 2026 KDP LIBRARY CHATBOT |
+Department Library
+
+</footer>
+
+
+<script>
+
+/* =================================================
+   BOOK DATABASE
+================================================= */
+
+const departmentSubjects = {
+
+
+/* ================= COMPUTER ================= */
+
+"Computer Engineering":[
+
+"Computer Fundamentals",
+"Programming in C",
+"Programming in C++",
+"Java Programming",
+"Python Programming",
+"Data Structures",
+"Algorithms",
+"Database Management System",
+"Operating System",
+"Computer Networks",
+"Software Engineering",
+"Web Technology",
+"HTML and CSS",
+"JavaScript",
+"React Development",
+"Node.js",
+"PHP Programming",
+"Artificial Intelligence",
+"Machine Learning",
+"Deep Learning",
+"Cyber Security",
+"Network Security",
+"Cryptography",
+"Ethical Hacking",
+"Cloud Computing",
+"Distributed Systems",
+"Big Data",
+"Data Science",
+"Data Mining",
+"Blockchain Technology",
+"Internet of Things",
+"Computer Graphics",
+"Digital Image Processing",
+"Computer Vision",
+"Natural Language Processing",
+"Robotics",
+"Embedded Systems",
+"Microprocessor",
+"Microcontroller",
+"Computer Architecture",
+"Compiler Design",
+"Theory of Computation",
+"Automata Theory",
+"Information Retrieval",
+"Parallel Computing",
+"Mobile Computing",
+"Android Development",
+"Software Testing",
+"Git and GitHub",
+"DevOps",
+"Linux Administration"
+
+],
+
+
+/* ================= ELECTRICAL ================= */
+
+"Electrical Engineering":[
+
+"Basic Electrical Engineering",
+"Electrical Circuit Theory",
+"Network Analysis",
+"Electrical Machines",
+"DC Machines",
+"AC Machines",
+"Transformers",
+"Induction Motors",
+"Synchronous Machines",
+"Electrical Measurements",
+"Electrical Instrumentation",
+"Power Systems",
+"Power Generation",
+"Power Transmission",
+"Power Distribution",
+"Power System Analysis",
+"Power System Protection",
+"Switchgear",
+"High Voltage Engineering",
+"Power Electronics",
+"Electric Drives",
+"Control Systems",
+"Automatic Control",
+"Digital Electronics",
+"Analog Electronics",
+"Electronic Devices",
+"Microprocessors",
+"Microcontrollers",
+"Embedded Systems",
+"Renewable Energy",
+"Solar Energy",
+"Wind Energy",
+"Hydro Power",
+"Energy Management",
+"Electrical Safety",
+"Industrial Electronics",
+"Industrial Automation",
+"PLC Programming",
+"SCADA Systems",
+"Smart Grid",
+"Electrical Design",
+"Electrical Wiring",
+"Electrical Estimation",
+"Electric Traction",
+"Electric Vehicles",
+"Battery Technology",
+"Power Quality",
+"HVDC Transmission",
+"Power System Stability",
+"Electrical Materials"
+
+],
+
+
+/* ================= MECHANICAL ================= */
+
+"Mechanical Engineering":[
+
+"Engineering Mechanics",
+"Engineering Drawing",
+"Thermodynamics",
+"Applied Thermodynamics",
+"Fluid Mechanics",
+"Heat Transfer",
+"Machine Design",
+"Machine Design I",
+"Machine Design II",
+"Manufacturing Processes",
+"Manufacturing Technology",
+"Production Engineering",
+"Engineering Materials",
+"Material Science",
+"Strength of Materials",
+"Theory of Machines",
+"Dynamics of Machines",
+"Kinematics of Machines",
+"Machine Tools",
+"Metrology",
+"Industrial Engineering",
+"Operations Research",
+"Production Planning",
+"Quality Control",
+"Total Quality Management",
+"Automobile Engineering",
+"Automotive Engineering",
+"Internal Combustion Engines",
+"IC Engine Design",
+"Refrigeration",
+"Air Conditioning",
+"CAD",
+"CAM",
+"CAE",
+"Robotics",
+"Industrial Automation",
+"Mechatronics",
+"Mechanical Vibrations",
+"Mechanical Measurements",
+"Instrumentation",
+"Hydraulics",
+"Pneumatics",
+"Power Plant Engineering",
+"Steam Engineering",
+"Gas Turbine Engineering",
+"Renewable Energy",
+"Solar Engineering",
+"Wind Energy",
+"Energy Engineering",
+"Tribology"
+
+],
+
+
+/* ================= CIVIL ================= */
+
+"Civil Engineering":[
+
+"Engineering Mechanics",
+"Engineering Drawing",
+"Building Materials",
+"Building Construction",
+"Concrete Technology",
+"Structural Analysis",
+"Strength of Materials",
+"Fluid Mechanics",
+"Hydraulics",
+"Surveying",
+"Advanced Surveying",
+"Geotechnical Engineering",
+"Soil Mechanics",
+"Foundation Engineering",
+"Structural Engineering",
+"Reinforced Concrete Design",
+"Steel Structure Design",
+"Prestressed Concrete",
+"Transportation Engineering",
+"Highway Engineering",
+"Railway Engineering",
+"Airport Engineering",
+"Traffic Engineering",
+"Water Resources Engineering",
+"Irrigation Engineering",
+"Hydrology",
+"Environmental Engineering",
+"Water Supply Engineering",
+"Wastewater Engineering",
+"Air Pollution",
+"Solid Waste Management",
+"Environmental Impact Assessment",
+"Construction Management",
+"Construction Planning",
+"Construction Technology",
+"Project Management",
+"Engineering Economics",
+"Quantity Surveying",
+"Estimation and Costing",
+"Building Services",
+"Earthquake Engineering",
+"Wind Engineering",
+"Finite Element Method",
+"Bridge Engineering",
+"Tunnel Engineering",
+"Dams Engineering",
+"Canal Engineering",
+"Coastal Engineering",
+"Remote Sensing",
+"GIS",
+"Urban Planning"
+
+],
+
+
+/* ================= EC ================= */
+
+"EC Engineering":[
+
+"Basic Electronics",
+"Electronic Devices",
+"Analog Electronics",
+"Digital Electronics",
+"Digital Logic Design",
+"Microprocessors",
+"Microcontrollers",
+"Embedded Systems",
+"Communication Systems",
+"Analog Communication",
+"Digital Communication",
+"Wireless Communication",
+"Mobile Communication",
+"Satellite Communication",
+"Optical Fiber Communication",
+"Microwave Engineering",
+"Antenna Engineering",
+"Electromagnetic Theory",
+"Signals and Systems",
+"Digital Signal Processing",
+"Control Systems",
+"Linear Integrated Circuits",
+"Power Electronics",
+"VLSI Design",
+"CMOS Design",
+"ASIC Design",
+"FPGA Design",
+"Embedded C",
+"Embedded Linux",
+"Internet of Things",
+"IoT Systems",
+"Sensor Technology",
+"MEMS",
+"Robotics",
+"Automation",
+"Artificial Intelligence",
+"Machine Learning",
+"Neural Networks",
+"Computer Networks",
+"Network Security",
+"Cryptography",
+"Information Theory",
+"Coding Theory",
+"Data Communication",
+"Network Analysis",
+"Electronic Measurements",
+"Instrumentation",
+"Biomedical Electronics",
+"Industrial Electronics",
+"Consumer Electronics",
+"Audio Engineering"
+
+]
+
+};
+
+
+/* =================================================
+   CREATE 100 BOOKS FOR EVERY DEPARTMENT
+================================================= */
+
+let allBooks = [];
+
+
+const prefixes = {
+
+"Computer Engineering":"CE",
+
+"Electrical Engineering":"EE",
+
+"Mechanical Engineering":"ME",
+
+"Civil Engineering":"CV",
+
+"EC Engineering":"EC"
+
+};
+
+
+/* =================================================
+   GENERATE EXACTLY 100 BOOKS
+================================================= */
+
+Object.keys(departmentSubjects).forEach(function(department){
+
+    const subjects = departmentSubjects[department];
+
+    const prefix = prefixes[department];
+
+
+    for(let i = 0; i < 100; i++){
+
+        const subject =
+            subjects[i % subjects.length];
+
+
+        let bookTitle = subject;
+
+
+        /*
+        If subject repeats after 50,
+        add Advanced / Reference / Practice
+        */
+
+        if(i >= subjects.length){
+
+            const version =
+                Math.floor(i / subjects.length);
+
+            if(version === 1){
+
+                bookTitle =
+                    "Advanced " + subject;
+
+            }else if(version === 2){
+
+                bookTitle =
+                    subject + " Reference";
+
+            }else{
+
+                bookTitle =
+                    subject + " Volume " +
+                    (version + 1);
+
             }
 
-            // Bind Search actions
-            const triggerSearch = () => {
-                const query = document.getElementById("hero-search-input").value.trim();
-                window.location.href = `books.html?query=${encodeURIComponent(query)}`;
-            };
-            
-            document.getElementById("hero-search-btn").addEventListener("click", triggerSearch);
-            document.getElementById("hero-search-input").addEventListener("keypress", (e) => {
-                if (e.key === "Enter") triggerSearch();
-            });
+        }
+
+
+        allBooks.push({
+
+            id:
+                prefix +
+                String(i + 1).padStart(3,"0"),
+
+            title:bookTitle,
+
+            subject:subject,
+
+            department:department,
+
+            author:"KDP Engineering Library",
+
+            status:"Available"
+
         });
-    </script>
-    <script type="module" src="js/app.js"></script>
-<script type="module">
-   
+
+    }
+
+});
+
+
+/* =================================================
+   AUTO-GENERATED READABLE CONTENT
+   (No copyrighted text — original template
+   content built per subject, so every one of
+   the 500 books has real pages to read.)
+================================================= */
+
+const chapterFrames = [
+
+    {
+        label:"Introduction",
+        text:function(s){
+            return "This opening chapter lays the foundation of " + s +
+            ". It explains why the topic matters in real engineering " +
+            "practice, introduces the key terminology a student will meet " +
+            "throughout the book, and outlines how the subject connects to " +
+            "the rest of the curriculum.";
+        }
+    },
+    {
+        label:"Core Concepts",
+        text:function(s){
+            return "Here the fundamental principles of " + s + " are broken " +
+            "down step by step. Diagrams, worked examples, and simple " +
+            "derivations are used to build intuition before moving on to " +
+            "more advanced material later in the book.";
+        }
+    },
+    {
+        label:"Practical Applications",
+        text:function(s){
+            return "This chapter shows how " + s + " is applied in real " +
+            "industry and laboratory settings. Case studies illustrate " +
+            "common problems, the tools engineers use to solve them, and " +
+            "the standards typically followed in practice.";
+        }
+    },
+    {
+        label:"Problem Solving",
+        text:function(s){
+            return "A collection of solved and practice problems on " + s +
+            " designed to reinforce the concepts covered earlier. Each " +
+            "problem includes a short explanation of the reasoning used to " +
+            "reach the solution.";
+        }
+    },
+    {
+        label:"Summary and Review",
+        text:function(s){
+            return "The final chapter reviews the key takeaways from " + s +
+            ", highlights the most commonly asked exam questions, and " +
+            "points toward advanced topics for students who want to go " +
+            "further.";
+        }
+    }
+
+];
+
+
+function generateChapters(book){
+
+    return chapterFrames.map(function(frame,index){
+
+        return {
+
+            title:
+                "Chapter " + (index + 1) +
+                ": " + frame.label,
+
+            paragraph:
+                frame.text(book.subject)
+
+        };
+
+    });
+
+}
+
+
+/* =================================================
+   DOM ELEMENTS
+================================================= */
+
+const sections =
+    document.getElementById("sections");
+
+const bookArea =
+    document.getElementById("bookArea");
+
+const booksContainer =
+    document.getElementById("books");
+
+const departmentTitle =
+    document.getElementById("departmentTitle");
+
+const bookCount =
+    document.getElementById("bookCount");
+
+const search =
+    document.getElementById("search");
+
+const backButton =
+    document.getElementById("backButton");
+
+const readerOverlay =
+    document.getElementById("readerOverlay");
+
+const readerTitle =
+    document.getElementById("readerTitle");
+
+const readerBody =
+    document.getElementById("readerBody");
+
+const readerCloseBtn =
+    document.getElementById("readerCloseBtn");
+
+
+let currentDepartment = null;
+
+
+/* =================================================
+   OPEN DEPARTMENT
+================================================= */
+
+function openDepartment(department){
+
+    currentDepartment = department;
+
+
+    sections.style.display = "none";
+
+    bookArea.style.display = "block";
+
+
+    departmentTitle.innerHTML =
+        "📚 " + department;
+
+
+    bookCount.innerHTML =
+        "100 Books Available";
+
+
+    search.value = "";
+
+
+    showBooks(department);
+
+}
+
+
+/* =================================================
+   SHOW BOOKS
+================================================= */
+
+function showBooks(department,keyword=""){
+
+    booksContainer.innerHTML = "";
+
+
+    let departmentBooks =
+        allBooks.filter(function(book){
+
+            return book.department === department;
+
+        });
+
+
+    if(keyword.trim() !== ""){
+
+        const text =
+            keyword.toLowerCase().trim();
+
+
+        departmentBooks =
+            departmentBooks.filter(function(book){
+
+                return (
+
+                    book.title
+                    .toLowerCase()
+                    .includes(text)
+
+                    ||
+
+                    book.id
+                    .toLowerCase()
+                    .includes(text)
+
+                );
+
+            });
+
+    }
+
+
+    if(departmentBooks.length === 0){
+
+        booksContainer.innerHTML = `
+
+        <div class="noBook">
+
+            <h2>❌ Book Not Found</h2>
+
+            <p>
+                Please try another search.
+            </p>
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    departmentBooks.forEach(function(book){
+
+        const card =
+            document.createElement("div");
+
+
+        card.className = "book";
+
+
+        card.innerHTML = `
+
+        <div class="bookIcon">
+            📘
+        </div>
+
+        <h3>
+            ${book.title}
+        </h3>
+
+        <p>
+            <b>Book ID:</b>
+            ${book.id}
+        </p>
+
+        <p>
+            <b>Department:</b>
+            ${book.department}
+        </p>
+
+        <p>
+            🟢 <b>${book.status}</b>
+        </p>
+
+        <div class="btnRow">
+
+            <button
+                type="button"
+                class="readBookButton">
+
+                📖 Read Book
+
+            </button>
+
+            <button
+                type="button"
+                class="openBookButton">
+
+                ℹ️ Details
+
+            </button>
+
+        </div>
+
+        `;
+
+
+        const readButton =
+            card.querySelector(
+                ".readBookButton"
+            );
+
+        const infoButton =
+            card.querySelector(
+                ".openBookButton"
+            );
+
+
+        /* READ BOOK — CLICK + TOUCH */
+
+        readButton.addEventListener(
+            "click",
+            function(event){
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+                readBook(book.id);
+
+            }
+        );
+
+        readButton.addEventListener(
+            "touchend",
+            function(event){
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+                readBook(book.id);
+
+            },
+            {passive:false}
+        );
+
+
+        /* DETAILS — CLICK + TOUCH */
+
+        infoButton.addEventListener(
+            "click",
+            function(event){
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+                openBook(book.id);
+
+            }
+        );
+
+        infoButton.addEventListener(
+            "touchend",
+            function(event){
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+                openBook(book.id);
+
+            },
+            {passive:false}
+        );
+
+
+        booksContainer.appendChild(card);
+
+    });
+
+}
+
+
+/* =================================================
+   OPEN BOOK (details modal)
+================================================= */
+
+function openBook(bookID){
+
+    const book =
+        allBooks.find(function(item){
+
+            return item.id === bookID;
+
+        });
+
+
+    if(!book){
+
+        alert("Book not found!");
+
+        return;
+
+    }
+
+
+    const oldModal =
+        document.getElementById("bookModal");
+
+
+    if(oldModal){
+
+        oldModal.remove();
+
+    }
+
+
+    const modal =
+        document.createElement("div");
+
+
+    modal.id = "bookModal";
+
+
+    modal.innerHTML = `
+
+    <div class="modalBox">
+
+        <div class="modalIcon">
+            📖
+        </div>
+
+        <h2>
+            ${book.title}
+        </h2>
+
+        <p>
+            <b>Book ID:</b>
+            ${book.id}
+        </p>
+
+        <p>
+            <b>Department:</b>
+            ${book.department}
+        </p>
+
+        <p>
+            <b>Author:</b>
+            ${book.author}
+        </p>
+
+        <p>
+            🟢 <b>Status:</b>
+            ${book.status}
+        </p>
+
+        <button
+            class="closeButton"
+            type="button"
+            id="closeBookButton">
+
+            ✕ Close
+
+        </button>
+
+    </div>
+
+    `;
+
+
+    document.body.appendChild(modal);
+
+
+    document
+    .getElementById("closeBookButton")
+    .addEventListener(
+        "click",
+        closeBook
+    );
+
+
+    document
+    .getElementById("closeBookButton")
+    .addEventListener(
+        "touchend",
+        function(event){
+
+            event.preventDefault();
+
+            closeBook();
+
+        },
+        {passive:false}
+    );
+
+}
+
+
+/* =================================================
+   CLOSE BOOK
+================================================= */
+
+function closeBook(){
+
+    const modal =
+        document.getElementById("bookModal");
+
+
+    if(modal){
+
+        modal.remove();
+
+    }
+
+}
+
+
+/* =================================================
+   READ BOOK (full readable content)
+================================================= */
+
+function readBook(bookID){
+
+    const book =
+        allBooks.find(function(item){
+
+            return item.id === bookID;
+
+        });
+
+
+    if(!book){
+
+        alert("Book not found!");
+
+        return;
+
+    }
+
+
+    readerTitle.innerHTML =
+        "📖 " + book.title;
+
+
+    const chapters =
+        generateChapters(book);
+
+
+    let html = `
+
+    <div class="readerMeta">
+
+        <b>Book ID:</b> ${book.id}
+        &nbsp;|&nbsp;
+        <b>Department:</b> ${book.department}
+        &nbsp;|&nbsp;
+        <b>Author:</b> ${book.author}
+
+    </div>
+
+    `;
+
+
+    chapters.forEach(function(chapter){
+
+        html += `
+
+        <div class="chapter">
+
+            <h3>${chapter.title}</h3>
+
+            <p>${chapter.paragraph}</p>
+
+        </div>
+
+        `;
+
+    });
+
+
+    readerBody.innerHTML = html;
+
+
+    readerOverlay.style.display = "block";
+
+    window.scrollTo(0,0);
+
+}
+
+
+/* =================================================
+   CLOSE READER
+================================================= */
+
+function closeReader(){
+
+    readerOverlay.style.display = "none";
+
+}
+
+
+readerCloseBtn.addEventListener(
+    "click",
+    closeReader
+);
+
+readerCloseBtn.addEventListener(
+    "touchend",
+    function(event){
+
+        event.preventDefault();
+
+        closeReader();
+
+    },
+    {passive:false}
+);
+
+
+/* =================================================
+   BACK TO SECTIONS
+================================================= */
+
+function goBack(){
+
+    bookArea.style.display = "none";
+
+    sections.style.display = "grid";
+
+    currentDepartment = null;
+
+    search.value = "";
+
+}
+
+
+/* =================================================
+   BACK BUTTON
+================================================= */
+
+backButton.addEventListener(
+    "click",
+    function(){
+
+        goBack();
+
+    }
+);
+
+
+/* =================================================
+   SEARCH
+================================================= */
+
+search.addEventListener(
+    "input",
+    function(){
+
+        if(!currentDepartment){
+
+            return;
+
+        }
+
+
+        showBooks(
+            currentDepartment,
+            search.value
+        );
+
+    }
+);
+
+
+/* =================================================
+   SECTION CLICK + MOBILE TOUCH
+================================================= */
+
+document
+.querySelectorAll(".section")
+.forEach(function(section){
+
+
+    const department =
+        section.dataset.department;
+
+
+    /* NORMAL CLICK */
+
+    section.addEventListener(
+        "click",
+        function(){
+
+            openDepartment(
+                department
+            );
+
+        }
+    );
+
+
+    /* MOBILE TOUCH */
+
+    section.addEventListener(
+        "touchend",
+        function(event){
+
+            event.preventDefault();
+
+            openDepartment(
+                department
+            );
+
+        },
+        {passive:false}
+    );
+
+
+});
+
+
+/* =================================================
+   PREVENT DOUBLE TOUCH
+================================================= */
+
+let lastTouch = 0;
+
+document.addEventListener(
+    "touchend",
+    function(){
+
+        const now =
+            Date.now();
+
+
+        if(now - lastTouch < 300){
+
+            return;
+
+        }
+
+
+        lastTouch = now;
+
+    },
+    {passive:true}
+);
+
 </script>
 
 </body>
-    </html>
+
+</html>
