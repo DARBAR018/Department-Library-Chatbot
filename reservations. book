@@ -1,276 +1,2188 @@
-"reservation.html"
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Reservation - Department Library</title>
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Department Library Book Reservation System"
+    >
+
+    <meta
+        name="theme-color"
+        content="#2563eb"
+    >
+
+    <title>
+        Book Reservation | Department Library
+    </title>
+
+
+    <!-- ==============================
+         GOOGLE FONT
+    =============================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- ==============================
+         FONT AWESOME
+    =============================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+
+    <!-- ==============================
+         PAGE CSS
+    =============================== -->
 
     <style>
+
+        /* =========================================
+           GLOBAL RESET
+        ========================================= */
+
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
         }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
 
         body {
-            margin: 0;
-            background: #f4f7fb;
+
+            min-height: 100vh;
+
+            font-family:
+                "Inter",
+                Arial,
+                sans-serif;
+
+            color: #0f172a;
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(37, 99, 235, 0.10),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at bottom right,
+                    rgba(14, 165, 233, 0.08),
+                    transparent 35%
+                ),
+                #f8fafc;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 30px 15px;
+
+            line-height: 1.5;
         }
 
-        .container {
-            max-width: 500px;
-            margin: 50px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+
+        /* =========================================
+           MAIN WRAPPER
+        ========================================= */
+
+        .page-wrapper {
+
+            width: 100%;
+            max-width: 1050px;
+
+            display: grid;
+
+            grid-template-columns:
+                minmax(280px, 0.85fr)
+                minmax(400px, 1.15fr);
+
+            background: #ffffff;
+
+            border:
+                1px solid
+                rgba(148, 163, 184, 0.20);
+
+            border-radius: 26px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 25px 60px
+                rgba(15, 23, 42, 0.12);
         }
 
-        h1 {
-            text-align: center;
-            color: #222;
-            margin-bottom: 10px;
+
+        /* =========================================
+           LEFT INFORMATION PANEL
+        ========================================= */
+
+        .info-panel {
+
+            position: relative;
+
+            padding: 45px 38px;
+
+            color: #ffffff;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #1d4ed8 0%,
+                    #2563eb 45%,
+                    #0ea5e9 100%
+                );
+
+            overflow: hidden;
         }
 
-        .subtitle {
-            text-align: center;
-            color: #666;
+
+        .info-panel::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 250px;
+            height: 250px;
+
+            top: -100px;
+            right: -100px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255, 255, 255, 0.10);
+        }
+
+
+        .info-panel::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 180px;
+            height: 180px;
+
+            bottom: -80px;
+            left: -70px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255, 255, 255, 0.08);
+        }
+
+
+        .info-content {
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+
+        /* =========================================
+           BRAND ICON
+        ========================================= */
+
+        .brand-icon {
+
+            width: 68px;
+            height: 68px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
             margin-bottom: 25px;
+
+            color: #ffffff;
+
+            background:
+                rgba(255, 255, 255, 0.16);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.22);
+
+            border-radius: 18px;
+
+            backdrop-filter: blur(10px);
+
+            box-shadow:
+                0 10px 30px
+                rgba(0, 0, 0, 0.12);
         }
 
-        label {
-            display: block;
-            margin-top: 15px;
-            margin-bottom: 6px;
-            font-weight: bold;
+
+        .brand-icon i {
+            font-size: 30px;
         }
 
-        input, select {
+
+        /* =========================================
+           INFO TITLE
+        ========================================= */
+
+        .info-title {
+
+            font-size: 30px;
+
+            font-weight: 800;
+
+            line-height: 1.2;
+
+            margin-bottom: 14px;
+
+            letter-spacing: -0.5px;
+        }
+
+
+        .info-description {
+
+            color:
+                rgba(255, 255, 255, 0.84);
+
+            font-size: 14px;
+
+            line-height: 1.7;
+
+            margin-bottom: 30px;
+        }
+
+
+        /* =========================================
+           FEATURES
+        ========================================= */
+
+        .features {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 15px;
+        }
+
+
+        .feature {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            color:
+                rgba(255, 255, 255, 0.92);
+
+            font-size: 13px;
+        }
+
+
+        .feature-icon {
+
+            width: 34px;
+            height: 34px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background:
+                rgba(255, 255, 255, 0.13);
+
+            border-radius: 10px;
+        }
+
+
+        .feature-icon i {
+            font-size: 13px;
+        }
+
+
+        /* =========================================
+           SECURITY BADGE
+        ========================================= */
+
+        .security-badge {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            margin-top: 35px;
+
+            padding: 8px 12px;
+
+            color: #ffffff;
+
+            background:
+                rgba(255, 255, 255, 0.12);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.18);
+
+            border-radius: 30px;
+
+            font-size: 11px;
+
+            font-weight: 600;
+        }
+
+
+        .security-badge i {
+            font-size: 11px;
+        }
+
+
+        /* =========================================
+           FORM PANEL
+        ========================================= */
+
+        .form-panel {
+
+            padding: 42px;
+
+            background: #ffffff;
+        }
+
+
+        /* =========================================
+           FORM HEADER
+        ========================================= */
+
+        .form-header {
+
+            margin-bottom: 28px;
+        }
+
+
+        .form-header h1 {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            color: #0f172a;
+
+            font-size: 25px;
+
+            font-weight: 800;
+
+            margin-bottom: 7px;
+        }
+
+
+        .form-header h1 i {
+
+            color: #2563eb;
+
+            font-size: 22px;
+        }
+
+
+        .form-header p {
+
+            color: #64748b;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================
+           FORM GRID
+        ========================================= */
+
+        .form-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 18px;
+        }
+
+
+        .form-group {
+
+            display: flex;
+
+            flex-direction: column;
+        }
+
+
+        .form-group.full {
+
+            grid-column:
+                1 / -1;
+        }
+
+
+        /* =========================================
+           LABEL
+        ========================================= */
+
+        .form-group label {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            margin-bottom: 7px;
+
+            color: #334155;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+
+        .required {
+            color: #ef4444;
+        }
+
+
+        /* =========================================
+           INPUT WRAPPER
+        ========================================= */
+
+        .input-wrapper {
+
+            position: relative;
+        }
+
+
+        .input-icon {
+
+            position: absolute;
+
+            left: 14px;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            color: #94a3b8;
+
+            font-size: 14px;
+
+            pointer-events: none;
+
+            transition:
+                color 0.2s ease;
+        }
+
+
+        /* =========================================
+           INPUTS
+        ========================================= */
+
+        .form-control {
+
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 15px;
+
+            height: 48px;
+
+            padding:
+                0 14px 0 42px;
+
+            color: #0f172a;
+
+            background: #ffffff;
+
+            border:
+                1px solid
+                #dbe2ea;
+
+            border-radius: 11px;
+
+            outline: none;
+
+            font-family: inherit;
+
+            font-size: 13px;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
         }
 
-        button {
-            width: 100%;
-            margin-top: 25px;
-            padding: 13px;
-            border: none;
-            border-radius: 8px;
-            background: #2563eb;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
+
+        .form-control::placeholder {
+            color: #94a3b8;
         }
 
-        button:hover {
-            background: #1d4ed8;
+
+        .form-control:hover {
+            border-color: #bfdbfe;
         }
 
-        #message {
-            display: none;
-            margin-top: 20px;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
+
+        .form-control:focus {
+
+            border-color: #2563eb;
+
+            background: #ffffff;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(37, 99, 235, 0.10);
         }
 
-        .success {
-            background: #dcfce7;
-            color: #166534;
-        }
 
-        .error {
-            background: #fee2e2;
-            color: #991b1b;
-        }
+        .input-wrapper:focus-within
+        .input-icon {
 
-        .back {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            text-decoration: none;
             color: #2563eb;
         }
+
+
+        /* =========================================
+           DATE INPUT
+        ========================================= */
+
+        input[type="date"] {
+
+            color-scheme: light;
+        }
+
+
+        /* =========================================
+           FIELD HINT
+        ========================================= */
+
+        .field-hint {
+
+            margin-top: 5px;
+
+            color: #94a3b8;
+
+            font-size: 10px;
+        }
+
+
+        /* =========================================
+           RESERVE BUTTON
+        ========================================= */
+
+        .reserve-button {
+
+            width: 100%;
+
+            height: 52px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 10px;
+
+            margin-top: 25px;
+
+            color: #ffffff;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #1d4ed8
+                );
+
+            border: none;
+
+            border-radius: 12px;
+
+            font-family: inherit;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 8px 20px
+                rgba(37, 99, 235, 0.20);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                opacity 0.2s ease;
+        }
+
+
+        .reserve-button:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 12px 25px
+                rgba(37, 99, 235, 0.28);
+        }
+
+
+        .reserve-button:active {
+
+            transform:
+                translateY(0)
+                scale(0.99);
+        }
+
+
+        .reserve-button:disabled {
+
+            cursor: not-allowed;
+
+            opacity: 0.7;
+
+            transform: none;
+        }
+
+
+        /* =========================================
+           MESSAGE
+        ========================================= */
+
+        #message {
+
+            display: none;
+
+            margin-top: 18px;
+
+            padding: 15px;
+
+            border-radius: 12px;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+
+            animation:
+                messageIn 0.3s ease;
+        }
+
+
+        #message.success {
+
+            color: #166534;
+
+            background: #f0fdf4;
+
+            border:
+                1px solid
+                #bbf7d0;
+        }
+
+
+        #message.error {
+
+            color: #991b1b;
+
+            background: #fef2f2;
+
+            border:
+                1px solid
+                #fecaca;
+        }
+
+
+        .message-content {
+
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 10px;
+        }
+
+
+        .message-icon {
+
+            flex-shrink: 0;
+
+            margin-top: 1px;
+        }
+
+
+        /* =========================================
+           RESERVATION ID
+        ========================================= */
+
+        .reservation-id {
+
+            display: inline-block;
+
+            margin-top: 6px;
+
+            padding: 4px 8px;
+
+            background:
+                rgba(22, 101, 52, 0.08);
+
+            border-radius: 6px;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================================
+           BACK BUTTON
+        ========================================= */
+
+        .back-link {
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            margin-top: 20px;
+
+            padding: 11px;
+
+            color: #475569;
+
+            background: #f8fafc;
+
+            border:
+                1px solid
+                #e2e8f0;
+
+            border-radius: 10px;
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            transition:
+                all 0.2s ease;
+        }
+
+
+        .back-link:hover {
+
+            color: #2563eb;
+
+            background: #eff6ff;
+
+            border-color: #bfdbfe;
+        }
+
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        .form-footer {
+
+            margin-top: 20px;
+
+            text-align: center;
+
+            color: #94a3b8;
+
+            font-size: 10px;
+        }
+
+
+        /* =========================================
+           ANIMATIONS
+        ========================================= */
+
+        @keyframes messageIn {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(-5px);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+            }
+        }
+
+
+        /* =========================================
+           TABLET
+        ========================================= */
+
+        @media (max-width: 850px) {
+
+            .page-wrapper {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .info-panel {
+
+                padding: 30px;
+            }
+
+
+            .features {
+
+                display: grid;
+
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+
+            .security-badge {
+
+                margin-top: 25px;
+            }
+
+
+            .form-panel {
+
+                padding: 30px;
+            }
+        }
+
+
+        /* =========================================
+           MOBILE
+        ========================================= */
+
+        @media (max-width: 600px) {
+
+            body {
+
+                padding: 15px;
+
+                align-items: flex-start;
+            }
+
+
+            .page-wrapper {
+
+                border-radius: 20px;
+
+                margin:
+                    10px 0;
+            }
+
+
+            .info-panel {
+
+                padding: 28px 22px;
+            }
+
+
+            .brand-icon {
+
+                width: 55px;
+                height: 55px;
+
+                margin-bottom: 18px;
+
+                border-radius: 15px;
+            }
+
+
+            .brand-icon i {
+                font-size: 24px;
+            }
+
+
+            .info-title {
+
+                font-size: 24px;
+            }
+
+
+            .info-description {
+
+                font-size: 12px;
+            }
+
+
+            .features {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .form-panel {
+
+                padding: 25px 20px;
+            }
+
+
+            .form-header h1 {
+
+                font-size: 21px;
+            }
+
+
+            .form-grid {
+
+                grid-template-columns:
+                    1fr;
+
+                gap: 15px;
+            }
+
+
+            .form-group.full {
+
+                grid-column:
+                    auto;
+            }
+        }
+
+
+        /* =========================================
+           SMALL MOBILE
+        ========================================= */
+
+        @media (max-width: 380px) {
+
+            .form-panel {
+
+                padding:
+                    22px 15px;
+            }
+
+
+            .info-panel {
+
+                padding:
+                    24px 18px;
+            }
+
+
+            .info-title {
+
+                font-size: 21px;
+            }
+
+
+            .form-header h1 {
+
+                font-size: 19px;
+            }
+        }
+
+
+        /* =========================================
+           ACCESSIBILITY
+        ========================================= */
+
+        .form-control:focus-visible,
+        .reserve-button:focus-visible,
+        .back-link:focus-visible {
+
+            outline: none;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(37, 99, 235, 0.16);
+        }
+
+
+        @media (prefers-reduced-motion: reduce) {
+
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+
+                animation: none !important;
+
+                transition: none !important;
+            }
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
-<div class="container">
 
-    <h1>📚 Book Reservation</h1>
+    <!-- =========================================
+         PAGE WRAPPER
+    ========================================== -->
 
-    <p class="subtitle">
-        Department Library Chatbot
-    </p>
-
-    <form id="reservationForm">
-
-        <label>Student Name</label>
-        <input
-            type="text"
-            id="studentName"
-            placeholder="Enter your name"
-            required
-        >
-
-        <label>Enrollment Number</label>
-        <input
-            type="text"
-            id="enrollment"
-            placeholder="Enter enrollment number"
-            required
-        >
-
-        <label>Book Title</label>
-        <input
-            type="text"
-            id="bookTitle"
-            placeholder="Enter book title"
-            required
-        >
-
-        <label>Author Name</label>
-        <input
-            type="text"
-            id="author"
-            placeholder="Enter author name"
-        >
-
-        <label>Reservation Date</label>
-        <input
-            type="date"
-            id="reservationDate"
-            required
-        >
-
-        <button type="submit">
-            Reserve Book
-        </button>
-
-    </form>
-
-    <div id="message"></div>
-
-    <a href="index.html" class="back">
-        ← Back to Library Chatbot
-    </a>
-
-</div>
-
-<script>
-
-    // Set today's date automatically
-    document.getElementById("reservationDate").value =
-        new Date().toISOString().split("T")[0];
+    <main class="page-wrapper">
 
 
-    document.getElementById("reservationForm")
-    .addEventListener("submit", function(event) {
+        <!-- =====================================
+             INFORMATION PANEL
+        ====================================== -->
 
-        event.preventDefault();
+        <section class="info-panel">
 
-        const studentName =
-            document.getElementById("studentName").value.trim();
-
-        const enrollment =
-            document.getElementById("enrollment").value.trim();
-
-        const bookTitle =
-            document.getElementById("bookTitle").value.trim();
-
-        const author =
-            document.getElementById("author").value.trim();
-
-        const reservationDate =
-            document.getElementById("reservationDate").value;
+            <div class="info-content">
 
 
-        if (!studentName || !enrollment || !bookTitle || !reservationDate) {
+                <!-- Brand -->
 
-            showMessage(
-                "Please fill all required fields.",
-                "error"
+                <div class="brand-icon">
+
+                    <i
+                        class="fa-solid fa-book-bookmark"
+                        aria-hidden="true"
+                    ></i>
+
+                </div>
+
+
+                <!-- Title -->
+
+                <h2 class="info-title">
+
+                    Reserve Your Book
+
+                </h2>
+
+
+                <!-- Description -->
+
+                <p class="info-description">
+
+                    Reserve books from the Department Library
+                    quickly and easily. Submit your details
+                    and your reservation will be recorded
+                    securely.
+
+                </p>
+
+
+                <!-- Features -->
+
+                <div class="features">
+
+
+                    <div class="feature">
+
+                        <span class="feature-icon">
+
+                            <i
+                                class="fa-solid fa-bolt"
+                                aria-hidden="true"
+                            ></i>
+
+                        </span>
+
+                        <span>
+                            Quick & easy reservation
+                        </span>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        <span class="feature-icon">
+
+                            <i
+                                class="fa-solid fa-database"
+                                aria-hidden="true"
+                            ></i>
+
+                        </span>
+
+                        <span>
+                            Reservation saved locally
+                        </span>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        <span class="feature-icon">
+
+                            <i
+                                class="fa-solid fa-clock"
+                                aria-hidden="true"
+                            ></i>
+
+                        </span>
+
+                        <span>
+                            Track your reservation status
+                        </span>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        <span class="feature-icon">
+
+                            <i
+                                class="fa-solid fa-mobile-screen"
+                                aria-hidden="true"
+                            ></i>
+
+                        </span>
+
+                        <span>
+                            Mobile-friendly interface
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- Security -->
+
+                <div class="security-badge">
+
+                    <i
+                        class="fa-solid fa-shield-halved"
+                        aria-hidden="true"
+                    ></i>
+
+                    Secure Library Reservation
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             FORM PANEL
+        ====================================== -->
+
+        <section class="form-panel">
+
+
+            <!-- Header -->
+
+            <div class="form-header">
+
+                <h1>
+
+                    <i
+                        class="fa-solid fa-calendar-check"
+                        aria-hidden="true"
+                    ></i>
+
+                    Book Reservation
+
+                </h1>
+
+                <p>
+                    Fill in the details below to reserve a book.
+                </p>
+
+            </div>
+
+
+
+            <!-- Form -->
+
+            <form
+                id="reservationForm"
+                autocomplete="on"
+                novalidate
+            >
+
+
+                <div class="form-grid">
+
+
+                    <!-- Student Name -->
+
+                    <div class="form-group full">
+
+                        <label for="studentName">
+
+                            <i
+                                class="fa-solid fa-user"
+                                aria-hidden="true"
+                            ></i>
+
+                            Student Name
+
+                            <span
+                                class="required"
+                                aria-hidden="true"
+                            >
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+                            <i
+                                class="fa-solid fa-user input-icon"
+                                aria-hidden="true"
+                            ></i>
+
+                            <input
+                                type="text"
+                                id="studentName"
+                                class="form-control"
+                                name="studentName"
+                                placeholder="Enter your full name"
+                                autocomplete="name"
+                                maxlength="80"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Enrollment -->
+
+                    <div class="form-group">
+
+                        <label for="enrollment">
+
+                            <i
+                                class="fa-solid fa-id-card"
+                                aria-hidden="true"
+                            ></i>
+
+                            Enrollment Number
+
+                            <span
+                                class="required"
+                                aria-hidden="true"
+                            >
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+                            <i
+                                class="fa-solid fa-hashtag input-icon"
+                                aria-hidden="true"
+                            ></i>
+
+                            <input
+                                type="text"
+                                id="enrollment"
+                                class="form-control"
+                                name="enrollment"
+                                placeholder="Enrollment number"
+                                autocomplete="off"
+                                maxlength="30"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Reservation Date -->
+
+                    <div class="form-group">
+
+                        <label for="reservationDate">
+
+                            <i
+                                class="fa-solid fa-calendar-days"
+                                aria-hidden="true"
+                            ></i>
+
+                            Reservation Date
+
+                            <span
+                                class="required"
+                                aria-hidden="true"
+                            >
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+                            <i
+                                class="fa-solid fa-calendar input-icon"
+                                aria-hidden="true"
+                            ></i>
+
+                            <input
+                                type="date"
+                                id="reservationDate"
+                                class="form-control"
+                                name="reservationDate"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Book Title -->
+
+                    <div class="form-group full">
+
+                        <label for="bookTitle">
+
+                            <i
+                                class="fa-solid fa-book"
+                                aria-hidden="true"
+                            ></i>
+
+                            Book Title
+
+                            <span
+                                class="required"
+                                aria-hidden="true"
+                            >
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+                            <i
+                                class="fa-solid fa-book-open input-icon"
+                                aria-hidden="true"
+                            ></i>
+
+                            <input
+                                type="text"
+                                id="bookTitle"
+                                class="form-control"
+                                name="bookTitle"
+                                placeholder="Enter the book title"
+                                maxlength="150"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Author -->
+
+                    <div class="form-group full">
+
+                        <label for="author">
+
+                            <i
+                                class="fa-solid fa-pen-nib"
+                                aria-hidden="true"
+                            ></i>
+
+                            Author Name
+
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+                            <i
+                                class="fa-solid fa-user-pen input-icon"
+                                aria-hidden="true"
+                            ></i>
+
+                            <input
+                                type="text"
+                                id="author"
+                                class="form-control"
+                                name="author"
+                                placeholder="Enter author name (optional)"
+                                maxlength="100"
+                            >
+
+                        </div>
+
+
+                        <span class="field-hint">
+
+                            Optional — enter the author if known.
+
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- Submit -->
+
+                <button
+                    type="submit"
+                    class="reserve-button"
+                    id="reserveButton"
+                >
+
+                    <i
+                        class="fa-solid fa-bookmark"
+                        aria-hidden="true"
+                    ></i>
+
+                    <span>
+                        Reserve Book
+                    </span>
+
+                </button>
+
+
+            </form>
+
+
+
+            <!-- Message -->
+
+            <div
+                id="message"
+                role="alert"
+                aria-live="polite"
+            ></div>
+
+
+
+            <!-- Back -->
+
+            <a
+                href="index.html"
+                class="back-link"
+            >
+
+                <i
+                    class="fa-solid fa-arrow-left"
+                    aria-hidden="true"
+                ></i>
+
+                Back to Library Chatbot
+
+            </a>
+
+
+
+            <!-- Footer -->
+
+            <div class="form-footer">
+
+                Department Library • Book Reservation System
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
+    <script>
+
+        "use strict";
+
+
+        /* =========================================
+           ELEMENTS
+        ========================================== */
+
+        const reservationForm =
+            document.getElementById(
+                "reservationForm"
             );
 
-            return;
+        const reservationDate =
+            document.getElementById(
+                "reservationDate"
+            );
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+        const reserveButton =
+            document.getElementById(
+                "reserveButton"
+            );
+
+        const studentName =
+            document.getElementById(
+                "studentName"
+            );
+
+        const enrollment =
+            document.getElementById(
+                "enrollment"
+            );
+
+        const bookTitle =
+            document.getElementById(
+                "bookTitle"
+            );
+
+        const author =
+            document.getElementById(
+                "author"
+            );
+
+
+        /* =========================================
+           TODAY DATE
+        ========================================== */
+
+        function getTodayDate() {
+
+            const today =
+                new Date();
+
+            const year =
+                today.getFullYear();
+
+            const month =
+                String(
+                    today.getMonth() + 1
+                ).padStart(2, "0");
+
+            const day =
+                String(
+                    today.getDate()
+                ).padStart(2, "0");
+
+            return `${year}-${month}-${day}`;
         }
 
 
-        // Get old reservations
-        let reservations =
-            JSON.parse(localStorage.getItem("bookReservations")) || [];
+        /* =========================================
+           SET DATE
+        ========================================== */
+
+        const todayDate =
+            getTodayDate();
+
+        reservationDate.value =
+            todayDate;
+
+        reservationDate.min =
+            todayDate;
 
 
-        // Create reservation
-        const reservation = {
+        /* =========================================
+           SHOW MESSAGE
+        ========================================== */
 
-            id: Date.now(),
+        function showMessage(
+            text,
+            type = "success",
+            reservationId = null
+        ) {
 
-            studentName: studentName,
-
-            enrollment: enrollment,
-
-            bookTitle: bookTitle,
-
-            author: author,
-
-            reservationDate: reservationDate,
-
-            status: "Pending",
-
-            createdAt: new Date().toLocaleString()
-
-        };
+            let icon =
+                type === "success"
+                    ? "fa-circle-check"
+                    : "fa-circle-exclamation";
 
 
-        // Save reservation
-        reservations.push(reservation);
+            let extraContent = "";
 
-        localStorage.setItem(
-            "bookReservations",
-            JSON.stringify(reservations)
+
+            if (reservationId) {
+
+                extraContent = `
+                    <div class="reservation-id">
+                        Reservation ID: ${reservationId}
+                    </div>
+                `;
+            }
+
+
+            message.innerHTML = `
+
+                <div class="message-content">
+
+                    <i
+                        class="fa-solid ${icon} message-icon"
+                        aria-hidden="true"
+                    ></i>
+
+                    <div>
+
+                        <div>
+                            ${text}
+                        </div>
+
+                        ${extraContent}
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            message.className =
+                type;
+
+            message.style.display =
+                "block";
+
+
+            message.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest"
+            });
+
+
+            setTimeout(
+                function () {
+
+                    message.style.display =
+                        "none";
+
+                },
+                7000
+            );
+        }
+
+
+
+        /* =========================================
+           GET RESERVATIONS
+        ========================================== */
+
+        function getReservations() {
+
+            try {
+
+                return JSON.parse(
+                    localStorage.getItem(
+                        "bookReservations"
+                    )
+                ) || [];
+
+            } catch (error) {
+
+                console.error(
+                    "Unable to read reservations:",
+                    error
+                );
+
+                return [];
+            }
+        }
+
+
+
+        /* =========================================
+           SAVE RESERVATIONS
+        ========================================== */
+
+        function saveReservations(
+            reservations
+        ) {
+
+            localStorage.setItem(
+                "bookReservations",
+                JSON.stringify(
+                    reservations
+                )
+            );
+        }
+
+
+
+        /* =========================================
+           GENERATE RESERVATION ID
+        ========================================== */
+
+        function generateReservationId() {
+
+            const randomPart =
+                Math.floor(
+                    1000 +
+                    Math.random() * 9000
+                );
+
+            const timePart =
+                Date.now()
+                    .toString()
+                    .slice(-4);
+
+            return `RES-${timePart}-${randomPart}`;
+        }
+
+
+
+        /* =========================================
+           FORM SUBMIT
+        ========================================== */
+
+        reservationForm.addEventListener(
+            "submit",
+            function (event) {
+
+                event.preventDefault();
+
+
+                /* ---------------------------------
+                   GET VALUES
+                ---------------------------------- */
+
+                const name =
+                    studentName.value.trim();
+
+                const enrollmentNumber =
+                    enrollment.value.trim();
+
+                const title =
+                    bookTitle.value.trim();
+
+                const authorName =
+                    author.value.trim();
+
+                const date =
+                    reservationDate.value;
+
+
+
+                /* ---------------------------------
+                   VALIDATION
+                ---------------------------------- */
+
+                if (!name) {
+
+                    showMessage(
+                        "Please enter your student name.",
+                        "error"
+                    );
+
+                    studentName.focus();
+
+                    return;
+                }
+
+
+                if (!enrollmentNumber) {
+
+                    showMessage(
+                        "Please enter your enrollment number.",
+                        "error"
+                    );
+
+                    enrollment.focus();
+
+                    return;
+                }
+
+
+                if (!title) {
+
+                    showMessage(
+                        "Please enter the book title.",
+                        "error"
+                    );
+
+                    bookTitle.focus();
+
+                    return;
+                }
+
+
+                if (!date) {
+
+                    showMessage(
+                        "Please select a reservation date.",
+                        "error"
+                    );
+
+                    reservationDate.focus();
+
+                    return;
+                }
+
+
+                if (date < getTodayDate()) {
+
+                    showMessage(
+                        "Reservation date cannot be in the past.",
+                        "error"
+                    );
+
+                    reservationDate.focus();
+
+                    return;
+                }
+
+
+
+                /* ---------------------------------
+                   PREVENT DUPLICATE RESERVATION
+                ---------------------------------- */
+
+                const reservations =
+                    getReservations();
+
+
+                const duplicate =
+                    reservations.some(
+                        function (item) {
+
+                            return (
+
+                                item.enrollment
+                                    .toLowerCase()
+                                ===
+                                enrollmentNumber
+                                    .toLowerCase()
+
+                                &&
+
+                                item.bookTitle
+                                    .toLowerCase()
+                                ===
+                                title
+                                    .toLowerCase()
+
+                                &&
+
+                                item.status
+                                !==
+                                "Cancelled"
+
+                            );
+
+                        }
+                    );
+
+
+                if (duplicate) {
+
+                    showMessage(
+                        "A reservation for this book already exists for this enrollment number.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+
+                /* ---------------------------------
+                   BUTTON LOADING
+                ---------------------------------- */
+
+                reserveButton.disabled =
+                    true;
+
+
+                reserveButton.innerHTML = `
+
+                    <i
+                        class="fa-solid fa-spinner fa-spin"
+                        aria-hidden="true"
+                    ></i>
+
+                    <span>
+                        Processing...
+                    </span>
+
+                `;
+
+
+
+                /* ---------------------------------
+                   CREATE RESERVATION
+                ---------------------------------- */
+
+                const reservation = {
+
+                    id:
+                        generateReservationId(),
+
+                    studentName:
+                        name,
+
+                    enrollment:
+                        enrollmentNumber,
+
+                    bookTitle:
+                        title,
+
+                    author:
+                        authorName,
+
+                    reservationDate:
+                        date,
+
+                    status:
+                        "Pending",
+
+                    createdAt:
+                        new Date()
+                            .toLocaleString(
+                                "en-IN"
+                            )
+
+                };
+
+
+
+                /* ---------------------------------
+                   SAVE
+                ---------------------------------- */
+
+                try {
+
+                    reservations.push(
+                        reservation
+                    );
+
+                    saveReservations(
+                        reservations
+                    );
+
+
+                    /* -----------------------------
+                       SUCCESS
+                    ------------------------------ */
+
+                    showMessage(
+                        "Your book reservation has been submitted successfully.",
+                        "success",
+                        reservation.id
+                    );
+
+
+                    /* -----------------------------
+                       RESET FORM
+                    ------------------------------ */
+
+                    reservationForm.reset();
+
+
+                    reservationDate.value =
+                        getTodayDate();
+
+                    reservationDate.min =
+                        getTodayDate();
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Reservation error:",
+                        error
+                    );
+
+
+                    showMessage(
+                        "Unable to save the reservation. Please try again.",
+                        "error"
+                    );
+
+                }
+
+
+
+                /* ---------------------------------
+                   RESTORE BUTTON
+                ---------------------------------- */
+
+                setTimeout(
+                    function () {
+
+                        reserveButton.disabled =
+                            false;
+
+                        reserveButton.innerHTML = `
+
+                            <i
+                                class="fa-solid fa-bookmark"
+                                aria-hidden="true"
+                            ></i>
+
+                            <span>
+                                Reserve Book
+                            </span>
+
+                        `;
+
+                    },
+                    600
+                );
+
+            }
         );
 
 
-        showMessage(
-            "✅ Book reservation submitted successfully!",
-            "success"
+
+        /* =========================================
+           CAPITALIZE STUDENT NAME
+        ========================================== */
+
+        studentName.addEventListener(
+            "blur",
+            function () {
+
+                this.value =
+                    this.value
+                        .replace(
+                            /\s+/g,
+                            " "
+                        )
+                        .trim();
+
+            }
         );
 
 
-        // Reset form
-        document.getElementById("reservationForm").reset();
 
-        document.getElementById("reservationDate").value =
-            new Date().toISOString().split("T")[0];
+        /* =========================================
+           CLEAN ENROLLMENT NUMBER
+        ========================================== */
 
-    });
+        enrollment.addEventListener(
+            "blur",
+            function () {
+
+                this.value =
+                    this.value
+                        .trim();
+
+            }
+        );
 
 
-    function showMessage(text, type) {
 
-        const message =
-            document.getElementById("message");
+        /* =========================================
+           CLEAN BOOK TITLE
+        ========================================== */
 
-        message.innerHTML = text;
+        bookTitle.addEventListener(
+            "blur",
+            function () {
 
-        message.className = type;
+                this.value =
+                    this.value
+                        .replace(
+                            /\s+/g,
+                            " "
+                        )
+                        .trim();
 
-        message.style.display = "block";
+            }
+        );
 
-        setTimeout(function() {
 
-            message.style.display = "none";
 
-        }, 5000);
-    }
+        /* =========================================
+           PAGE LOAD
+        ========================================== */
 
-</script>
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                reservationDate.min =
+                    getTodayDate();
+
+                if (!reservationDate.value) {
+
+                    reservationDate.value =
+                        getTodayDate();
+                }
+
+            }
+        );
+
+    </script>
 
 </body>
+
 </html>
