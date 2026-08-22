@@ -1,4 +1,646 @@
-<a href="pages/scanner.html" class="nav-link">
-  <i class="fa-solid fa-barcode"></i>
-  <span>Barcode Scanner</span>
+<a href="pages/scanner.html"
+   class="nav-link barcode-scanner-link"
+   id="barcodeScannerNav"
+   title="Barcode Scanner"
+   aria-label="Open Barcode Scanner"
+   aria-current="page">
+
+    <!-- Left Icon -->
+    <span class="nav-icon barcode-icon">
+        <i class="fa-solid fa-barcode" aria-hidden="true"></i>
+    </span>
+
+    <!-- Main Content -->
+    <span class="nav-content">
+
+        <span class="nav-title">
+            Barcode Scanner
+        </span>
+
+        <span class="nav-description">
+            Scan and manage library books
+        </span>
+
+    </span>
+
+    <!-- Status -->
+    <span class="nav-status">
+        <span class="status-dot"></span>
+        <span class="status-text">Ready</span>
+    </span>
+
+    <!-- Arrow -->
+    <span class="nav-arrow">
+        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+    </span>
+
 </a>
+
+<style>
+
+/* =====================================================
+   PROFESSIONAL BARCODE SCANNER NAVIGATION
+   ===================================================== */
+
+.barcode-scanner-link {
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    min-height: 72px;
+
+    padding: 10px 14px;
+
+    margin: 8px 0;
+
+    gap: 14px;
+
+    text-decoration: none;
+
+    color: #1e293b;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    transition:
+        all 0.25s ease;
+}
+
+
+/* =====================================================
+   LEFT ACTIVE INDICATOR
+   ===================================================== */
+
+.barcode-scanner-link::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 50%;
+
+    width: 4px;
+    height: 0;
+
+    background: #2563eb;
+
+    border-radius: 0 6px 6px 0;
+
+    transform: translateY(-50%);
+
+    transition:
+        height 0.25s ease;
+}
+
+
+/* =====================================================
+   ICON BOX
+   ===================================================== */
+
+.barcode-scanner-link .nav-icon {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    width: 46px;
+    height: 46px;
+
+    color: #2563eb;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eff6ff,
+            #dbeafe
+        );
+
+    border-radius: 13px;
+
+    box-shadow:
+        inset 0 0 0 1px rgba(37, 99, 235, 0.08);
+
+    transition:
+        all 0.25s ease;
+}
+
+
+/* =====================================================
+   BARCODE ICON
+   ===================================================== */
+
+.barcode-scanner-link .barcode-icon i {
+
+    font-size: 22px;
+
+    transition:
+        transform 0.25s ease;
+}
+
+
+/* =====================================================
+   CONTENT AREA
+   ===================================================== */
+
+.barcode-scanner-link .nav-content {
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    flex: 1;
+
+    min-width: 0;
+
+    line-height: 1.3;
+}
+
+
+/* =====================================================
+   TITLE
+   ===================================================== */
+
+.barcode-scanner-link .nav-title {
+
+    display: block;
+
+    color: #0f172a;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.1px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    transition:
+        color 0.25s ease;
+}
+
+
+/* =====================================================
+   DESCRIPTION
+   ===================================================== */
+
+.barcode-scanner-link .nav-description {
+
+    display: block;
+
+    margin-top: 4px;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 400;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    transition:
+        color 0.25s ease;
+}
+
+
+/* =====================================================
+   STATUS AREA
+   ===================================================== */
+
+.barcode-scanner-link .nav-status {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 5px 8px;
+
+    background: #f0fdf4;
+
+    border: 1px solid #bbf7d0;
+
+    border-radius: 20px;
+
+    flex-shrink: 0;
+
+    transition:
+        all 0.25s ease;
+}
+
+
+/* =====================================================
+   STATUS DOT
+   ===================================================== */
+
+.barcode-scanner-link .status-dot {
+
+    width: 6px;
+    height: 6px;
+
+    background: #22c55e;
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 0 3px rgba(34, 197, 94, 0.12);
+
+    animation:
+        scannerPulse 2s infinite;
+}
+
+
+/* =====================================================
+   STATUS TEXT
+   ===================================================== */
+
+.barcode-scanner-link .status-text {
+
+    color: #15803d;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.2px;
+}
+
+
+/* =====================================================
+   RIGHT ARROW
+   ===================================================== */
+
+.barcode-scanner-link .nav-arrow {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 30px;
+    height: 30px;
+
+    color: #94a3b8;
+
+    flex-shrink: 0;
+
+    opacity: 0.7;
+
+    transition:
+        all 0.25s ease;
+}
+
+
+.barcode-scanner-link .nav-arrow i {
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   HOVER EFFECT
+   ===================================================== */
+
+.barcode-scanner-link:hover {
+
+    color: #1d4ed8;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #f8fbff
+        );
+
+    border-color: #bfdbfe;
+
+    transform: translateX(4px);
+
+    box-shadow:
+        0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+
+/* =====================================================
+   HOVER ICON
+   ===================================================== */
+
+.barcode-scanner-link:hover .nav-icon {
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #1d4ed8
+        );
+
+    transform: scale(1.05);
+
+    box-shadow:
+        0 6px 16px rgba(37, 99, 235, 0.25);
+}
+
+
+.barcode-scanner-link:hover .barcode-icon i {
+
+    transform:
+        scale(1.12)
+        rotate(-2deg);
+}
+
+
+/* =====================================================
+   HOVER TEXT
+   ===================================================== */
+
+.barcode-scanner-link:hover .nav-title {
+
+    color: #1d4ed8;
+}
+
+
+.barcode-scanner-link:hover .nav-description {
+
+    color: #64748b;
+}
+
+
+/* =====================================================
+   HOVER STATUS
+   ===================================================== */
+
+.barcode-scanner-link:hover .nav-status {
+
+    background: #dcfce7;
+
+    border-color: #86efac;
+}
+
+
+/* =====================================================
+   HOVER ARROW
+   ===================================================== */
+
+.barcode-scanner-link:hover .nav-arrow {
+
+    color: #2563eb;
+
+    opacity: 1;
+
+    transform: translateX(4px);
+}
+
+
+/* =====================================================
+   ACTIVE STATE
+   ===================================================== */
+
+.barcode-scanner-link.active {
+
+    background:
+        linear-gradient(
+            135deg,
+            #eff6ff,
+            #dbeafe
+        );
+
+    border-color: #93c5fd;
+
+    box-shadow:
+        0 8px 22px rgba(37, 99, 235, 0.12);
+}
+
+
+.barcode-scanner-link.active::before {
+
+    height: 38px;
+}
+
+
+.barcode-scanner-link.active .nav-icon {
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #1d4ed8
+        );
+
+    box-shadow:
+        0 6px 16px rgba(37, 99, 235, 0.28);
+}
+
+
+.barcode-scanner-link.active .nav-title {
+
+    color: #1d4ed8;
+}
+
+
+.barcode-scanner-link.active .nav-description {
+
+    color: #3b82f6;
+}
+
+
+.barcode-scanner-link.active .nav-arrow {
+
+    color: #2563eb;
+
+    opacity: 1;
+}
+
+
+/* =====================================================
+   KEYBOARD ACCESSIBILITY
+   ===================================================== */
+
+.barcode-scanner-link:focus-visible {
+
+    outline: none;
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 4px rgba(37, 99, 235, 0.18);
+}
+
+
+/* =====================================================
+   CLICK EFFECT
+   ===================================================== */
+
+.barcode-scanner-link:active {
+
+    transform:
+        translateX(2px)
+        scale(0.99);
+}
+
+
+/* =====================================================
+   STATUS ANIMATION
+   ===================================================== */
+
+@keyframes scannerPulse {
+
+    0% {
+        box-shadow:
+            0 0 0 0 rgba(34, 197, 94, 0.35);
+    }
+
+    70% {
+        box-shadow:
+            0 0 0 6px rgba(34, 197, 94, 0);
+    }
+
+    100% {
+        box-shadow:
+            0 0 0 0 rgba(34, 197, 94, 0);
+    }
+}
+
+
+/* =====================================================
+   MOBILE RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 768px) {
+
+    .barcode-scanner-link {
+
+        min-height: 64px;
+
+        padding: 8px 10px;
+
+        gap: 10px;
+
+        border-radius: 13px;
+    }
+
+
+    .barcode-scanner-link .nav-icon {
+
+        width: 40px;
+        height: 40px;
+
+        border-radius: 11px;
+    }
+
+
+    .barcode-scanner-link .barcode-icon i {
+
+        font-size: 19px;
+    }
+
+
+    .barcode-scanner-link .nav-title {
+
+        font-size: 14px;
+    }
+
+
+    .barcode-scanner-link .nav-description {
+
+        font-size: 10px;
+    }
+
+
+    .barcode-scanner-link .nav-status {
+
+        display: none;
+    }
+
+
+    .barcode-scanner-link .nav-arrow {
+
+        width: 25px;
+    }
+}
+
+
+/* =====================================================
+   SMALL MOBILE
+   ===================================================== */
+
+@media (max-width: 420px) {
+
+    .barcode-scanner-link {
+
+        min-height: 58px;
+
+        padding: 7px 9px;
+
+        gap: 9px;
+    }
+
+
+    .barcode-scanner-link .nav-icon {
+
+        width: 36px;
+        height: 36px;
+    }
+
+
+    .barcode-scanner-link .nav-title {
+
+        font-size: 13px;
+    }
+
+
+    .barcode-scanner-link .nav-description {
+
+        display: none;
+    }
+}
+
+
+/* =====================================================
+   REDUCED MOTION
+   ===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .barcode-scanner-link,
+    .barcode-scanner-link *,
+    .barcode-scanner-link::before {
+
+        transition: none !important;
+
+        animation: none !important;
+    }
+}
+
+</style>
