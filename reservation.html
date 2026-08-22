@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Book Reservation | Department Library</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Inter", Arial, sans-serif;
+            color: #0f172a;
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(37, 99, 235, 0.12),
+                    transparent 35%
+                ),
+                #f8fafc;
+        }
+
+        /* HEADER */
+
+        .header {
+            position: relative;
+            overflow: hidden;
+
+            padding: 45px 20px 75px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #1e3a8a,
+                    #2563eb
+                );
+        }
+
+        .header::before {
+            content: "";
+
+            position: absolute;
+
+            width: 280px;
+            height: 280px;
+
+            right: -100px;
+            top: -150px;
+
+            border-radius: 50%;
+
+            background: rgba(255,255,255,0.08);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+
+            max-width: 900px;
+            margin: auto;
+
+            text-align: center;
+        }
+
+        .header-icon {
+            width: 65px;
+            height: 65px;
+
+            margin: 0 auto 15px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 18px;
+
+            background: rgba(255,255,255,0.13);
+            border: 1px solid rgba(255,255,255,0.2);
+
+            backdrop-filter: blur(10px);
+        }
+
+        .header-icon i {
+            font-size: 28px;
+        }
+
+        .header h1 {
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.78);
+        }
+
+        /* MAIN */
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+
+            margin: -38px auto 45px;
+
+            padding: 0 18px;
+
+            position: relative;
+            z-index: 5;
+        }
+
+        /* CARD */
+
+        .reservation-card {
+            background: white;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 18px 45px
+                rgba(15,23,42,0.11);
+        }
+
+        /* CARD HEADER */
+
+        .card-header {
+            padding: 23px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 14px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f8fafc,
+                    #eff6ff
+                );
+
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #2563eb;
+
+            background: white;
+
+            border: 1px solid #bfdbfe;
+
+            border-radius: 13px;
+        }
+
+        .card-icon i {
+            font-size: 20px;
+        }
+
+        .card-header h2 {
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .card-header p {
+            margin-top: 4px;
+
+            color: #64748b;
+
+            font-size: 10px;
+        }
+
+        /* FORM */
+
+        .form-content {
+            padding: 26px;
+        }
+
+        .form-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            margin-bottom: 8px;
+
+            color: #334155;
+
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        label i {
+            color: #2563eb;
+        }
+
+        .required {
+            color: #dc2626;
+        }
+
+        .optional {
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .input-box {
+            position: relative;
+        }
+
+        .input-box i {
+            position: absolute;
+
+            left: 14px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: #94a3b8;
+
+            pointer-events: none;
+        }
+
+        input {
+            width: 100%;
+            height: 48px;
+
+            padding: 0 14px 0 40px;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 10px;
+
+            outline: none;
+
+            background: #f8fafc;
+
+            color: #0f172a;
+
+            font-size: 12px;
+
+            transition: 0.2s ease;
+        }
+
+        input::placeholder {
+            color: #94a3b8;
+        }
+
+        input:focus {
+            background: white;
+
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(37,99,235,0.10);
+        }
+
+        .date-help {
+            margin-top: 7px;
+
+            color: #64748b;
+
+            font-size: 9px;
+        }
+
+        /* BUTTON */
+
+        .submit-btn {
+            width: 100%;
+            height: 50px;
+
+            margin-top: 25px;
+
+            border: none;
+            border-radius: 11px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 9px;
+
+            cursor: pointer;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #1d4ed8
+                );
+
+            font-size: 12px;
+            font-weight: 700;
+
+            box-shadow:
+                0 8px 20px
+                rgba(37,99,235,0.23);
+
+            transition: 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 26px
+                rgba(37,99,235,0.28);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* MESSAGE */
+
+        #message {
+            display: none;
+
+            margin: 0 25px 25px;
+
+            padding: 14px;
+
+            border-radius: 11px;
+
+            text-align: center;
+
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .success {
+            display: block !important;
+
+            color: #166534;
+
+            background: #dcfce7;
+
+            border: 1px solid #bbf7d0;
+        }
+
+        .error {
+            display: block !important;
+
+            color: #991b1b;
+
+            background: #fee2e2;
+
+            border: 1px solid #fecaca;
+        }
+
+        /* INFO */
+
+        .info-box {
+            margin: 0 25px 25px;
+
+            padding: 15px;
+
+            display: flex;
+
+            gap: 12px;
+
+            color: #1e40af;
+
+            background: #eff6ff;
+
+            border: 1px solid #bfdbfe;
+
+            border-radius: 12px;
+        }
+
+        .info-box i {
+            margin-top: 2px;
+        }
+
+        .info-box strong {
+            display: block;
+
+            margin-bottom: 4px;
+
+            font-size: 10px;
+        }
+
+        .info-box span {
+            color: #64748b;
+
+            font-size: 9px;
+
+            line-height: 1.5;
+        }
+
+        /* BACK */
+
+        .back-section {
+            margin-top: 22px;
+
+            text-align: center;
+        }
+
+        .back-link {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: #2563eb;
+
+            text-decoration: none;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            transition: 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: #1d4ed8;
+            gap: 10px;
+        }
+
+        /* FOOTER */
+
+        footer {
+            padding: 25px 20px;
+
+            background: white;
+
+            border-top: 1px solid #e2e8f0;
+
+            text-align: center;
+
+            color: #64748b;
+        }
+
+        .footer-title {
+            color: #334155;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+        footer p {
+            margin-top: 5px;
+
+            font-size: 9px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 650px) {
+
+            .header {
+                padding: 32px 15px 65px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                padding: 0 12px;
+            }
+
+            .form-content {
+                padding: 18px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 17px;
+            }
+
+            .full {
+                grid-column: auto;
+            }
+
+            #message {
+                margin: 0 18px 18px;
+            }
+
+            .info-box {
+                margin: 0 18px 18px;
+            }
+        }
+
+        @media (max-width: 400px) {
+
+            .card-header {
+                padding: 18px;
+            }
+
+            .form-content {
+                padding: 16px;
+            }
+
+            input {
+                height: 46px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div class="header-content">
+
+            <div class="header-icon">
+                <i class="fa-solid fa-calendar-check"></i>
+            </div>
+
+            <h1>Book Reservation</h1>
+
+            <p>
+                Department Library • Reserve your required book
+            </p>
+
+        </div>
+
+    </header>
+
+
+    <!-- MAIN -->
+
+    <main class="container">
+
+        <div class="reservation-card">
+
+            <!-- CARD HEADER -->
+
+            <div class="card-header">
+
+                <div class="card-icon">
+                    <i class="fa-solid fa-book-bookmark"></i>
+                </div>
+
+                <div>
+
+                    <h2>
+                        Reserve a Library Book
+                    </h2>
+
+                    <p>
+                        Enter your details to submit a reservation request.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- FORM -->
+
+            <div class="form-content">
+
+                <form id="reservationForm">
+
+                    <div class="form-grid">
+
+                        <!-- STUDENT NAME -->
+
+                        <div class="form-group">
+
+                            <label for="studentName">
+
+                                <i class="fa-solid fa-user"></i>
+
+                                Student Name
+
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <div class="input-box">
+
+                                <i class="fa-solid fa-user"></i>
+
+                                <input
+                                    type="text"
+                                    id="studentName"
+                                    placeholder="Enter your full name"
+                                    maxlength="80"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ENROLLMENT -->
+
+                        <div class="form-group">
+
+                            <label for="enrollment">
+
+                                <i class="fa-solid fa-id-card"></i>
+
+                                Enrollment Number
+
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <div class="input-box">
+
+                                <i class="fa-solid fa-hashtag"></i>
+
+                                <input
+                                    type="text"
+                                    id="enrollment"
+                                    placeholder="Enter enrollment number"
+                                    maxlength="30"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- BOOK -->
+
+                        <div class="form-group full">
+
+                            <label for="bookTitle">
+
+                                <i class="fa-solid fa-book"></i>
+
+                                Book Title
+
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <div class="input-box">
+
+                                <i class="fa-solid fa-book-open"></i>
+
+                                <input
+                                    type="text"
+                                    id="bookTitle"
+                                    placeholder="Enter the book title"
+                                    maxlength="150"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- AUTHOR -->
+
+                        <div class="form-group full">
+
+                            <label for="author">
+
+                                <i class="fa-solid fa-pen-nib"></i>
+
+                                Author Name
+
+                                <span class="optional">
+                                    (Optional)
+                                </span>
+
+                            </label>
+
+                            <div class="input-box">
+
+                                <i class="fa-solid fa-user-pen"></i>
+
+                                <input
+                                    type="text"
+                                    id="author"
+                                    placeholder="Enter author name"
+                                    maxlength="100"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- DATE -->
+
+                        <div class="form-group full">
+
+                            <label for="reservationDate">
+
+                                <i class="fa-solid fa-calendar-days"></i>
+
+                                Reservation Date
+
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <div class="input-box">
+
+                                <i class="fa-solid fa-calendar"></i>
+
+                                <input
+                                    type="date"
+                                    id="reservationDate"
+                                    required
+                                >
+
+                            </div>
+
+                            <div class="date-help">
+
+                                <i class="fa-solid fa-circle-info"></i>
+
+                                Select today or a future reservation date.
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- BUTTON -->
+
+                    <button
+                        type="submit"
+                        class="submit-btn"
+                        id="submitButton"
+                    >
+
+                        <i class="fa-solid fa-paper-plane"></i>
+
+                        Submit Reservation
+
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- MESSAGE -->
+
+            <div id="message"></div>
+
+
+            <!-- INFO -->
+
+            <div class="info-box">
+
+                <i class="fa-solid fa-circle-info"></i>
+
+                <div>
+
+                    <strong>
+                        Reservation Information
+                    </strong>
+
+                    <span>
+                        Your reservation request is saved on this
+                        device and will remain Pending until processed.
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- BACK -->
+
+        <div class="back-section">
+
+            <a
+                href="index.html"
+                class="back-link"
+            >
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Back to Department Library
+
+            </a>
+
+        </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <div class="footer-title">
+
+            <i class="fa-solid fa-book-open"></i>
+
+            Department Library
+
+        </div>
+
+        <p>
+            © 2026 Department Library Chatbot
+        </p>
+
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+        "use strict";
+
+
+        const form =
+            document.getElementById("reservationForm");
+
+        const message =
+            document.getElementById("message");
+
+        const submitButton =
+            document.getElementById("submitButton");
+
+        const dateInput =
+            document.getElementById("reservationDate");
+
+
+        /* TODAY DATE */
+
+        function setToday() {
+
+            const today =
+                new Date();
+
+            const year =
+                today.getFullYear();
+
+            const month =
+                String(
+                    today.getMonth() + 1
+                ).padStart(2, "0");
+
+            const day =
+                String(
+                    today.getDate()
+                ).padStart(2, "0");
+
+            const date =
+                `${year}-${month}-${day}`;
+
+            dateInput.value = date;
+
+            dateInput.min = date;
+        }
+
+
+        setToday();
+
+
+        /* MESSAGE */
+
+        function showMessage(
+            text,
+            type
+        ) {
+
+            message.textContent = text;
+
+            message.className = type;
+
+            message.style.display = "block";
+
+            setTimeout(function() {
+
+                message.style.display = "none";
+
+            }, 5000);
+
+        }
+
+
+        /* FORM SUBMIT */
+
+        form.addEventListener(
+            "submit",
+            function(event) {
+
+                event.preventDefault();
+
+
+                const studentName =
+                    document
+                        .getElementById("studentName")
+                        .value
+                        .trim();
+
+
+                const enrollment =
+                    document
+                        .getElementById("enrollment")
+                        .value
+                        .trim();
+
+
+                const bookTitle =
+                    document
+                        .getElementById("bookTitle")
+                        .value
+                        .trim();
+
+
+                const author =
+                    document
+                        .getElementById("author")
+                        .value
+                        .trim();
+
+
+                const selectedDate =
+                    dateInput.value;
+
+
+                /* VALIDATION */
+
+                if (
+                    !studentName ||
+                    !enrollment ||
+                    !bookTitle ||
+                    !selectedDate
+                ) {
+
+                    showMessage(
+                        "Please fill all required fields.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                /* DATE CHECK */
+
+                const today =
+                    new Date();
+
+                today.setHours(
+                    0,
+                    0,
+                    0,
+                    0
+                );
+
+
+                const selected =
+                    new Date(
+                        selectedDate +
+                        "T00:00:00"
+                    );
+
+
+                if (selected < today) {
+
+                    showMessage(
+                        "Please select today or a future date.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                /* OLD RESERVATIONS */
+
+                let reservations = [];
+
+
+                try {
+
+                    reservations =
+                        JSON.parse(
+                            localStorage.getItem(
+                                "bookReservations"
+                            )
+                        ) || [];
+
+                } catch (error) {
+
+                    reservations = [];
+
+                }
+
+
+                /* NEW RESERVATION */
+
+                const reservation = {
+
+                    id:
+                        "RES-" +
+                        Date.now(),
+
+                    studentName:
+                        studentName,
+
+                    enrollment:
+                        enrollment,
+
+                    bookTitle:
+                        bookTitle,
+
+                    author:
+                        author,
+
+                    reservationDate:
+                        selectedDate,
+
+                    status:
+                        "Pending",
+
+                    createdAt:
+                        new Date().toLocaleString(
+                            "en-IN"
+                        )
+
+                };
+
+
+                /* SAVE */
+
+                reservations.push(
+                    reservation
+                );
+
+
+                localStorage.setItem(
+                    "bookReservations",
+                    JSON.stringify(
+                        reservations
+                    )
+                );
+
+
+                /* SUCCESS */
+
+                submitButton.innerHTML = `
+                    <i class="fa-solid fa-check"></i>
+                    Reservation Submitted
+                `;
+
+
+                showMessage(
+                    "✅ Reservation submitted successfully! Your request is Pending.",
+                    "success"
+                );
+
+
+                form.reset();
+
+                setToday();
+
+
+                /* RESET BUTTON */
+
+                setTimeout(function() {
+
+                    submitButton.innerHTML = `
+                        <i class="fa-solid fa-paper-plane"></i>
+                        Submit Reservation
+                    `;
+
+                }, 2500);
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>
