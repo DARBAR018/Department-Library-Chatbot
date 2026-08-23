@@ -17,10 +17,8 @@ function getMailer()
     $mail->SMTPAuth = true;
 
     // Your Gmail
-    $mail->Username = getenv("MAIL_USERNAME");
-
-    // Gmail App Password
-    $mail->Password = getenv("MAIL_PASSWORD");
+    $mail->Username = 'departmentlibrary.ai@gmail.com';
+    $mail->Password = 'qflcuhhdpmajbcib';
 
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = 587;
