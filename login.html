@@ -240,7 +240,6 @@
 
 
                     try {
-
                         console.log("Sending request...");
 
                         const response = await fetch("server/send_otp.php", {
@@ -251,17 +250,18 @@
                             body: "email=" + encodeURIComponent(email)
                         });
 
-                        console.log(response);
-                        console.log(response.status);
+                        const data = await response.json(); // Read it as JSON, not text
 
-                        const text = await response.text();
-
-                        console.log(text);
+                        if (data.success) {
+                            window.showToast("OTP Sent", "Check your college email for the code.", "success");
+                        } else {
+                            // This will show you exactly WHY it failed (e.g. SMTP auth error)
+                            window.showToast("Failed to send OTP", data.message, "error");
+                        }
 
                     } catch (error) {
-
                         console.error(error);
-
+                        window.showToast("Network Error", "Could not connect to the server.", "error");
                     }
 
             });
