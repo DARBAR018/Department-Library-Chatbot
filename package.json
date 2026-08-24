@@ -1,9 +1,34 @@
 {
   "name": "library-chatbot-api",
   "version": "1.0.0",
+  "description": "Professional AI-powered Department Library Chatbot REST API built with Node.js, Express.js and Google Gemini AI. This backend provides secure API endpoints for chatbot communication, library information, FAQs, books, notices, faculty details and other department-library services.",
   "main": "server.js",
+  "type": "commonjs",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node server.js",
+    "production": "NODE_ENV=production node server.js"
+  },
+  "keywords": [
+    "library",
+    "library-chatbot",
+    "ai-chatbot",
+    "department-library",
+    "chatbot-api",
+    "gemini-ai",
+    "google-gemini",
+    "nodejs",
+    "express",
+    "rest-api",
+    "education",
+    "college",
+    "student-assistant"
+  ],
+  "author": "Department Library Chatbot Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
