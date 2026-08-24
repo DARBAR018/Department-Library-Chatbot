@@ -172,67 +172,126 @@ function handleUserMessageSubmit() {
     
     // Simulate AI response offset
     setTimeout(async () => {
-        removeTypingIndicator();
+    try {
         const responseText = await processCognitiveResponse(text);
+        removeTypingIndicator();
         appendMessage(responseText, "bot");
-        
-        // Read response aloud if toggle is on
+
         if (isVoiceEnabled && speechSynth) {
-            speechSynth.cancel(); // Mute overlapping voice lines
-            const speechText = responseText.replace(/<\/?[^>]+(>|$)/g, ""); // strip HTML tags
+            speechSynth.cancel();
+
+            const speechText = responseText.replace(
+                /<\/?[^>]+(>|$)/g,
+                ""
+            );
+
             const utterance = new SpeechSynthesisUtterance(speechText);
             speechSynth.speak(utterance);
         }
-    }, 1000);
-}
+    } catch (error) {
+        console.error("[Chatbot] Response processing error:", error);
 
+        removeTypingIndicator();
+
+        appendMessage(
+            "Sorry, something went wrong while processing your question.",
+            "bot"
+        );
+    }
+}, 300);
 /**
  * Core Matching NLP Framework
  */
 async function processCognitiveResponse(userQuery) {
-    try {
-    const response = await fetch("https://library-chatbot-api.onrender.com/chat", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            message: userQuery
-        })
-    });
+    const queryClean = userQuery
+        .toLowerCase()
+        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "")
+        .trim();
 
-    const data = await response.json();
-
-    if (data.reply) {
-        return data.reply;
-    }
-
-} catch (error) {
-    console.error("Gemini API Error:", error);
-    }
-    const queryClean = userQuery.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "").trim();
     const tokens = queryClean.split(/\s+/);
-    
-    // 1. CHECK FACULTY DETAILS MATCH
+
+    // =========================================================
+    // 1. AI / BACKEND API CALL
+    // =========================================================
+    try {
+        const controller = new AbortController();
+
+        // Stop waiting after 15 seconds
+        const timeout = setTimeout(() => controller.abort(), 15000);
+
+        const response = await fetch(
+            "https://library-chatbot-api.onrender.com/chat",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: userQuery
+                }),
+                signal: controller.signal
+            }
+        );
+
+        clearTimeout(timeout);
+
+        if (!response.ok) {
+            throw new Error(`API HTTP Error: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // API response contains AI answer
+        if (data && typeof data.reply === "string" && data.reply.trim()) {
+            return data.reply.trim();
+        }
+
+        console.warn("[Chatbot] API returned no reply. Using local NLP.");
+    } catch (error) {
+        console.error("[Chatbot] AI API Error:", error);
+        console.log("[Chatbot] Switching to local cognitive processing...");
+    }
+
+    // =========================================================
+    // 2. FACULTY DETAILS
+    // =========================================================
     const facultyMatch = searchFacultyDetails(queryClean, tokens);
-    if (facultyMatch) return facultyMatch;
 
-    // 2. CHECK BOOK AVAILABILITY MATCH
+    if (facultyMatch) {
+        return facultyMatch;
+    }
+
+    // =========================================================
+    // 3. BOOK AVAILABILITY
+    // =========================================================
     const bookMatch = searchBookAvailability(queryClean, tokens);
-    if (bookMatch) return bookMatch;
 
-    // 3. CHECK FAQ COLLECTION KEYWORDS
+    if (bookMatch) {
+        return bookMatch;
+    }
+
+    // =========================================================
+    // 4. FAQ KEYWORD MATCHING
+    // =========================================================
     let bestMatch = null;
     let highestScore = 0;
 
     faqs.forEach(faq => {
+        if (!faq || !Array.isArray(faq.keywords)) return;
+
         let score = 0;
+
         faq.keywords.forEach(keyword => {
-            if (tokens.includes(keyword) || queryClean.includes(keyword)) {
+            const cleanKeyword = String(keyword).toLowerCase().trim();
+
+            if (
+                tokens.includes(cleanKeyword) ||
+                queryClean.includes(cleanKeyword)
+            ) {
                 score++;
             }
         });
-        
+
         if (score > highestScore) {
             highestScore = score;
             bestMatch = faq;
@@ -243,19 +302,44 @@ async function processCognitiveResponse(userQuery) {
         return bestMatch.answer;
     }
 
-    // 4. CHECK NOTICE BOARD MATCHES
-    if (tokens.includes("notice") || tokens.includes("exam") || tokens.includes("schedule")) {
+    // =========================================================
+    // 5. NOTICE BOARD
+    // =========================================================
+    if (
+        tokens.includes("notice") ||
+        tokens.includes("notices") ||
+        tokens.includes("exam") ||
+        tokens.includes("schedule")
+    ) {
         const topNotices = notices.slice(0, 2);
+
         if (topNotices.length > 0) {
-            return `Here are the latest Notice Board announcements:<br>` + 
-                topNotices.map(n => `• <strong>${n.title}</strong> (${n.date}): ${n.content}`).join("<br><br>");
+            return (
+                `Here are the latest Notice Board announcements:<br>` +
+                topNotices
+                    .map(
+                        n =>
+                            `• <strong>${n.title}</strong> (${n.date}): ${n.content}`
+                    )
+                    .join("<br><br>")
+            );
         }
     }
 
-    // 5. FALLBACK DIALOGUE
-    return "I'm sorry, I don't quite understand that. You can ask me about library hours, rules, book issues/returns, check specific book availability, or get faculty contact info.";
+    // =========================================================
+    // 6. FINAL FALLBACK
+    // =========================================================
+    return `
+        I'm sorry, I couldn't understand your question.<br><br>
+        You can ask me about:
+        <br>• Library timings
+        <br>• Library rules
+        <br>• Book availability
+        <br>• Book issue/return
+        <br>• Faculty information
+        <br>• Notices and exam schedules
+    `;
 }
-
 function searchFacultyDetails(query, tokens) {
     // Check if user is asking about faculty, HOD, or staff names
     for (let f of faculty) {
