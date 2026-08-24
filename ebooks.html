@@ -1,290 +1,5767 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Search and download curriculum textbooks and digital references.">
-    <title>Digital E-Books | Library Portal</title>
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Material Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Font Awesome Icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- AOS Animate On Scroll -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <!-- Custom Style -->
-    <link href="css/style.css" rel="stylesheet">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="KDP Department Engineering Library digital e-book catalog, online reader and PDF download portal."
+    >
+
+    <meta
+        name="keywords"
+        content="KDP Library, Engineering Ebooks, Digital Library, PDF Books, Computer Engineering, Mechanical Engineering, Civil Engineering, Electrical Engineering, EC Engineering"
+    >
+
+    <meta
+        name="author"
+        content="KDP Department Engineering Library"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0d6efd"
+    >
+
+    <title>
+        Digital E-Books | KDP Library Portal
+    </title>
+
+
+    <!-- ======================================================
+         BOOTSTRAP
+    ======================================================= -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+
+    <!-- ======================================================
+         MATERIAL ICONS
+    ======================================================= -->
+
+    <link
+        href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet"
+    >
+
+
+    <!-- ======================================================
+         FONT AWESOME
+    ======================================================= -->
+
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        rel="stylesheet"
+    >
+
+
+    <!-- ======================================================
+         AOS
+    ======================================================= -->
+
+    <link
+        href="https://unpkg.com/aos@2.3.1/dist/aos.css"
+        rel="stylesheet"
+    >
+
+
+    <!-- ======================================================
+         PROJECT CSS
+    ======================================================= -->
+
+    <link
+        href="css/style.css"
+        rel="stylesheet"
+    >
+
+
+    <!-- ======================================================
+         PAGE CSS
+    ======================================================= -->
+
     <style>
+
+        :root {
+
+            --ebook-primary:
+                var(--primary-color, #0d6efd);
+
+            --ebook-primary-dark:
+                #084298;
+
+            --ebook-bg:
+                #f8fafc;
+
+            --ebook-card:
+                #ffffff;
+
+            --ebook-text:
+                #1e293b;
+
+            --ebook-muted:
+                #64748b;
+
+            --ebook-border:
+                #e2e8f0;
+
+            --ebook-success:
+                #198754;
+
+            --ebook-warning:
+                #f59e0b;
+
+            --ebook-danger:
+                #dc3545;
+
+            --ebook-shadow:
+                0 10px 30px rgba(15, 23, 42, .08);
+
+            --ebook-radius:
+                16px;
+
+        }
+
+
+        /* ==================================================
+           PAGE
+        ================================================== */
+
+        body {
+
+            background:
+                var(--ebook-bg);
+
+            color:
+                var(--ebook-text);
+
+            transition:
+                background .25s ease,
+                color .25s ease;
+
+        }
+
+
+        /* ==================================================
+           LOADING SCREEN
+        ================================================== */
+
+        #loading-screen {
+
+            position:
+                fixed;
+
+            inset:
+                0;
+
+            z-index:
+                99999;
+
+            background:
+                var(--ebook-bg);
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            justify-content:
+                center;
+
+            align-items:
+                center;
+
+            transition:
+                opacity .4s ease,
+                visibility .4s ease;
+
+        }
+
+
+        #loading-screen.hidden {
+
+            opacity:
+                0;
+
+            visibility:
+                hidden;
+
+            pointer-events:
+                none;
+
+        }
+
+
+        .spinner-custom {
+
+            width:
+                52px;
+
+            height:
+                52px;
+
+            border:
+                4px solid #dbeafe;
+
+            border-top-color:
+                var(--ebook-primary);
+
+            border-radius:
+                50%;
+
+            animation:
+                ebookSpin .8s linear infinite;
+
+        }
+
+
+        @keyframes ebookSpin {
+
+            to {
+                transform:
+                    rotate(360deg);
+            }
+
+        }
+
+
+        .logo-loading {
+
+            margin-top:
+                18px;
+
+            font-weight:
+                800;
+
+            letter-spacing:
+                2px;
+
+            color:
+                var(--ebook-primary);
+
+        }
+
+
+        /* ==================================================
+           HERO
+        ================================================== */
+
+        .ebook-hero {
+
+            position:
+                relative;
+
+            overflow:
+                hidden;
+
+            border-radius:
+                24px;
+
+            padding:
+                38px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #1d4ed8
+                );
+
+            color:
+                white;
+
+            box-shadow:
+                0 18px 45px rgba(15, 23, 42, .18);
+
+        }
+
+
+        .ebook-hero::before {
+
+            content:
+                "";
+
+            position:
+                absolute;
+
+            width:
+                240px;
+
+            height:
+                240px;
+
+            right:
+                -80px;
+
+            top:
+                -90px;
+
+            border-radius:
+                50%;
+
+            background:
+                rgba(255,255,255,.08);
+
+        }
+
+
+        .ebook-hero::after {
+
+            content:
+                "";
+
+            position:
+                absolute;
+
+            width:
+                180px;
+
+            height:
+                180px;
+
+            left:
+                35%;
+
+            bottom:
+                -120px;
+
+            border-radius:
+                50%;
+
+            background:
+                rgba(255,255,255,.06);
+
+        }
+
+
+        .ebook-hero-content {
+
+            position:
+                relative;
+
+            z-index:
+                2;
+
+        }
+
+
+        .ebook-hero h1 {
+
+            font-weight:
+                800;
+
+            font-size:
+                clamp(
+                    28px,
+                    4vw,
+                    48px
+                );
+
+            margin-bottom:
+                10px;
+
+        }
+
+
+        .ebook-hero p {
+
+            max-width:
+                720px;
+
+            opacity:
+                .88;
+
+            margin-bottom:
+                22px;
+
+        }
+
+
+        /* ==================================================
+           SEARCH
+        ================================================== */
+
+        .hero-search {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            background:
+                white;
+
+            border-radius:
+                14px;
+
+            padding:
+                7px;
+
+            max-width:
+                760px;
+
+            box-shadow:
+                0 10px 35px rgba(0,0,0,.15);
+
+        }
+
+
+        .hero-search .material-icons {
+
+            color:
+                #64748b;
+
+            margin:
+                0 10px;
+
+        }
+
+
+        .hero-search input {
+
+            flex:
+                1;
+
+            border:
+                none;
+
+            outline:
+                none;
+
+            padding:
+                12px 8px;
+
+            font-size:
+                14px;
+
+            color:
+                #0f172a;
+
+        }
+
+
+        .hero-search button {
+
+            border:
+                none;
+
+            border-radius:
+                10px;
+
+            padding:
+                11px 18px;
+
+            background:
+                var(--ebook-primary);
+
+            color:
+                white;
+
+            font-weight:
+                700;
+
+        }
+
+
+        /* ==================================================
+           STAT CARDS
+        ================================================== */
+
+        .ebook-stat-card {
+
+            background:
+                var(--ebook-card);
+
+            border:
+                1px solid var(--ebook-border);
+
+            border-radius:
+                var(--ebook-radius);
+
+            padding:
+                18px;
+
+            box-shadow:
+                var(--ebook-shadow);
+
+            height:
+                100%;
+
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease;
+
+        }
+
+
+        .ebook-stat-card:hover {
+
+            transform:
+                translateY(-3px);
+
+            box-shadow:
+                0 15px 35px rgba(15,23,42,.12);
+
+        }
+
+
+        .ebook-stat-icon {
+
+            width:
+                46px;
+
+            height:
+                46px;
+
+            border-radius:
+                12px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            background:
+                #eff6ff;
+
+            color:
+                var(--ebook-primary);
+
+            font-size:
+                22px;
+
+        }
+
+
+        .ebook-stat-number {
+
+            font-size:
+                24px;
+
+            font-weight:
+                800;
+
+            margin-top:
+                12px;
+
+        }
+
+
+        .ebook-stat-label {
+
+            font-size:
+                12px;
+
+            color:
+                var(--ebook-muted);
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                .5px;
+
+        }
+
+
+        /* ==================================================
+           FILTER SIDEBAR
+        ================================================== */
+
+        .ebook-filter-card {
+
+            background:
+                var(--ebook-card);
+
+            border:
+                1px solid var(--ebook-border);
+
+            border-radius:
+                var(--ebook-radius);
+
+            padding:
+                22px;
+
+            box-shadow:
+                var(--ebook-shadow);
+
+        }
+
+
+        .filter-title {
+
+            font-weight:
+                800;
+
+            margin-bottom:
+                18px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                8px;
+
+        }
+
+
+        .filter-section {
+
+            margin-bottom:
+                22px;
+
+        }
+
+
+        .filter-label {
+
+            font-size:
+                12px;
+
+            font-weight:
+                700;
+
+            color:
+                var(--ebook-muted);
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                .5px;
+
+            margin-bottom:
+                8px;
+
+        }
+
+
+        .category-button {
+
+            width:
+                100%;
+
+            border:
+                none;
+
+            background:
+                transparent;
+
+            color:
+                var(--ebook-text);
+
+            text-align:
+                left;
+
+            padding:
+                9px 12px;
+
+            border-radius:
+                9px;
+
+            font-size:
+                13px;
+
+            margin-bottom:
+                3px;
+
+            transition:
+                all .15s ease;
+
+        }
+
+
+        .category-button:hover {
+
+            background:
+                #eff6ff;
+
+            color:
+                var(--ebook-primary);
+
+        }
+
+
+        .category-button.active {
+
+            background:
+                var(--ebook-primary);
+
+            color:
+                white;
+
+            font-weight:
+                700;
+
+        }
+
+
+        /* ==================================================
+           CATALOG TOOLBAR
+        ================================================== */
+
+        .catalog-toolbar {
+
+            background:
+                var(--ebook-card);
+
+            border:
+                1px solid var(--ebook-border);
+
+            border-radius:
+                14px;
+
+            padding:
+                13px 16px;
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            gap:
+                10px;
+
+            flex-wrap:
+                wrap;
+
+            margin-bottom:
+                18px;
+
+        }
+
+
+        .result-count {
+
+            font-size:
+                13px;
+
+            color:
+                var(--ebook-muted);
+
+        }
+
+
+        /* ==================================================
+           EBOOK CARD
+        ================================================== */
+
+        .ebook-card {
+
+            background:
+                var(--ebook-card);
+
+            border:
+                1px solid var(--ebook-border);
+
+            border-radius:
+                var(--ebook-radius);
+
+            overflow:
+                hidden;
+
+            height:
+                100%;
+
+            box-shadow:
+                var(--ebook-shadow);
+
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease;
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+        }
+
+
+        .ebook-card:hover {
+
+            transform:
+                translateY(-5px);
+
+            box-shadow:
+                0 18px 42px rgba(15,23,42,.14);
+
+        }
+
+
+        .ebook-cover {
+
+            height:
+                175px;
+
+            position:
+                relative;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            overflow:
+                hidden;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #dbeafe,
+                    #eff6ff
+                );
+
+        }
+
+
+        .ebook-cover-icon {
+
+            width:
+                78px;
+
+            height:
+                96px;
+
+            border-radius:
+                5px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #2563eb
+                );
+
+            color:
+                white;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            font-size:
+                36px;
+
+            box-shadow:
+                8px 10px 20px rgba(15,23,42,.2);
+
+        }
+
+
+        .ebook-favorite {
+
+            position:
+                absolute;
+
+            right:
+                12px;
+
+            top:
+                12px;
+
+            width:
+                36px;
+
+            height:
+                36px;
+
+            border:
+                none;
+
+            border-radius:
+                50%;
+
+            background:
+                rgba(255,255,255,.9);
+
+            color:
+                #64748b;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            cursor:
+                pointer;
+
+        }
+
+
+        .ebook-favorite.active {
+
+            color:
+                #dc3545;
+
+        }
+
+
+        .ebook-card-body {
+
+            padding:
+                18px;
+
+            flex:
+                1;
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+        }
+
+
+        .ebook-category {
+
+            display:
+                inline-flex;
+
+            align-self:
+                flex-start;
+
+            padding:
+                4px 9px;
+
+            border-radius:
+                50px;
+
+            background:
+                #eff6ff;
+
+            color:
+                var(--ebook-primary);
+
+            font-size:
+                10px;
+
+            font-weight:
+                800;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                .4px;
+
+            margin-bottom:
+                10px;
+
+        }
+
+
+        .ebook-title {
+
+            font-weight:
+                800;
+
+            font-size:
+                17px;
+
+            line-height:
+                1.35;
+
+            margin-bottom:
+                7px;
+
+            display:
+                -webkit-box;
+
+            -webkit-line-clamp:
+                2;
+
+            -webkit-box-orient:
+                vertical;
+
+            overflow:
+                hidden;
+
+        }
+
+
+        .ebook-author {
+
+            color:
+                var(--ebook-muted);
+
+            font-size:
+                13px;
+
+            margin-bottom:
+                10px;
+
+        }
+
+
+        .ebook-description {
+
+            color:
+                var(--ebook-muted);
+
+            font-size:
+                12px;
+
+            line-height:
+                1.6;
+
+            display:
+                -webkit-box;
+
+            -webkit-line-clamp:
+                3;
+
+            -webkit-box-orient:
+                vertical;
+
+            overflow:
+                hidden;
+
+        }
+
+
+        .ebook-meta {
+
+            margin-top:
+                auto;
+
+            padding-top:
+                14px;
+
+            border-top:
+                1px solid var(--ebook-border);
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            gap:
+                8px;
+
+            color:
+                var(--ebook-muted);
+
+            font-size:
+                11px;
+
+        }
+
+
+        .ebook-actions {
+
+            display:
+                flex;
+
+            gap:
+                7px;
+
+            margin-top:
+                12px;
+
+        }
+
+
+        .ebook-actions button {
+
+            flex:
+                1;
+
+            font-size:
+                12px;
+
+        }
+
+
+        /* ==================================================
+           BUTTONS
+        ================================================== */
+
+        .btn-primary-custom {
+
+            background:
+                var(--ebook-primary);
+
+            border:
+                1px solid var(--ebook-primary);
+
+            color:
+                white;
+
+            font-weight:
+                700;
+
+        }
+
+
+        .btn-primary-custom:hover {
+
+            background:
+                var(--ebook-primary-dark);
+
+            border-color:
+                var(--ebook-primary-dark);
+
+            color:
+                white;
+
+        }
+
+
+        .btn-outline-custom {
+
+            border:
+                1px solid var(--ebook-border);
+
+            color:
+                var(--ebook-text);
+
+            background:
+                var(--ebook-card);
+
+            font-weight:
+                600;
+
+        }
+
+
+        .btn-outline-custom:hover {
+
+            border-color:
+                var(--ebook-primary);
+
+            color:
+                var(--ebook-primary);
+
+        }
+
+
+        /* ==================================================
+           READER MODAL
+        ================================================== */
+
+        .reader-modal .modal-dialog {
+
+            max-width:
+                1100px;
+
+        }
+
+
+        .reader-modal .modal-content {
+
+            border:
+                none;
+
+            border-radius:
+                16px;
+
+            overflow:
+                hidden;
+
+        }
+
+
+        .reader-toolbar {
+
+            background:
+                #0f172a;
+
+            color:
+                white;
+
+            padding:
+                10px 14px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            gap:
+                10px;
+
+            flex-wrap:
+                wrap;
+
+        }
+
+
+        .reader-toolbar-left,
+        .reader-toolbar-right {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                7px;
+
+        }
+
+
+        .reader-toolbar button {
+
+            border:
+                1px solid rgba(255,255,255,.2);
+
+            background:
+                rgba(255,255,255,.08);
+
+            color:
+                white;
+
+            border-radius:
+                7px;
+
+            padding:
+                7px 10px;
+
+        }
+
+
+        .reader-body {
+
+            background:
+                #475569;
+
+            min-height:
+                600px;
+
+            max-height:
+                72vh;
+
+            overflow:
+                auto;
+
+            padding:
+                25px;
+
+        }
+
+
         .ebook-reader-page {
-            background: #ffffff;
-            color: #1e293b;
-            padding: 35px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            border-radius: 8px;
-            font-family: Georgia, serif;
-            min-height: 480px;
+
+            background:
+                #ffffff;
+
+            color:
+                #1e293b;
+
+            padding:
+                45px;
+
+            border:
+                1px solid #e2e8f0;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,.15);
+
+            border-radius:
+                4px;
+
+            font-family:
+                Georgia,
+                serif;
+
+            max-width:
+                850px;
+
+            min-height:
+                650px;
+
+            margin:
+                0 auto;
+
         }
+
+
+        .reader-cover {
+
+            min-height:
+                600px;
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            text-align:
+                center;
+
+        }
+
+
+        .reader-cover-icon {
+
+            width:
+                120px;
+
+            height:
+                150px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #2563eb
+                );
+
+            color:
+                white;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border-radius:
+                7px;
+
+            font-size:
+                55px;
+
+            margin-bottom:
+                25px;
+
+        }
+
+
         .reader-chapter-title {
-            font-weight: bold;
-            font-size: 22px;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            border-bottom: 1px solid #cbd5e1;
-            padding-bottom: 8px;
+
+            font-weight:
+                bold;
+
+            font-size:
+                24px;
+
+            color:
+                #1d4ed8;
+
+            margin-bottom:
+                22px;
+
+            border-bottom:
+                1px solid #cbd5e1;
+
+            padding-bottom:
+                10px;
+
         }
+
+
         .reader-para {
-            text-align: justify;
-            text-indent: 30px;
-            line-height: 1.8;
-            font-size: 15px;
-            margin-bottom: 15px;
+
+            text-align:
+                justify;
+
+            text-indent:
+                30px;
+
+            line-height:
+                1.9;
+
+            font-size:
+                16px;
+
+            margin-bottom:
+                18px;
+
         }
-        [data-theme="dark"] .ebook-reader-page {
-            background: #f8fafc;
-            color: #0f172a;
+
+
+        .reader-progress {
+
+            height:
+                4px;
+
+            background:
+                #1e293b;
+
         }
+
+
+        .reader-progress-bar {
+
+            height:
+                100%;
+
+            width:
+                0%;
+
+            background:
+                #3b82f6;
+
+            transition:
+                width .15s linear;
+
+        }
+
+
+        /* ==================================================
+           REAL PDF VIEWER
+        ================================================== */
+
+        #real-pdf-viewer {
+
+            width:
+                100%;
+
+            height:
+                70vh;
+
+            border:
+                none;
+
+            background:
+                white;
+
+            display:
+                none;
+
+        }
+
+
+        /* ==================================================
+           EMPTY STATE
+        ================================================== */
+
+        .empty-state {
+
+            background:
+                var(--ebook-card);
+
+            border:
+                1px dashed var(--ebook-border);
+
+            border-radius:
+                16px;
+
+            padding:
+                65px 25px;
+
+            text-align:
+                center;
+
+            color:
+                var(--ebook-muted);
+
+        }
+
+
+        .empty-state .material-icons {
+
+            font-size:
+                70px;
+
+            opacity:
+                .35;
+
+        }
+
+
+        /* ==================================================
+           FAVORITES
+        ================================================== */
+
+        .favorite-item {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                10px;
+
+            padding:
+                9px;
+
+            border-bottom:
+                1px solid var(--ebook-border);
+
+        }
+
+
+        .favorite-item:last-child {
+
+            border-bottom:
+                none;
+
+        }
+
+
+        /* ==================================================
+           RECENTLY VIEWED
+        ================================================== */
+
+        .recent-list {
+
+            display:
+                flex;
+
+            gap:
+                10px;
+
+            overflow-x:
+                auto;
+
+            padding-bottom:
+                5px;
+
+        }
+
+
+        .recent-item {
+
+            min-width:
+                190px;
+
+            padding:
+                12px;
+
+            border:
+                1px solid var(--ebook-border);
+
+            border-radius:
+                10px;
+
+            background:
+                var(--ebook-card);
+
+            cursor:
+                pointer;
+
+        }
+
+
+        /* ==================================================
+           DARK MODE
+        ================================================== */
+
+        [data-theme="dark"] {
+
+            --ebook-bg:
+                #0f172a;
+
+            --ebook-card:
+                #111827;
+
+            --ebook-text:
+                #e5e7eb;
+
+            --ebook-muted:
+                #94a3b8;
+
+            --ebook-border:
+                #263244;
+
+            --ebook-shadow:
+                0 10px 30px rgba(0,0,0,.25);
+
+        }
+
+
+        [data-theme="dark"]
+        .ebook-cover {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #172554,
+                    #1e3a8a
+                );
+
+        }
+
+
+        [data-theme="dark"]
+        .category-button:hover {
+
+            background:
+                #172554;
+
+        }
+
+
+        /* ==================================================
+           MOBILE
+        ================================================== */
+
+        @media(max-width:768px) {
+
+            .ebook-hero {
+
+                padding:
+                    25px;
+
+                border-radius:
+                    16px;
+
+            }
+
+
+            .hero-search {
+
+                flex-direction:
+                    column;
+
+                align-items:
+                    stretch;
+
+            }
+
+
+            .hero-search button {
+
+                width:
+                    100%;
+
+            }
+
+
+            .ebook-reader-page {
+
+                padding:
+                    24px;
+
+            }
+
+
+            .reader-body {
+
+                padding:
+                    10px;
+
+            }
+
+        }
+
+
+        @media(max-width:576px) {
+
+            .ebook-actions {
+
+                flex-direction:
+                    column;
+
+            }
+
+
+            .ebook-stat-card {
+
+                padding:
+                    14px;
+
+            }
+
+        }
+
     </style>
+
 </head>
+
+
 <body class="d-flex flex-column min-vh-100">
 
-    <!-- Loading Screen -->
+
+    <!-- ======================================================
+         LOADING SCREEN
+    ======================================================= -->
+
     <div id="loading-screen">
+
         <div class="spinner-custom"></div>
-        <div class="logo-loading">DEPT LIBRARY</div>
-        <p class="text-muted mt-2 fs-14">Opening digital reference shelves...</p>
+
+        <div class="logo-loading">
+            KDP DIGITAL LIBRARY
+        </div>
+
+        <p
+            class="text-muted mt-2"
+            style="font-size:13px"
+        >
+            Opening digital reference shelves...
+        </p>
+
     </div>
 
-    <!-- Global Header -->
+
+    <!-- ======================================================
+         HEADER
+    ======================================================= -->
+
     <header></header>
 
-    <!-- Main Container -->
-    <main class="container my-5 pt-5 flex-grow-1">
-        <!-- Breadcrumbs Placeholder -->
+
+    <!-- ======================================================
+         MAIN
+    ======================================================= -->
+
+    <main
+        class="container my-5 pt-5 flex-grow-1"
+    >
+
+
+        <!-- ==================================================
+             BREADCRUMB
+        =================================================== -->
+
         <div id="breadcrumbs-container"></div>
 
-        <div class="row g-4 mt-3">
-            <!-- Sidebar controls -->
-            <div class="col-lg-3" data-aos="fade-right">
-                <div class="glass-card p-4 sticky-top" style="top: 100px;">
-                    <h5 class="fw-800 text-primary mb-3 d-flex align-items-center gap-2">
-                        <span class="material-icons">auto_stories</span> Categories
+
+        <!-- ==================================================
+             HERO
+        =================================================== -->
+
+        <section
+            class="ebook-hero mt-3"
+            data-aos="fade-up"
+        >
+
+            <div class="ebook-hero-content">
+
+                <div
+                    class="d-inline-flex align-items-center gap-2 mb-2"
+                    style="
+                        font-size:12px;
+                        font-weight:700;
+                        letter-spacing:.8px;
+                        text-transform:uppercase;
+                        opacity:.85;
+                    "
+                >
+
+                    <span class="material-icons">
+                        auto_stories
+                    </span>
+
+                    KDP Digital Library
+
+                </div>
+
+
+                <h1>
+                    Digital E-Books
+                </h1>
+
+
+                <p>
+                    Explore engineering textbooks,
+                    technical references, curriculum
+                    resources and digital study material
+                    from all library departments.
+                </p>
+
+
+                <div class="hero-search">
+
+                    <span class="material-icons">
+                        search
+                    </span>
+
+                    <input
+                        type="search"
+                        id="hero-ebook-search"
+                        placeholder="Search books, authors, subjects or keywords..."
+                        autocomplete="off"
+                    >
+
+                    <button
+                        id="hero-search-button"
+                    >
+                        Search
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             STATISTICS
+        =================================================== -->
+
+        <section
+            class="row g-3 mt-4"
+            data-aos="fade-up"
+        >
+
+            <div class="col-6 col-lg-3">
+
+                <div class="ebook-stat-card">
+
+                    <div class="ebook-stat-icon">
+                        <span class="material-icons">
+                            menu_book
+                        </span>
+                    </div>
+
+                    <div
+                        class="ebook-stat-number"
+                        id="stat-total"
+                    >
+                        0
+                    </div>
+
+                    <div class="ebook-stat-label">
+                        Total E-Books
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-6 col-lg-3">
+
+                <div class="ebook-stat-card">
+
+                    <div class="ebook-stat-icon">
+                        <span class="material-icons">
+                            category
+                        </span>
+                    </div>
+
+                    <div
+                        class="ebook-stat-number"
+                        id="stat-categories"
+                    >
+                        0
+                    </div>
+
+                    <div class="ebook-stat-label">
+                        Categories
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-6 col-lg-3">
+
+                <div class="ebook-stat-card">
+
+                    <div class="ebook-stat-icon">
+                        <span class="material-icons">
+                            picture_as_pdf
+                        </span>
+                    </div>
+
+                    <div
+                        class="ebook-stat-number"
+                        id="stat-pdf"
+                    >
+                        0
+                    </div>
+
+                    <div class="ebook-stat-label">
+                        PDF Resources
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-6 col-lg-3">
+
+                <div class="ebook-stat-card">
+
+                    <div class="ebook-stat-icon">
+                        <span class="material-icons">
+                            favorite
+                        </span>
+                    </div>
+
+                    <div
+                        class="ebook-stat-number"
+                        id="stat-favorites"
+                    >
+                        0
+                    </div>
+
+                    <div class="ebook-stat-label">
+                        My Favorites
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             RECENTLY VIEWED
+        =================================================== -->
+
+        <section
+            class="mt-4"
+            id="recent-section"
+            style="display:none"
+        >
+
+            <div
+                class="d-flex justify-content-between align-items-center mb-2"
+            >
+
+                <div>
+
+                    <h5 class="fw-bold mb-1">
+                        Recently Viewed
                     </h5>
-                    
-                    <!-- Search Input -->
-                    <div class="mb-3">
-                        <label class="form-label fw-600 fs-13">Search E-Books</label>
-                        <input type="text" id="ebook-search-bar" class="form-control form-control-custom" placeholder="Title, author, keywords...">
-                    </div>
 
-                    <!-- Category List -->
-                    <div class="list-group list-group-flush gap-1" id="category-pills-list">
-                        <button class="list-group-item list-group-item-action border-0 rounded py-2 active-category-pill" data-category="">All Categories</button>
-                        <!-- Injected dynamically -->
-                    </div>
+                    <p
+                        class="text-muted mb-0"
+                        style="font-size:12px"
+                    >
+                        Continue reading your recently opened books.
+                    </p>
+
                 </div>
+
+                <button
+                    class="btn btn-sm btn-outline-custom"
+                    id="clear-recent-btn"
+                >
+                    Clear
+                </button>
+
             </div>
 
-            <!-- Ebooks Catalog Grid -->
-            <div class="col-lg-9" data-aos="fade-left">
-                <div class="row g-4" id="ebooks-grid-container">
-                    <!-- Dynamic cards -->
+
+            <div
+                class="recent-list"
+                id="recent-list"
+            ></div>
+
+        </section>
+
+
+        <!-- ==================================================
+             MAIN CATALOG ROW
+        =================================================== -->
+
+        <div
+            class="row g-4 mt-2"
+        >
+
+
+            <!-- ==============================================
+                 FILTER SIDEBAR
+            =============================================== -->
+
+            <aside
+                class="col-lg-3"
+                data-aos="fade-right"
+            >
+
+                <div
+                    class="ebook-filter-card sticky-top"
+                    style="top:100px"
+                >
+
+                    <div class="filter-title">
+
+                        <span class="material-icons text-primary">
+                            tune
+                        </span>
+
+                        Filters
+
+                    </div>
+
+
+                    <!-- Search -->
+
+                    <div class="filter-section">
+
+                        <div class="filter-label">
+                            Search
+                        </div>
+
+                        <input
+                            type="text"
+                            id="ebook-search-bar"
+                            class="form-control"
+                            placeholder="Title, author, subject..."
+                        >
+
+                    </div>
+
+
+                    <!-- Categories -->
+
+                    <div class="filter-section">
+
+                        <div class="filter-label">
+                            Categories
+                        </div>
+
+                        <div
+                            id="category-pills-list"
+                        >
+
+                            <button
+                                type="button"
+                                class="category-button active"
+                                data-category=""
+                            >
+                                All Categories
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Author -->
+
+                    <div class="filter-section">
+
+                        <div class="filter-label">
+                            Author
+                        </div>
+
+                        <select
+                            id="author-filter"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Authors
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- File Type -->
+
+                    <div class="filter-section">
+
+                        <div class="filter-label">
+                            File Type
+                        </div>
+
+                        <select
+                            id="file-type-filter"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Formats
+                            </option>
+
+                            <option value="pdf">
+                                PDF
+                            </option>
+
+                            <option value="epub">
+                                EPUB
+                            </option>
+
+                            <option value="doc">
+                                DOC/DOCX
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Sort -->
+
+                    <div class="filter-section">
+
+                        <div class="filter-label">
+                            Sort By
+                        </div>
+
+                        <select
+                            id="sort-filter"
+                            class="form-select"
+                        >
+
+                            <option value="title">
+                                Title A-Z
+                            </option>
+
+                            <option value="title-desc">
+                                Title Z-A
+                            </option>
+
+                            <option value="author">
+                                Author A-Z
+                            </option>
+
+                            <option value="newest">
+                                Newest
+                            </option>
+
+                            <option value="oldest">
+                                Oldest
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Reset -->
+
+                    <button
+                        class="btn btn-outline-custom w-100"
+                        id="reset-filters-btn"
+                    >
+
+                        <span class="material-icons fs-16 align-middle">
+                            restart_alt
+                        </span>
+
+                        Reset Filters
+
+                    </button>
+
                 </div>
-            </div>
+
+            </aside>
+
+
+            <!-- ==============================================
+                 CATALOG
+            =============================================== -->
+
+            <section
+                class="col-lg-9"
+                data-aos="fade-left"
+            >
+
+
+                <!-- Toolbar -->
+
+                <div class="catalog-toolbar">
+
+                    <div>
+
+                        <div
+                            class="fw-bold"
+                            id="catalog-title"
+                        >
+                            Digital Library Collection
+                        </div>
+
+                        <div
+                            class="result-count"
+                            id="ebook-result-count"
+                        >
+                            Loading books...
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="d-flex gap-2 flex-wrap"
+                    >
+
+                        <button
+                            class="btn btn-sm btn-outline-custom"
+                            id="favorites-only-btn"
+                        >
+
+                            <span class="material-icons fs-14 align-middle">
+                                favorite
+                            </span>
+
+                            Favorites
+
+                        </button>
+
+
+                        <button
+                            class="btn btn-sm btn-outline-custom"
+                            id="export-ebook-list-btn"
+                        >
+
+                            <span class="material-icons fs-14 align-middle">
+                                file_download
+                            </span>
+
+                            Export
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Grid -->
+
+                <div
+                    class="row g-4"
+                    id="ebooks-grid-container"
+                >
+
+                    <!-- Dynamic -->
+
+                </div>
+
+
+                <!-- Pagination -->
+
+                <div
+                    class="d-flex justify-content-center mt-4"
+                    id="ebook-pagination"
+                ></div>
+
+
+            </section>
+
         </div>
+
     </main>
 
-    <!-- E-BOOK PREVIEW / READER MODAL -->
-    <div class="modal fade pdf-modal" id="ebookReaderModal" tabindex="-1" aria-labelledby="ebookReaderModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
+
+    <!-- ======================================================
+         EBOOK DETAILS MODAL
+    ======================================================= -->
+
+    <div
+        class="modal fade"
+        id="ebookDetailsModal"
+        tabindex="-1"
+        aria-hidden="true"
+    >
+
+        <div
+            class="modal-dialog modal-lg modal-dialog-centered"
+        >
+
             <div class="modal-content">
+
                 <div class="modal-header">
-                    <h5 class="modal-title fw-800" id="ebookReaderModalLabel">E-Book Virtual Reader</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: var(--text-color) invert(1);"></button>
+
+                    <h5
+                        class="modal-title fw-bold"
+                        id="ebookDetailsTitle"
+                    >
+                        E-Book Details
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                    ></button>
+
                 </div>
-                <div class="modal-body bg-light overflow-y-auto" style="max-height: 550px;">
-                    <div class="ebook-reader-page" id="ebook-reader-page-content">
-                        <!-- Loaded dynamically -->
-                    </div>
+
+
+                <div
+                    class="modal-body"
+                    id="ebook-details-body"
+                ></div>
+
+
+                <div class="modal-footer">
+
+                    <button
+                        class="btn btn-outline-custom"
+                        data-bs-dismiss="modal"
+                    >
+                        Close
+                    </button>
+
+                    <button
+                        class="btn btn-primary-custom"
+                        id="details-read-btn"
+                    >
+                        <span class="material-icons fs-16 align-middle">
+                            menu_book
+                        </span>
+                        Read
+                    </button>
+
+                    <button
+                        class="btn btn-primary-custom"
+                        id="details-download-btn"
+                    >
+                        <span class="material-icons fs-16 align-middle">
+                            download
+                        </span>
+                        Download
+                    </button>
+
                 </div>
-                <div class="modal-footer justify-content-between">
-                    <span class="fs-12 text-muted" id="reader-page-number">Virtual Preview Mode</span>
-                    <div class="d-flex gap-2">
-                        <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">Close Reader</button>
-                        <button type="button" class="btn btn-primary-custom" id="ebook-download-btn"><span class="material-icons fs-16 align-middle">download</span> Download PDF</button>
-                    </div>
-                </div>
+
             </div>
+
         </div>
+
     </div>
 
-    <!-- Global Footer -->
+
+    <!-- ======================================================
+         READER MODAL
+    ======================================================= -->
+
+    <div
+        class="modal fade reader-modal"
+        id="ebookReaderModal"
+        tabindex="-1"
+        aria-labelledby="ebookReaderModalLabel"
+        aria-hidden="true"
+    >
+
+        <div
+            class="modal-dialog modal-xl modal-dialog-centered"
+        >
+
+            <div class="modal-content">
+
+
+                <!-- Reader Header -->
+
+                <div class="modal-header">
+
+                    <div>
+
+                        <h5
+                            class="modal-title fw-bold"
+                            id="ebookReaderModalLabel"
+                        >
+                            E-Book Reader
+                        </h5>
+
+                        <small
+                            class="text-muted"
+                            id="reader-book-author"
+                        ></small>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                    ></button>
+
+                </div>
+
+
+                <!-- Reader Toolbar -->
+
+                <div class="reader-toolbar">
+
+                    <div class="reader-toolbar-left">
+
+                        <button
+                            id="reader-prev-btn"
+                            title="Previous"
+                        >
+                            <span class="material-icons">
+                                chevron_left
+                            </span>
+                        </button>
+
+
+                        <span
+                            id="reader-page-number"
+                            style="font-size:12px"
+                        >
+                            Preview
+                        </span>
+
+
+                        <button
+                            id="reader-next-btn"
+                            title="Next"
+                        >
+                            <span class="material-icons">
+                                chevron_right
+                            </span>
+                        </button>
+
+                    </div>
+
+
+                    <div class="reader-toolbar-right">
+
+                        <button
+                            id="reader-zoom-out"
+                            title="Zoom Out"
+                        >
+                            <span class="material-icons">
+                                zoom_out
+                            </span>
+                        </button>
+
+
+                        <span
+                            id="reader-zoom-value"
+                            style="font-size:12px"
+                        >
+                            100%
+                        </span>
+
+
+                        <button
+                            id="reader-zoom-in"
+                            title="Zoom In"
+                        >
+                            <span class="material-icons">
+                                zoom_in
+                            </span>
+                        </button>
+
+
+                        <button
+                            id="reader-fullscreen-btn"
+                            title="Fullscreen"
+                        >
+                            <span class="material-icons">
+                                fullscreen
+                            </span>
+                        </button>
+
+
+                        <button
+                            id="reader-download-btn"
+                            title="Download"
+                        >
+                            <span class="material-icons">
+                                download
+                            </span>
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Progress -->
+
+                <div class="reader-progress">
+
+                    <div
+                        class="reader-progress-bar"
+                        id="reader-progress-bar"
+                    ></div>
+
+                </div>
+
+
+                <!-- Reader -->
+
+                <div
+                    class="reader-body"
+                    id="reader-scroll-container"
+                >
+
+                    <iframe
+                        id="real-pdf-viewer"
+                        title="PDF Reader"
+                    ></iframe>
+
+
+                    <div
+                        class="ebook-reader-page"
+                        id="ebook-reader-page-content"
+                    >
+
+                        <!-- Dynamic -->
+
+                    </div>
+
+                </div>
+
+
+                <!-- Footer -->
+
+                <div class="modal-footer">
+
+                    <span
+                        class="text-muted"
+                        style="font-size:12px"
+                        id="reader-status"
+                    >
+                        Virtual Preview Mode
+                    </span>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-custom"
+                        data-bs-dismiss="modal"
+                    >
+                        Close Reader
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================================
+         FOOTER
+    ======================================================= -->
+
     <footer></footer>
 
-    <!-- Bootstrap 5 Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- AOS Library -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <!-- Script Module -->
-    <script type="module" src="js/app.js"></script>
+
+    <!-- ======================================================
+         BOOTSTRAP
+    ======================================================= -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    ></script>
+
+
+    <!-- ======================================================
+         AOS
+    ======================================================= -->
+
+    <script
+        src="https://unpkg.com/aos@2.3.1/dist/aos.js"
+    ></script>
+
+
+    <!-- ======================================================
+         APPLICATION
+    ======================================================= -->
+
+    <script
+        type="module"
+        src="js/app.js"
+    ></script>
+
+
+    <!-- ======================================================
+         EBOOK APPLICATION
+    ======================================================= -->
+
     <script type="module">
-        import { getEbooks } from "./js/db.js";
+
+        import {
+            getEbooks
+        } from "./js/db.js";
+
+
+        /* ==================================================
+           STATE
+        ================================================== */
 
         let allEbooks = [];
+
+        let filteredEbooks = [];
+
         let activeCategory = "";
+
+        let activeAuthor = "";
+
+        let activeFileType = "";
+
+        let searchQuery = "";
+
+        let sortMode = "title";
+
+        let favoritesOnly = false;
+
         let selectedEbook = null;
 
-        document.addEventListener("DOMContentLoaded", async () => {
-            await loadEbooksData();
-            buildCategoryList();
-            filterAndRenderEbooks();
+        let currentPage = 1;
 
-            // Bind events
-            document.getElementById("ebook-search-bar").addEventListener("input", filterAndRenderEbooks);
-            document.getElementById("ebook-download-btn").addEventListener("click", () => {
-                if (selectedEbook) triggerEbookDownload(selectedEbook);
-            });
-        });
+        const ITEMS_PER_PAGE = 12;
+
+        let readerZoom = 100;
+
+        let readerPage = 1;
+
+        const MAX_VIRTUAL_PAGES = 8;
+
+
+        /* ==================================================
+           DOM
+        ================================================== */
+
+        const $ = selector =>
+            document.querySelector(selector);
+
+
+        const $$ = selector =>
+            [...document.querySelectorAll(selector)];
+
+
+        /* ==================================================
+           SAFE HTML
+        ================================================== */
+
+        function escapeHTML(value) {
+
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
+
+        /* ==================================================
+           INITIALIZATION
+        ================================================== */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initEbookPage
+        );
+
+
+        async function initEbookPage() {
+
+            try {
+
+                if (
+                    window.AOS
+                ) {
+
+                    AOS.init({
+                        duration: 650,
+                        once: true,
+                        offset: 50
+                    });
+
+                }
+
+
+                await loadEbooksData();
+
+                buildCategoryList();
+
+                buildAuthorList();
+
+                updateStatistics();
+
+                filterAndRenderEbooks();
+
+                renderRecentlyViewed();
+
+                bindEvents();
+
+                updateFavoritesCount();
+
+            }
+
+            catch(error) {
+
+                console.error(
+                    "Ebook initialization failed:",
+                    error
+                );
+
+                showEmptyState(
+                    "Unable to load the digital library."
+                );
+
+            }
+
+            finally {
+
+                setTimeout(
+                    hideLoadingScreen,
+                    350
+                );
+
+            }
+
+        }
+
+
+        /* ==================================================
+           LOAD DATA
+        ================================================== */
 
         async function loadEbooksData() {
+
             try {
-                allEbooks = await getEbooks();
-            } catch (e) {
-                console.error("Failed to load ebooks:", e);
+
+                const result =
+                    await getEbooks();
+
+
+                if (
+                    Array.isArray(result)
+                ) {
+
+                    allEbooks =
+                        result;
+
+                }
+
+                else {
+
+                    allEbooks =
+                        [];
+
+                }
+
             }
+
+            catch(error) {
+
+                console.error(
+                    "Failed to load ebooks:",
+                    error
+                );
+
+                allEbooks =
+                    [];
+
+            }
+
         }
+
+
+        /* ==================================================
+           LOADING
+        ================================================== */
+
+        function hideLoadingScreen() {
+
+            const screen =
+                $("#loading-screen");
+
+            if (!screen)
+                return;
+
+            screen.classList.add(
+                "hidden"
+            );
+
+        }
+
+
+        /* ==================================================
+           NORMALIZE EBOOK
+        ================================================== */
+
+        function normalizeEbook(ebook) {
+
+            return {
+
+                id:
+                    ebook.id ??
+                    cryptoRandomId(),
+
+                title:
+                    ebook.title ??
+                    "Untitled E-Book",
+
+                author:
+                    ebook.author ??
+                    "Unknown Author",
+
+                category:
+                    ebook.category ??
+                    "General",
+
+                subject:
+                    ebook.subject ??
+                    ebook.category ??
+                    "General",
+
+                size:
+                    ebook.size ??
+                    "Unknown",
+
+                fileName:
+                    ebook.fileName ??
+                    `${slugify(ebook.title ?? "ebook")}.pdf`,
+
+                fileUrl:
+                    ebook.fileUrl ??
+                    ebook.pdfUrl ??
+                    ebook.url ??
+                    ebook.downloadUrl ??
+                    "",
+
+                pdfUrl:
+                    ebook.pdfUrl ??
+                    ebook.fileUrl ??
+                    "",
+
+                fileType:
+                    getFileType(
+                        ebook.fileName ??
+                        ebook.fileUrl ??
+                        ""
+                    ),
+
+                year:
+                    ebook.year ??
+                    "",
+
+                description:
+                    ebook.description ??
+                    "Digital reference resource available through the KDP Library.",
+
+                thumbnail:
+                    ebook.thumbnail ??
+                    ebook.cover ??
+                    "",
+
+                createdAt:
+                    ebook.createdAt ??
+                    ebook.date ??
+                    "",
+
+                keywords:
+                    ebook.keywords ??
+                    ""
+
+            };
+
+        }
+
+
+        function cryptoRandomId() {
+
+            return (
+                "ebook-" +
+                Date.now() +
+                "-" +
+                Math.random()
+                    .toString(36)
+                    .substring(2,8)
+            );
+
+        }
+
+
+        function slugify(text) {
+
+            return String(text)
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/(^-|-$)/g, "");
+
+        }
+
+
+        function getFileType(value) {
+
+            const clean =
+                String(value)
+                    .toLowerCase()
+                    .split("?")[0];
+
+
+            if (
+                clean.endsWith(".pdf")
+            )
+                return "pdf";
+
+
+            if (
+                clean.endsWith(".epub")
+            )
+                return "epub";
+
+
+            if (
+                clean.endsWith(".doc") ||
+                clean.endsWith(".docx")
+            )
+                return "doc";
+
+
+            return "pdf";
+
+        }
+
+
+        /* ==================================================
+           BUILD CATEGORIES
+        ================================================== */
 
         function buildCategoryList() {
-            const container = document.getElementById("category-pills-list");
-            const categories = [...new Set(allEbooks.map(e => e.category))];
-            
-            categories.forEach(cat => {
-                const btn = document.createElement("button");
-                btn.className = "list-group-item list-group-item-action border-0 rounded py-2";
-                btn.textContent = cat;
-                btn.dataset.category = cat;
-                btn.style.background = "transparent";
-                btn.style.color = "var(--text-color)";
-                container.appendChild(btn);
-            });
 
-            // Add active styles on click
-            const buttons = container.querySelectorAll("button");
-            buttons.forEach(btn => {
-                btn.addEventListener("click", () => {
-                    buttons.forEach(b => {
-                        b.classList.remove("active");
-                        b.style.background = "transparent";
-                        b.style.color = "var(--text-color)";
-                    });
-                    btn.classList.add("active");
-                    btn.style.background = "var(--primary-color)";
-                    btn.style.color = "white";
-                    
-                    activeCategory = btn.dataset.category;
-                    filterAndRenderEbooks();
-                });
-            });
-            
-            // Set initial state
-            buttons[0].classList.add("active");
-            buttons[0].style.background = "var(--primary-color)";
-            buttons[0].style.color = "white";
-        }
+            const container =
+                $("#category-pills-list");
 
-        function filterAndRenderEbooks() {
-            const query = document.getElementById("ebook-search-bar").value.toLowerCase();
-            
-            const filtered = allEbooks.filter(e => {
-                const matchCategory = activeCategory === "" || e.category === activeCategory;
-                const matchQuery = e.title.toLowerCase().includes(query) || 
-                                   e.author.toLowerCase().includes(query);
-                
-                return matchCategory && matchQuery;
-            });
 
-            renderEbooksGrid(filtered);
-        }
-
-        function renderEbooksGrid(ebooks) {
-            const container = document.getElementById("ebooks-grid-container");
-            if (ebooks.length === 0) {
-                container.innerHTML = `
-                    <div class="col-12 text-center py-5 text-muted">
-                        <span class="material-icons" style="font-size: 64px;">auto_stories</span>
-                        <h4 class="mt-3">No E-books found matching filters.</h4>
-                    </div>
-                `;
+            if (!container)
                 return;
-            }
 
-            container.innerHTML = ebooks.map(e => `
-                <div class="col-md-6 col-xl-4">
-                    <div class="glass-card p-4 h-100 d-flex flex-column">
-                        <span class="badge bg-primary-light text-primary px-3 py-1 rounded-pill align-self-start mb-3 fs-11 fw-600">${e.category}</span>
-                        <h5 class="fw-800 text-color mb-1 text-truncate-2" style="height: 48px; line-height:1.2; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${e.title}</h5>
-                        <p class="text-muted fs-13 mb-3">by ${e.author}</p>
-                        
-                        <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top fs-12 text-muted">
-                            <span>File Size: <strong>${e.size}</strong></span>
-                            <div class="d-flex gap-1">
-                                <button class="btn btn-sm btn-outline-custom read-btn" data-id="${e.id}"><span class="material-icons fs-14 align-middle">visibility</span> Read</button>
-                                <button class="btn btn-sm btn-primary-custom download-btn" data-id="${e.id}"><span class="material-icons fs-14 align-middle">download</span> Get</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
 
-            // Attach triggers
-            document.querySelectorAll(".read-btn").forEach(btn => {
-                btn.addEventListener("click", () => openReaderModal(btn.dataset.id));
-            });
-            document.querySelectorAll(".download-btn").forEach(btn => {
-                btn.addEventListener("click", () => {
-                    const ebook = allEbooks.find(e => e.id === btn.dataset.id);
-                    if (ebook) triggerEbookDownload(ebook);
-                });
-            });
-        }
+            const categories =
+                [
+                    ...new Set(
+                        allEbooks
+                            .map(
+                                e =>
+                                    normalizeEbook(e)
+                                        .category
+                            )
+                            .filter(Boolean)
+                    )
+                ]
+                .sort(
+                    (a,b) =>
+                        a.localeCompare(b)
+                );
 
-        function openReaderModal(id) {
-            const ebook = allEbooks.find(e => e.id === id);
-            if (!ebook) return;
 
-            selectedEbook = ebook;
-            const content = document.getElementById("ebook-reader-page-content");
-            
-            // Render virtual book pages
-            content.innerHTML = `
-                <div class="reader-chapter-title">Chapter 1: Foundations of Technical Study</div>
-                <p class="reader-para">Welcome to "${ebook.title}". In engineering education, textbooks serve as a fundamental pillar. This text presents a detailed overview of curricular principles, detailing the methodologies, designs, and analytical steps required to construct and debug technical projects.</p>
-                <p class="reader-para">As student users study these chapters, it is highly recommended to complement literature reading with coding routines, laboratory simulations, and physical experiments. The algorithms and architectures covered in subsequent chapters form the baseline of modern computing systems.</p>
-                <p class="reader-para">To proceed further, students must be familiar with prerequisites like advanced mathematics, logic gates, and modular planning patterns. Keep this reference handbook active throughout the semester modules.</p>
+            container.innerHTML = `
+
+                <button
+                    type="button"
+                    class="category-button active"
+                    data-category=""
+                >
+                    All Categories
+                </button>
+
+                ${
+                    categories
+                        .map(
+                            category =>
+                                `
+                                <button
+                                    type="button"
+                                    class="category-button"
+                                    data-category="${escapeHTML(category)}"
+                                >
+                                    ${escapeHTML(category)}
+                                </button>
+                                `
+                        )
+                        .join("")
+                }
+
             `;
 
-            const modal = new bootstrap.Modal(document.getElementById("ebookReaderModal"));
+        }
+
+
+        /* ==================================================
+           BUILD AUTHORS
+        ================================================== */
+
+        function buildAuthorList() {
+
+            const select =
+                $("#author-filter");
+
+
+            if (!select)
+                return;
+
+
+            const authors =
+                [
+                    ...new Set(
+                        allEbooks
+                            .map(
+                                e =>
+                                    normalizeEbook(e)
+                                        .author
+                            )
+                            .filter(Boolean)
+                    )
+                ]
+                .sort(
+                    (a,b) =>
+                        a.localeCompare(b)
+                );
+
+
+            select.innerHTML = `
+
+                <option value="">
+                    All Authors
+                </option>
+
+                ${
+                    authors
+                        .map(
+                            author =>
+                                `
+                                <option
+                                    value="${escapeHTML(author)}"
+                                >
+                                    ${escapeHTML(author)}
+                                </option>
+                                `
+                        )
+                        .join("")
+                }
+
+            `;
+
+        }
+
+
+        /* ==================================================
+           SEARCH
+        ================================================== */
+
+        function performSearch(value) {
+
+            searchQuery =
+                String(value ?? "")
+                    .toLowerCase()
+                    .trim();
+
+
+            $("#ebook-search-bar").value =
+                value;
+
+
+            $("#hero-ebook-search").value =
+                value;
+
+
+            currentPage =
+                1;
+
+
+            filterAndRenderEbooks();
+
+        }
+
+
+        /* ==================================================
+           FILTER
+        ================================================== */
+
+        function filterAndRenderEbooks() {
+
+            const normalized =
+                allEbooks.map(
+                    normalizeEbook
+                );
+
+
+            filteredEbooks =
+                normalized.filter(
+                    ebook => {
+
+                        const text = [
+
+                            ebook.title,
+
+                            ebook.author,
+
+                            ebook.category,
+
+                            ebook.subject,
+
+                            ebook.description,
+
+                            ebook.keywords,
+
+                            ebook.year
+
+                        ]
+                        .join(" ")
+                        .toLowerCase();
+
+
+                        const matchesSearch =
+                            !searchQuery ||
+                            text.includes(
+                                searchQuery
+                            );
+
+
+                        const matchesCategory =
+                            !activeCategory ||
+                            ebook.category ===
+                            activeCategory;
+
+
+                        const matchesAuthor =
+                            !activeAuthor ||
+                            ebook.author ===
+                            activeAuthor;
+
+
+                        const matchesType =
+                            !activeFileType ||
+                            ebook.fileType ===
+                            activeFileType;
+
+
+                        const matchesFavorite =
+                            !favoritesOnly ||
+                            isFavorite(
+                                ebook.id
+                            );
+
+
+                        return (
+                            matchesSearch &&
+                            matchesCategory &&
+                            matchesAuthor &&
+                            matchesType &&
+                            matchesFavorite
+                        );
+
+                    }
+                );
+
+
+            sortEbooks();
+
+            renderEbooksGrid();
+
+            renderPagination();
+
+            updateResultCount();
+
+        }
+
+
+        /* ==================================================
+           SORT
+        ================================================== */
+
+        function sortEbooks() {
+
+            filteredEbooks.sort(
+                (a,b) => {
+
+                    switch(sortMode) {
+
+                        case "title-desc":
+
+                            return b.title
+                                .localeCompare(
+                                    a.title
+                                );
+
+
+                        case "author":
+
+                            return a.author
+                                .localeCompare(
+                                    b.author
+                                );
+
+
+                        case "newest":
+
+                            return (
+                                getYear(b) -
+                                getYear(a)
+                            );
+
+
+                        case "oldest":
+
+                            return (
+                                getYear(a) -
+                                getYear(b)
+                            );
+
+
+                        default:
+
+                            return a.title
+                                .localeCompare(
+                                    b.title
+                                );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        function getYear(ebook) {
+
+            const year =
+                Number(
+                    ebook.year ||
+                    String(
+                        ebook.createdAt
+                    ).substring(0,4)
+                );
+
+            return Number.isFinite(year)
+                ? year
+                : 0;
+
+        }
+
+
+        /* ==================================================
+           RENDER GRID
+        ================================================== */
+
+        function renderEbooksGrid() {
+
+            const container =
+                $("#ebooks-grid-container");
+
+
+            if (!container)
+                return;
+
+
+            if (
+                filteredEbooks.length === 0
+            ) {
+
+                showEmptyState(
+                    "No E-books found matching your filters."
+                );
+
+                return;
+
+            }
+
+
+            const start =
+                (
+                    currentPage -
+                    1
+                ) *
+                ITEMS_PER_PAGE;
+
+
+            const end =
+                start +
+                ITEMS_PER_PAGE;
+
+
+            const pageItems =
+                filteredEbooks.slice(
+                    start,
+                    end
+                );
+
+
+            container.innerHTML =
+                pageItems
+                    .map(
+                        createEbookCard
+                    )
+                    .join("");
+
+
+            attachCardEvents();
+
+        }
+
+
+        /* ==================================================
+           CARD
+        ================================================== */
+
+        function createEbookCard(
+            ebook
+        ) {
+
+            const favorite =
+                isFavorite(
+                    ebook.id
+                );
+
+
+            const cover =
+                ebook.thumbnail
+                    ? `
+                        <img
+                            src="${escapeHTML(ebook.thumbnail)}"
+                            alt="${escapeHTML(ebook.title)}"
+                            style="
+                                width:100%;
+                                height:100%;
+                                object-fit:cover;
+                            "
+                            loading="lazy"
+                        >
+                    `
+                    : `
+                        <div class="ebook-cover-icon">
+                            <span class="material-icons">
+                                menu_book
+                            </span>
+                        </div>
+                    `;
+
+
+            return `
+
+                <div
+                    class="col-md-6 col-xl-4"
+                    data-aos="fade-up"
+                >
+
+                    <article
+                        class="ebook-card"
+                    >
+
+
+                        <div
+                            class="ebook-cover"
+                        >
+
+                            ${cover}
+
+
+                            <button
+                                type="button"
+                                class="ebook-favorite ${
+                                    favorite
+                                        ? "active"
+                                        : ""
+                                }"
+                                data-favorite-id="${escapeHTML(ebook.id)}"
+                                title="Favorite"
+                            >
+
+                                <span class="material-icons">
+                                    ${
+                                        favorite
+                                            ? "favorite"
+                                            : "favorite_border"
+                                    }
+                                </span>
+
+                            </button>
+
+                        </div>
+
+
+                        <div
+                            class="ebook-card-body"
+                        >
+
+
+                            <span
+                                class="ebook-category"
+                            >
+                                ${escapeHTML(
+                                    ebook.category
+                                )}
+                            </span>
+
+
+                            <h5
+                                class="ebook-title"
+                                title="${escapeHTML(ebook.title)}"
+                            >
+                                ${escapeHTML(
+                                    ebook.title
+                                )}
+                            </h5>
+
+
+                            <p
+                                class="ebook-author"
+                            >
+                                <i
+                                    class="fa-solid fa-user-pen me-1"
+                                ></i>
+
+                                ${escapeHTML(
+                                    ebook.author
+                                )}
+                            </p>
+
+
+                            <p
+                                class="ebook-description"
+                            >
+                                ${escapeHTML(
+                                    ebook.description
+                                )}
+                            </p>
+
+
+                            <div
+                                class="ebook-meta"
+                            >
+
+                                <span>
+
+                                    <i
+                                        class="fa-solid fa-file-pdf me-1"
+                                    ></i>
+
+                                    ${escapeHTML(
+                                        ebook.fileType
+                                            .toUpperCase()
+                                    )}
+
+                                </span>
+
+
+                                <span>
+
+                                    <i
+                                        class="fa-solid fa-hard-drive me-1"
+                                    ></i>
+
+                                    ${escapeHTML(
+                                        ebook.size
+                                    )}
+
+                                </span>
+
+                            </div>
+
+
+                            <div
+                                class="ebook-actions"
+                            >
+
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-custom details-btn"
+                                    data-id="${escapeHTML(ebook.id)}"
+                                >
+
+                                    <span
+                                        class="material-icons fs-14 align-middle"
+                                    >
+                                        info
+                                    </span>
+
+                                    Details
+
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-primary-custom read-btn"
+                                    data-id="${escapeHTML(ebook.id)}"
+                                >
+
+                                    <span
+                                        class="material-icons fs-14 align-middle"
+                                    >
+                                        menu_book
+                                    </span>
+
+                                    Read
+
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-custom download-btn"
+                                    data-id="${escapeHTML(ebook.id)}"
+                                >
+
+                                    <span
+                                        class="material-icons fs-14 align-middle"
+                                    >
+                                        download
+                                    </span>
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            `;
+
+        }
+
+
+        /* ==================================================
+           ATTACH CARD EVENTS
+        ================================================== */
+
+        function attachCardEvents() {
+
+            $$(".read-btn")
+                .forEach(
+                    button => {
+
+                        button.addEventListener(
+                            "click",
+                            () =>
+                                openReaderModal(
+                                    button.dataset.id
+                                )
+                        );
+
+                    }
+                );
+
+
+            $$(".details-btn")
+                .forEach(
+                    button => {
+
+                        button.addEventListener(
+                            "click",
+                            () =>
+                                openDetailsModal(
+                                    button.dataset.id
+                                )
+                        );
+
+                    }
+                );
+
+
+            $$(".download-btn")
+                .forEach(
+                    button => {
+
+                        button.addEventListener(
+                            "click",
+                            () => {
+
+                                const ebook =
+                                    findEbook(
+                                        button.dataset.id
+                                    );
+
+
+                                if (ebook)
+                                    triggerEbookDownload(
+                                        ebook
+                                    );
+
+                            }
+                        );
+
+                    }
+                );
+
+
+            $$(".ebook-favorite")
+                .forEach(
+                    button => {
+
+                        button.addEventListener(
+                            "click",
+                            event => {
+
+                                event.stopPropagation();
+
+                                toggleFavorite(
+                                    button.dataset.favoriteId
+                                );
+
+                            }
+                        );
+
+                    }
+                );
+
+        }
+
+
+        /* ==================================================
+           FIND EBOOK
+        ================================================== */
+
+        function findEbook(id) {
+
+            return normalizeEbook(
+                allEbooks.find(
+                    ebook =>
+                        String(
+                            ebook.id
+                        ) ===
+                        String(id)
+                )
+            );
+
+        }
+
+
+        /* ==================================================
+           DETAILS MODAL
+        ================================================== */
+
+        function openDetailsModal(id) {
+
+            const ebook =
+                findEbook(id);
+
+
+            if (!ebook)
+                return;
+
+
+            selectedEbook =
+                ebook;
+
+
+            $("#ebookDetailsTitle")
+                .textContent =
+                    ebook.title;
+
+
+            $("#ebook-details-body")
+                .innerHTML = `
+
+                    <div
+                        class="row g-4"
+                    >
+
+                        <div
+                            class="col-md-4 text-center"
+                        >
+
+                            <div
+                                class="ebook-cover rounded"
+                                style="height:260px"
+                            >
+
+                                ${
+                                    ebook.thumbnail
+                                        ? `
+                                            <img
+                                                src="${escapeHTML(ebook.thumbnail)}"
+                                                alt=""
+                                                style="
+                                                    width:100%;
+                                                    height:100%;
+                                                    object-fit:cover;
+                                                "
+                                            >
+                                        `
+                                        : `
+                                            <div class="ebook-cover-icon">
+                                                <span class="material-icons">
+                                                    menu_book
+                                                </span>
+                                            </div>
+                                        `
+                                }
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="col-md-8"
+                        >
+
+                            <span
+                                class="ebook-category"
+                            >
+                                ${escapeHTML(
+                                    ebook.category
+                                )}
+                            </span>
+
+
+                            <h3
+                                class="fw-bold mt-2"
+                            >
+                                ${escapeHTML(
+                                    ebook.title
+                                )}
+                            </h3>
+
+
+                            <p
+                                class="text-muted"
+                            >
+                                By
+                                <strong>
+                                    ${escapeHTML(
+                                        ebook.author
+                                    )}
+                                </strong>
+                            </p>
+
+
+                            <p
+                                style="line-height:1.8"
+                            >
+                                ${escapeHTML(
+                                    ebook.description
+                                )}
+                            </p>
+
+
+                            <div
+                                class="row g-2 mt-3"
+                            >
+
+                                <div class="col-6">
+                                    <small class="text-muted">
+                                        Category
+                                    </small>
+                                    <div class="fw-bold">
+                                        ${escapeHTML(
+                                            ebook.category
+                                        )}
+                                    </div>
+                                </div>
+
+
+                                <div class="col-6">
+                                    <small class="text-muted">
+                                        Format
+                                    </small>
+                                    <div class="fw-bold">
+                                        ${escapeHTML(
+                                            ebook.fileType
+                                                .toUpperCase()
+                                        )}
+                                    </div>
+                                </div>
+
+
+                                <div class="col-6">
+                                    <small class="text-muted">
+                                        File Size
+                                    </small>
+                                    <div class="fw-bold">
+                                        ${escapeHTML(
+                                            ebook.size
+                                        )}
+                                    </div>
+                                </div>
+
+
+                                <div class="col-6">
+                                    <small class="text-muted">
+                                        Publication Year
+                                    </small>
+                                    <div class="fw-bold">
+                                        ${
+                                            ebook.year ||
+                                            "Not specified"
+                                        }
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+
+            const modal =
+                bootstrap.Modal.getOrCreateInstance(
+                    $("#ebookDetailsModal")
+                );
+
+
             modal.show();
+
         }
 
-        function triggerEbookDownload(ebook) {
-            window.showToast("Preparing Download", `Assembling ${ebook.fileName}...`, "info");
-            
-            setTimeout(() => {
-                const dummyContent = `%PDF-1.4\n%...\n1 0 obj\n<< /Title (${ebook.title}) >>\nendobj\n...`;
-                const blob = new Blob([dummyContent], { type: 'application/pdf' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = ebook.fileName;
-                document.body.appendChild(link);
+
+        /* ==================================================
+           READER
+        ================================================== */
+
+        function openReaderModal(id) {
+
+            const ebook =
+                findEbook(id);
+
+
+            if (!ebook)
+                return;
+
+
+            selectedEbook =
+                ebook;
+
+
+            saveRecentlyViewed(
+                ebook
+            );
+
+
+            readerPage =
+                1;
+
+
+            readerZoom =
+                100;
+
+
+            updateReaderZoom();
+
+
+            $("#ebookReaderModalLabel")
+                .textContent =
+                    ebook.title;
+
+
+            $("#reader-book-author")
+                .textContent =
+                    `by ${ebook.author}`;
+
+
+            $("#reader-status")
+                .textContent =
+                    ebook.fileUrl
+                        ? "Online PDF Reader"
+                        : "Virtual Preview Mode";
+
+
+            const pdfViewer =
+                $("#real-pdf-viewer");
+
+
+            const virtualPage =
+                $("#ebook-reader-page-content");
+
+
+            if (
+                ebook.fileUrl &&
+                ebook.fileType === "pdf"
+            ) {
+
+                pdfViewer.src =
+                    ebook.fileUrl;
+
+                pdfViewer.style.display =
+                    "block";
+
+                virtualPage.style.display =
+                    "none";
+
+
+                $("#reader-page-number")
+                    .textContent =
+                        "PDF";
+
+            }
+
+            else {
+
+                pdfViewer.src =
+                    "about:blank";
+
+                pdfViewer.style.display =
+                    "none";
+
+                virtualPage.style.display =
+                    "block";
+
+
+                renderVirtualReaderPage();
+
+            }
+
+
+            updateReaderProgress();
+
+
+            const modal =
+                bootstrap.Modal.getOrCreateInstance(
+                    $("#ebookReaderModal")
+                );
+
+
+            modal.show();
+
+        }
+
+
+        /* ==================================================
+           VIRTUAL READER
+        ================================================== */
+
+        function renderVirtualReaderPage() {
+
+            if (!selectedEbook)
+                return;
+
+
+            const ebook =
+                selectedEbook;
+
+
+            const content =
+                $("#ebook-reader-page-content");
+
+
+            if (
+                readerPage === 1
+            ) {
+
+                content.innerHTML = `
+
+                    <div
+                        class="reader-cover"
+                    >
+
+                        <div
+                            class="reader-cover-icon"
+                        >
+
+                            <span class="material-icons">
+                                menu_book
+                            </span>
+
+                        </div>
+
+
+                        <div
+                            style="
+                                color:#64748b;
+                                font-size:13px;
+                                margin-bottom:10px;
+                            "
+                        >
+                            KDP DIGITAL LIBRARY
+                        </div>
+
+
+                        <h1
+                            style="
+                                font-size:34px;
+                                margin-bottom:12px;
+                            "
+                        >
+                            ${escapeHTML(
+                                ebook.title
+                            )}
+                        </h1>
+
+
+                        <p>
+                            ${escapeHTML(
+                                ebook.author
+                            )}
+                        </p>
+
+
+                        <p
+                            style="
+                                color:#64748b;
+                                margin-top:20px;
+                            "
+                        >
+                            ${escapeHTML(
+                                ebook.category
+                            )}
+                        </p>
+
+                    </div>
+
+                `;
+
+            }
+
+            else {
+
+                const chapter =
+                    readerPage - 1;
+
+
+                content.innerHTML = `
+
+                    <div
+                        class="reader-chapter-title"
+                    >
+                        Chapter ${chapter}:
+                        Technical Foundations
+                    </div>
+
+
+                    <p
+                        class="reader-para"
+                    >
+                        Welcome to
+                        "${escapeHTML(
+                            ebook.title
+                        )}".
+                        This digital reference provides
+                        structured learning material for
+                        engineering students and library
+                        users. The objective of this chapter
+                        is to introduce the fundamental
+                        concepts required for understanding
+                        advanced technical subjects.
+                    </p>
+
+
+                    <p
+                        class="reader-para"
+                    >
+                        Engineering education combines
+                        theoretical knowledge with practical
+                        application. Students are encouraged
+                        to study the concepts carefully and
+                        connect them with laboratory work,
+                        programming exercises, design
+                        assignments and real-world engineering
+                        problems.
+                    </p>
+
+
+                    <p
+                        class="reader-para"
+                    >
+                        The material in this virtual preview
+                        should be considered an introductory
+                        reference. For complete content,
+                        students should use the official
+                        digital PDF provided by the library
+                        administrator.
+                    </p>
+
+
+                    <p
+                        class="reader-para"
+                    >
+                        Regular reading, revision and
+                        practical implementation can help
+                        students build a stronger foundation.
+                        Library resources are designed to
+                        support classroom learning and
+                        independent study.
+                    </p>
+
+                `;
+
+            }
+
+
+            $("#reader-page-number")
+                .textContent =
+                    `Page ${readerPage} / ${MAX_VIRTUAL_PAGES}`;
+
+        }
+
+
+        /* ==================================================
+           READER NAVIGATION
+        ================================================== */
+
+        function nextReaderPage() {
+
+            if (
+                readerPage <
+                MAX_VIRTUAL_PAGES
+            ) {
+
+                readerPage++;
+
+                renderVirtualReaderPage();
+
+                updateReaderProgress();
+
+            }
+
+        }
+
+
+        function previousReaderPage() {
+
+            if (
+                readerPage >
+                1
+            ) {
+
+                readerPage--;
+
+                renderVirtualReaderPage();
+
+                updateReaderProgress();
+
+            }
+
+        }
+
+
+        /* ==================================================
+           READER ZOOM
+        ================================================== */
+
+        function updateReaderZoom() {
+
+            const page =
+                $("#ebook-reader-page-content");
+
+
+            if (!page)
+                return;
+
+
+            page.style.zoom =
+                `${readerZoom}%`;
+
+
+            $("#reader-zoom-value")
+                .textContent =
+                    `${readerZoom}%`;
+
+        }
+
+
+        function zoomIn() {
+
+            readerZoom =
+                Math.min(
+                    160,
+                    readerZoom + 10
+                );
+
+
+            updateReaderZoom();
+
+        }
+
+
+        function zoomOut() {
+
+            readerZoom =
+                Math.max(
+                    70,
+                    readerZoom - 10
+                );
+
+
+            updateReaderZoom();
+
+        }
+
+
+        /* ==================================================
+           FULLSCREEN
+        ================================================== */
+
+        async function toggleReaderFullscreen() {
+
+            const element =
+                $(".reader-modal .modal-content");
+
+
+            if (!element)
+                return;
+
+
+            if (
+                !document.fullscreenElement
+            ) {
+
+                try {
+
+                    await element.requestFullscreen();
+
+                }
+
+                catch(error) {
+
+                    console.warn(
+                        "Fullscreen failed:",
+                        error
+                    );
+
+                }
+
+            }
+
+            else {
+
+                await document.exitFullscreen();
+
+            }
+
+        }
+
+
+        /* ==================================================
+           READER PROGRESS
+        ================================================== */
+
+        function updateReaderProgress() {
+
+            const percentage =
+                (
+                    readerPage /
+                    MAX_VIRTUAL_PAGES
+                ) *
+                100;
+
+
+            $("#reader-progress-bar")
+                .style.width =
+                    `${percentage}%`;
+
+        }
+
+
+        /* ==================================================
+           DOWNLOAD
+        ================================================== */
+
+        function triggerEbookDownload(
+            ebook
+        ) {
+
+            if (!ebook)
+                return;
+
+
+            if (
+                ebook.fileUrl
+            ) {
+
+                showToast(
+                    "Download Started",
+                    `${ebook.fileName} is being prepared.`,
+                    "info"
+                );
+
+
+                const link =
+                    document.createElement(
+                        "a"
+                    );
+
+
+                link.href =
+                    ebook.fileUrl;
+
+                link.download =
+                    ebook.fileName;
+
+                link.target =
+                    "_blank";
+
+                link.rel =
+                    "noopener";
+
+
+                document.body.appendChild(
+                    link
+                );
+
+
                 link.click();
-                document.body.removeChild(link);
-                
-                window.showToast("Download Complete", `${ebook.fileName} downloaded successfully.`, "success");
-            }, 1000);
-        }
-    </script>
-</body>
-</html>
 
+
+                link.remove();
+
+
+                return;
+
+            }
+
+
+            showToast(
+                "PDF Not Available",
+                "This e-book does not have a real PDF file yet.",
+                "warning"
+            );
+
+        }
+
+
+        /* ==================================================
+           FAVORITES
+        ================================================== */
+
+        function getFavorites() {
+
+            try {
+
+                return JSON.parse(
+                    localStorage.getItem(
+                        "kdp_ebook_favorites"
+                    ) || "[]"
+                );
+
+            }
+
+            catch {
+
+                return [];
+
+            }
+
+        }
+
+
+        function saveFavorites(
+            favorites
+        ) {
+
+            localStorage.setItem(
+                "kdp_ebook_favorites",
+                JSON.stringify(
+                    favorites
+                )
+            );
+
+        }
+
+
+        function isFavorite(id) {
+
+            return getFavorites()
+                .includes(
+                    String(id)
+                );
+
+        }
+
+
+        function toggleFavorite(id) {
+
+            const favorites =
+                getFavorites();
+
+
+            const index =
+                favorites.indexOf(
+                    String(id)
+                );
+
+
+            if (index >= 0) {
+
+                favorites.splice(
+                    index,
+                    1
+                );
+
+
+                showToast(
+                    "Removed from favorites",
+                    "info"
+                );
+
+            }
+
+            else {
+
+                favorites.push(
+                    String(id)
+                );
+
+
+                showToast(
+                    "Added to favorites",
+                    "success"
+                );
+
+            }
+
+
+            saveFavorites(
+                favorites
+            );
+
+
+            updateFavoritesCount();
+
+            filterAndRenderEbooks();
+
+        }
+
+
+        function updateFavoritesCount() {
+
+            const element =
+                $("#stat-favorites");
+
+
+            if (element) {
+
+                element.textContent =
+                    getFavorites().length;
+
+            }
+
+        }
+
+
+        /* ==================================================
+           RECENTLY VIEWED
+        ================================================== */
+
+        function getRecentlyViewed() {
+
+            try {
+
+                return JSON.parse(
+                    localStorage.getItem(
+                        "kdp_recent_ebooks"
+                    ) || "[]"
+                );
+
+            }
+
+            catch {
+
+                return [];
+
+            }
+
+        }
+
+
+        function saveRecentlyViewed(
+            ebook
+        ) {
+
+            let recent =
+                getRecentlyViewed();
+
+
+            recent =
+                recent.filter(
+                    item =>
+                        String(item.id) !==
+                        String(ebook.id)
+                );
+
+
+            recent.unshift({
+
+                id:
+                    ebook.id,
+
+                title:
+                    ebook.title,
+
+                author:
+                    ebook.author
+
+            });
+
+
+            recent =
+                recent.slice(
+                    0,
+                    8
+                );
+
+
+            localStorage.setItem(
+                "kdp_recent_ebooks",
+                JSON.stringify(
+                    recent
+                )
+            );
+
+
+            renderRecentlyViewed();
+
+        }
+
+
+        function renderRecentlyViewed() {
+
+            const section =
+                $("#recent-section");
+
+            const container =
+                $("#recent-list");
+
+
+            if (
+                !section ||
+                !container
+            )
+                return;
+
+
+            const recent =
+                getRecentlyViewed();
+
+
+            if (
+                recent.length === 0
+            ) {
+
+                section.style.display =
+                    "none";
+
+                return;
+
+            }
+
+
+            section.style.display =
+                "block";
+
+
+            container.innerHTML =
+                recent.map(
+                    item =>
+                        `
+
+                        <div
+                            class="recent-item"
+                            data-recent-id="${escapeHTML(item.id)}"
+                        >
+
+                            <div
+                                class="fw-bold"
+                                style="
+                                    font-size:13px;
+                                    display:-webkit-box;
+                                    -webkit-line-clamp:2;
+                                    -webkit-box-orient:vertical;
+                                    overflow:hidden;
+                                "
+                            >
+                                ${escapeHTML(
+                                    item.title
+                                )}
+                            </div>
+
+                            <small
+                                class="text-muted"
+                            >
+                                ${escapeHTML(
+                                    item.author
+                                )}
+                            </small>
+
+                        </div>
+
+                        `
+                )
+                .join("");
+
+
+            $$(".recent-item")
+                .forEach(
+                    item => {
+
+                        item.addEventListener(
+                            "click",
+                            () =>
+                                openReaderModal(
+                                    item.dataset.recentId
+                                )
+                        );
+
+                    }
+                );
+
+        }
+
+
+        function clearRecentlyViewed() {
+
+            localStorage.removeItem(
+                "kdp_recent_ebooks"
+            );
+
+
+            renderRecentlyViewed();
+
+
+            showToast(
+                "Recently viewed list cleared",
+                "success"
+            );
+
+        }
+
+
+        /* ==================================================
+           PAGINATION
+        ================================================== */
+
+        function renderPagination() {
+
+            const container =
+                $("#ebook-pagination");
+
+
+            if (!container)
+                return;
+
+
+            const totalPages =
+                Math.ceil(
+                    filteredEbooks.length /
+                    ITEMS_PER_PAGE
+                );
+
+
+            if (
+                totalPages <= 1
+            ) {
+
+                container.innerHTML =
+                    "";
+
+                return;
+
+            }
+
+
+            let html = `
+
+                <nav
+                    aria-label="Ebook pagination"
+                >
+
+                    <ul
+                        class="pagination pagination-sm"
+                    >
+
+            `;
+
+
+            html += `
+
+                <li
+                    class="page-item ${
+                        currentPage === 1
+                            ? "disabled"
+                            : ""
+                    }"
+                >
+
+                    <button
+                        class="page-link"
+                        data-page-action="prev"
+                    >
+                        Previous
+                    </button>
+
+                </li>
+
+            `;
+
+
+            for (
+                let i = 1;
+                i <= totalPages;
+                i++
+            ) {
+
+                html += `
+
+                    <li
+                        class="page-item ${
+                            i === currentPage
+                                ? "active"
+                                : ""
+                        }"
+                    >
+
+                        <button
+                            class="page-link"
+                            data-page="${i}"
+                        >
+                            ${i}
+                        </button>
+
+                    </li>
+
+                `;
+
+            }
+
+
+            html += `
+
+                <li
+                    class="page-item ${
+                        currentPage === totalPages
+                            ? "disabled"
+                            : ""
+                    }"
+                >
+
+                    <button
+                        class="page-link"
+                        data-page-action="next"
+                    >
+                        Next
+                    </button>
+
+                </li>
+
+            `;
+
+
+            html += `
+
+                    </ul>
+
+                </nav>
+
+            `;
+
+
+            container.innerHTML =
+                html;
+
+
+            container
+                .querySelectorAll(
+                    "[data-page]"
+                )
+                .forEach(
+                    button => {
+
+                        button.addEventListener(
+                            "click",
+                            () => {
+
+                                currentPage =
+                                    Number(
+                                        button.dataset.page
+                                    );
+
+                                renderEbooksGrid();
+
+                                renderPagination();
+
+                                window.scrollTo({
+                                    top: 450,
+                                    behavior: "smooth"
+                                });
+
+                            }
+                        );
+
+                    }
+                );
+
+
+            const previous =
+                container.querySelector(
+                    '[data-page-action="prev"]'
+                );
+
+
+            const next =
+                container.querySelector(
+                    '[data-page-action="next"]'
+                );
+
+
+            previous?.addEventListener(
+                "click",
+                () => {
+
+                    if (
+                        currentPage > 1
+                    ) {
+
+                        currentPage--;
+
+                        renderEbooksGrid();
+
+                        renderPagination();
+
+                    }
+
+                }
+            );
+
+
+            next?.addEventListener(
+                "click",
+                () => {
+
+                    if (
+                        currentPage <
+                        totalPages
+                    ) {
+
+                        currentPage++;
+
+                        renderEbooksGrid();
+
+                        renderPagination();
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* ==================================================
+           RESULT COUNT
+        ================================================== */
+
+        function updateResultCount() {
+
+            const element =
+                $("#ebook-result-count");
+
+
+            if (!element)
+                return;
+
+
+            element.textContent =
+                `${filteredEbooks.length} e-book${
+                    filteredEbooks.length === 1
+                        ? ""
+                        : "s"
+                } found`;
+
+        }
+
+
+        /* ==================================================
+           EMPTY STATE
+        ================================================== */
+
+        function showEmptyState(
+            message
+        ) {
+
+            const container =
+                $("#ebooks-grid-container");
+
+
+            if (!container)
+                return;
+
+
+            container.innerHTML = `
+
+                <div
+                    class="col-12"
+                >
+
+                    <div
+                        class="empty-state"
+                    >
+
+                        <span class="material-icons">
+                            auto_stories
+                        </span>
+
+
+                        <h4
+                            class="mt-3 fw-bold"
+                        >
+                            ${escapeHTML(
+                                message
+                            )}
+                        </h4>
+
+
+                        <p>
+                            Try changing your search
+                            or filter settings.
+                        </p>
+
+
+                        <button
+                            class="btn btn-primary-custom"
+                            id="empty-reset-btn"
+                        >
+                            Reset Filters
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            $("#empty-reset-btn")
+                ?.addEventListener(
+                    "click",
+                    resetFilters
+                );
+
+        }
+
+
+        /* ==================================================
+           STATISTICS
+        ================================================== */
+
+        function updateStatistics() {
+
+            const normalized =
+                allEbooks.map(
+                    normalizeEbook
+                );
+
+
+            $("#stat-total")
+                .textContent =
+                    normalized.length;
+
+
+            $("#stat-categories")
+                .textContent =
+                    new Set(
+                        normalized.map(
+                            e =>
+                                e.category
+                        )
+                    ).size;
+
+
+            $("#stat-pdf")
+                .textContent =
+                    normalized.filter(
+                        e =>
+                            e.fileType ===
+                            "pdf"
+                    ).length;
+
+
+            updateFavoritesCount();
+
+        }
+
+
+        /* ==================================================
+           RESET
+        ================================================== */
+
+        function resetFilters() {
+
+            activeCategory =
+                "";
+
+            activeAuthor =
+                "";
+
+            activeFileType =
+                "";
+
+            searchQuery =
+                "";
+
+            sortMode =
+                "title";
+
+            favoritesOnly =
+                false;
+
+            currentPage =
+                1;
+
+
+            $("#ebook-search-bar")
+                .value =
+                "";
+
+
+            $("#hero-ebook-search")
+                .value =
+                "";
+
+
+            $("#author-filter")
+                .value =
+                "";
+
+
+            $("#file-type-filter")
+                .value =
+                "";
+
+
+            $("#sort-filter")
+                .value =
+                "title";
+
+
+            $("#favorites-only-btn")
+                .classList.remove(
+                    "active"
+                );
+
+
+            $$(".category-button")
+                .forEach(
+                    button => {
+
+                        button.classList.toggle(
+                            "active",
+                            button.dataset.category === ""
+                        );
+
+                    }
+                );
+
+
+            filterAndRenderEbooks();
+
+        }
+
+
+        /* ==================================================
+           EXPORT CSV
+        ================================================== */
+
+        function exportEbookList() {
+
+            if (
+                filteredEbooks.length === 0
+            ) {
+
+                showToast(
+                    "No e-books to export",
+                    "warning"
+                );
+
+                return;
+
+            }
+
+
+            const headers = [
+
+                "ID",
+                "Title",
+                "Author",
+                "Category",
+                "Subject",
+                "Year",
+                "File Type",
+                "File Size"
+
+            ];
+
+
+            const rows =
+                filteredEbooks.map(
+                    ebook => [
+
+                        ebook.id,
+                        ebook.title,
+                        ebook.author,
+                        ebook.category,
+                        ebook.subject,
+                        ebook.year,
+                        ebook.fileType,
+                        ebook.size
+
+                    ]
+                );
+
+
+            const csv =
+                [
+                    headers,
+                    ...rows
+                ]
+                .map(
+                    row =>
+                        row
+                            .map(
+                                value =>
+                                    `"${String(value)
+                                        .replace(
+                                            /"/g,
+                                            '""'
+                                        )}"`
+                            )
+                            .join(",")
+                )
+                .join("\n");
+
+
+            const blob =
+                new Blob(
+                    [csv],
+                    {
+                        type:
+                            "text/csv;charset=utf-8"
+                    }
+                );
+
+
+            const url =
+                URL.createObjectURL(
+                    blob
+                );
+
+
+            const link =
+                document.createElement(
+                    "a"
+                );
+
+
+            link.href =
+                url;
+
+            link.download =
+                "kdp-digital-ebooks.csv";
+
+
+            document.body.appendChild(
+                link
+            );
+
+
+            link.click();
+
+
+            link.remove();
+
+
+            URL.revokeObjectURL(
+                url
+            );
+
+
+            showToast(
+                "E-book list exported successfully",
+                "success"
+            );
+
+        }
+
+
+        /* ==================================================
+           EVENTS
+        ================================================== */
+
+        function bindEvents() {
+
+
+            /* Search */
+
+            $("#ebook-search-bar")
+                ?.addEventListener(
+                    "input",
+                    event => {
+
+                        performSearch(
+                            event.target.value
+                        );
+
+                    }
+                );
+
+
+            $("#hero-ebook-search")
+                ?.addEventListener(
+                    "input",
+                    event => {
+
+                        performSearch(
+                            event.target.value
+                        );
+
+                    }
+                );
+
+
+            $("#hero-search-button")
+                ?.addEventListener(
+                    "click",
+                    () => {
+
+                        performSearch(
+                            $("#hero-ebook-search")
+                                .value
+                        );
+
+
+                        $("#ebook-search-bar")
+                            .focus();
+
+                    }
+                );
+
+
+            /* Category */
+
+            $("#category-pills-list")
+                ?.addEventListener(
+                    "click",
+                    event => {
+
+                        const button =
+                            event.target.closest(
+                                ".category-button"
+                            );
+
+
+                        if (!button)
+                            return;
+
+
+                        $$(".category-button")
+                            .forEach(
+                                item =>
+                                    item.classList.remove(
+                                        "active"
+                                    )
+                            );
+
+
+                        button.classList.add(
+                            "active"
+                        );
+
+
+                        activeCategory =
+                            button.dataset.category;
+
+
+                        currentPage =
+                            1;
+
+
+                        filterAndRenderEbooks();
+
+                    }
+                );
+
+
+            /* Author */
+
+            $("#author-filter")
+                ?.addEventListener(
+                    "change",
+                    event => {
+
+                        activeAuthor =
+                            event.target.value;
+
+                        currentPage =
+                            1;
+
+                        filterAndRenderEbooks();
+
+                    }
+                );
+
+
+            /* File Type */
+
+            $("#file-type-filter")
+                ?.addEventListener(
+                    "change",
+                    event => {
+
+                        activeFileType =
+                            event.target.value;
+
+                        currentPage =
+                            1;
+
+                        filterAndRenderEbooks();
+
+                    }
+                );
+
+
+            /* Sort */
+
+            $("#sort-filter")
+                ?.addEventListener(
+                    "change",
+                    event => {
+
+                        sortMode =
+                            event.target.value;
+
+                        currentPage =
+                            1;
+
+                        filterAndRenderEbooks();
+
+                    }
+                );
+
+
+            /* Reset */
+
+            $("#reset-filters-btn")
+                ?.addEventListener(
+                    "click",
+                    resetFilters
+                );
+
+
+            /* Favorites */
+
+            $("#favorites-only-btn")
+                ?.addEventListener(
+                    "click",
+                    () => {
+
+                        favoritesOnly =
+                            !favoritesOnly;
+
+
+                        $("#favorites-only-btn")
+                            .classList.toggle(
+                                "active",
+                                favoritesOnly
+                            );
+
+
+                        currentPage =
+                            1;
+
+
+                        filterAndRenderEbooks();
+
+                    }
+                );
+
+
+            /* Export */
+
+            $("#export-ebook-list-btn")
+                ?.addEventListener(
+                    "click",
+                    exportEbookList
+                );
+
+
+            /* Recently Viewed */
+
+            $("#clear-recent-btn")
+                ?.addEventListener(
+                    "click",
+                    clearRecentlyViewed
+                );
+
+
+            /* Reader */
+
+            $("#reader-prev-btn")
+                ?.addEventListener(
+                    "click",
+                    previousReaderPage
+                );
+
+
+            $("#reader-next-btn")
+                ?.addEventListener(
+                    "click",
+                    nextReaderPage
+                );
+
+
+            $("#reader-zoom-in")
+                ?.addEventListener(
+                    "click",
+                    zoomIn
+                );
+
+
+            $("#reader-zoom-out")
+                ?.addEventListener(
+                    "click",
+                    zoomOut
+                );
+
+
+            $("#reader-fullscreen-btn")
+                ?.addEventListener(
+                    "click",
+                    toggleReaderFullscreen
+                );
+
+
+            $("#reader-download-btn")
+                ?.addEventListener(
+                    "click",
+                    () => {
+
+                        if (
+                            selectedEbook
+                        ) {
+
+                            triggerEbookDownload(
+                                selectedEbook
+                            );
+
+                        }
+
+                    }
+                );
+
+
+            /* Details buttons */
+
+            $("#details-read-btn")
+                ?.addEventListener(
+                    "click",
+                    () => {
+
+                        if (
+                            selectedEbook
+                        ) {
+
+                            const modal =
+                                bootstrap.Modal.getInstance(
+                                    $("#ebookDetailsModal")
+                                );
+
+
+                            modal?.hide();
+
+
+                            setTimeout(
+                                () =>
+                                    openReaderModal(
+                                        selectedEbook.id
+                                    ),
+                                250
+                            );
+
+                        }
+
+                    }
+                );
+
+
+            $("#details-download-btn")
+                ?.addEventListener(
+                    "click",
+                    () => {
+
+                        if (
+                            selectedEbook
+                        ) {
+
+                            triggerEbookDownload(
+                                selectedEbook
+                            );
+
+                        }
+
+                    }
+                );
+
+
+            /* Reader Scroll */
+
+            $("#reader-scroll-container")
+                ?.addEventListener(
+                    "scroll",
+                    event => {
+
+                        const target =
+                            event.target;
+
+
+                        const max =
+                            target.scrollHeight -
+                            target.clientHeight;
+
+
+                        if (
+                            max <= 0
+                        )
+                            return;
+
+
+                        const percentage =
+                            (
+                                target.scrollTop /
+                                max
+                            ) *
+                            100;
+
+
+                        $("#reader-progress-bar")
+                            .style.width =
+                                `${Math.min(
+                                    100,
+                                    percentage
+                                )}%`;
+
+                    }
+                );
+
+
+            /* Keyboard */
+
+            document.addEventListener(
+                "keydown",
+                event => {
+
+                    const modal =
+                        $("#ebookReaderModal");
+
+
+                    if (
+                        modal &&
+                        modal.classList.contains(
+                            "show"
+                        )
+                    ) {
+
+                        if (
+                            event.key ===
+                            "ArrowRight"
+                        ) {
+
+                            nextReaderPage();
+
+                        }
+
+
+                        if (
+                            event.key ===
+                            "ArrowLeft"
+                        ) {
+
+                            previousReaderPage();
+
+                        }
+
+
+                        if (
+                            event.key ===
+                            "+"
+                        ) {
+
+                            zoomIn();
+
+                        }
+
+
+                        if (
+                            event.key ===
+                            "-"
+                        ) {
+
+                            zoomOut();
+
+                        }
+
+                    }
+
+
+                    /* Ctrl + K */
+
+                    if (
+                        event.ctrlKey &&
+                        event.key.toLowerCase() ===
+                        "k"
+                    ) {
+
+                        event.preventDefault();
+
+                        $("#hero-ebook-search")
+                            ?.focus();
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* ==================================================
+           TOAST
+        ================================================== */
+
+        function showToast(
+            title,
+            message,
+            type = "info"
+        ) {
+
+            if (
+                typeof window.showToast ===
+                "function"
+            ) {
+
+                window.showToast(
+                    title,
+                    message,
+                    type
+                );
+
+                return;
+
+            }
+
+
+            const toast =
+                document.createElement(
+                    "div"
+                );
+
+
+            toast.style.cssText = `
+
+                position:fixed;
+                right:20px;
+                bottom:20px;
+                z-index:99999;
+                background:#0f172a;
+                color:white;
+                padding:13px 16px;
+                border-radius:10px;
+                box-shadow:0 12px 35px rgba(0,0,0,.2);
+                max-width:320px;
+                font-size:13px;
+
+            `;
+
+
+            toast.innerHTML = `
+
+                <strong>
+                    ${escapeHTML(title)}
+                </strong>
+
+                <div
+                    style="
+                        opacity:.8;
+                        margin-top:3px;
+                    "
+                >
+                    ${escapeHTML(message)}
+                </div>
+
+            `;
+
+
+            document.body.appendChild(
+                toast
+            );
+
+
+            setTimeout(
+                () =>
+                    toast.remove(),
+                3500
+            );
+
+        }
+
+
+        /* ==================================================
+           PUBLIC API
+        ================================================== */
+
+        window.KDPEbooks = {
+
+            reload: async () => {
+
+                await loadEbooksData();
+
+                buildCategoryList();
+
+                buildAuthorList();
+
+                updateStatistics();
+
+                filterAndRenderEbooks();
+
+            },
+
+            search: performSearch,
+
+            open: openReaderModal,
+
+            download:
+                triggerEbookDownload,
+
+            reset:
+                resetFilters
+
+        };
+
+    </script>
+
+
+</body>
+
+</html>
